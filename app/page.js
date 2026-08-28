@@ -239,7 +239,7 @@ export default function KwanjulaBudgetPage() {
           particleCount: 120,
           spread: 80,
           origin: { y: 0.6 },
-          colors: ['#d97706', '#059669', '#fbbf24', '#10b981', '#ffffff']
+          colors: ['#16a34a', '#059669', '#4ade80', '#10b981', '#ffffff']
         });
       } catch (e) {}
 
@@ -619,7 +619,7 @@ export default function KwanjulaBudgetPage() {
         {/* General Pledge Callout */}
         <div className="bg-accent-50 border border-accent-200 rounded-lg p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-accent-500 text-white flex items-center justify-center text-xl shrink-0">
+            <div className="w-12 h-12 rounded-full bg-accent-700 text-white flex items-center justify-center text-xl shrink-0">
               <FaHandHoldingDollar aria-hidden="true" />
             </div>
             <div>
@@ -724,7 +724,7 @@ export default function KwanjulaBudgetPage() {
                               <span
                                 aria-hidden="true"
                                 className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-500' : 'bg-neutral-400'
+                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-700' : 'bg-neutral-400'
                                 }`}
                               ></span>
                               <span className={isCovered ? 'text-brand-700' : isPartial ? 'text-accent-700' : 'text-neutral-600'}>

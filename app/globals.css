@@ -11,7 +11,10 @@
  * a different emerald from the one the tokens named.
  *
  *   brand   — the ceremony's emerald. Identity, funded state, primary actions.
- *   accent  — the gold. Attention, money outstanding, destructive confirmation.
+ *   accent  — a second, warmer green (Tailwind's "green" scale, not "emerald").
+ *             Attention, money outstanding, destructive confirmation — the same
+ *             role gold/amber held before; only the hue changed, on request,
+ *             to keep the palette entirely within shades of green.
  *   neutral — the slate. Surfaces, text, borders, and "not yet supported".
  *
  * white / black / transparent / current are re-declared because the reset
@@ -38,17 +41,17 @@
   --color-brand-900: #064e3b;
   --color-brand-950: #022c22;
 
-  --color-accent-50: #fffbeb;
-  --color-accent-100: #fef3c7;
-  --color-accent-200: #fde68a;
-  --color-accent-300: #fcd34d;
-  --color-accent-400: #fbbf24;
-  --color-accent-500: #f59e0b;
-  --color-accent-600: #d97706;
-  --color-accent-700: #b45309;
-  --color-accent-800: #92400e;
-  --color-accent-900: #78350f;
-  --color-accent-950: #451a03;
+  --color-accent-50: #f0fdf4;
+  --color-accent-100: #dcfce7;
+  --color-accent-200: #bbf7d0;
+  --color-accent-300: #86efac;
+  --color-accent-400: #4ade80;
+  --color-accent-500: #22c55e;
+  --color-accent-600: #16a34a;
+  --color-accent-700: #15803d;
+  --color-accent-800: #166534;
+  --color-accent-900: #14532d;
+  --color-accent-950: #052e16;
 
   --color-neutral-50: #f8fafc;
   --color-neutral-100: #f1f5f9;
