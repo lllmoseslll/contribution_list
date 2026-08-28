@@ -617,7 +617,7 @@ export default function KwanjulaBudgetPage() {
         )}
 
         {/* General Pledge Callout */}
-        <div className="bg-gradient-to-r from-accent-50 to-accent-100/60 border border-accent-200 rounded-2xl p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div className="bg-accent-50 border border-accent-200 rounded-lg p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-accent-500 text-white flex items-center justify-center text-xl shrink-0">
               <FaHandHoldingDollar aria-hidden="true" />
@@ -631,7 +631,7 @@ export default function KwanjulaBudgetPage() {
           </div>
           <button
             onClick={() => openPledgeModal(null)}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-bold bg-accent-600 hover:bg-accent-700 text-white shadow-md transition shrink-0 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-lg text-sm font-bold bg-brand-700 hover:bg-brand-800 text-white transition shrink-0 flex items-center justify-center gap-2"
           >
             <FaGift aria-hidden="true" /> Make General Pledge
           </button>
@@ -849,7 +849,7 @@ export default function KwanjulaBudgetPage() {
         ))}
 
         {/* Contributor Roll of Honor & Blessings Wall */}
-        <section className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-md mb-16">
+        <section className="bg-white rounded-lg p-6 sm:p-8 border border-neutral-200 mb-16">
           <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
             <div>
               <h2 className="text-2xl font-bold text-brand-950 flex items-center gap-2">
@@ -862,7 +862,7 @@ export default function KwanjulaBudgetPage() {
             {rollOfHonorPledges.length > 9 && (
               <button
                 onClick={() => setShowAllHonorPledges(!showAllHonorPledges)}
-                className="px-4 py-1.5 rounded-full text-xs font-bold text-brand-800 bg-brand-50 hover:bg-brand-100 border border-brand-200 transition"
+                className="px-4 py-1.5 rounded-md text-xs font-bold text-brand-800 bg-brand-50 hover:bg-brand-100 border border-brand-200 transition"
               >
                 {showAllHonorPledges ? 'Show Less' : `View All (${rollOfHonorPledges.length})`}
               </button>
@@ -879,7 +879,7 @@ export default function KwanjulaBudgetPage() {
               {(showAllHonorPledges ? rollOfHonorPledges : rollOfHonorPledges.slice(0, 9)).map((p, idx) => {
                 const initials = (p.name || 'W').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
                 return (
-                  <div key={p.id || idx} className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200 flex flex-col gap-2.5 transition hover:bg-white hover:shadow">
+                  <div key={p.id || idx} className="bg-neutral-50 p-4 rounded-lg border border-neutral-200 flex flex-col gap-2.5 transition-colors hover:bg-white hover:border-neutral-300">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-brand-800 text-white font-bold text-sm flex items-center justify-center shrink-0">
                         {initials}
@@ -908,11 +908,11 @@ export default function KwanjulaBudgetPage() {
         </section>
 
         {/* Mobile Money Payment Channels Section */}
-        <section className="bg-gradient-to-br from-brand-950 to-brand-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl" id="paymentSection">
+        <section className="bg-brand-950 text-white rounded-lg p-6 sm:p-10" id="paymentSection">
           <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent-400/20 text-accent-300 border border-accent-400/30 uppercase tracking-wider mb-2">
-              <FaShieldHalved aria-hidden="true" /> Verified Payment Channels
-            </span>
+            <p className="text-accent-300 text-xs font-bold uppercase tracking-widest mb-2">
+              Verified Payment Channels
+            </p>
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">How to Fulfill Your Pledge</h2>
             <p className="text-brand-200 text-xs sm:text-sm">
               Please send your contribution directly via Mobile Money to the Groom or Committee Members below. Use your <strong>Name</strong> and <strong>Pledged Item</strong> as reference.
@@ -920,15 +920,15 @@ export default function KwanjulaBudgetPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-            
+
             {/* Edwin Laston */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-accent-400/50 flex flex-col justify-between shadow-lg">
+            <div className="bg-brand-900 rounded-lg p-6 border border-accent-700 flex flex-col justify-between">
               <div>
                 <div className="text-[11px] font-extrabold text-accent-300 tracking-wider uppercase mb-1">Groom / Primary Organizer</div>
                 <h3 className="text-xl font-bold text-white mb-4">Mr. Edwin Laston</h3>
 
                 <div className="space-y-2 mb-6">
-                  <div className="flex items-center justify-between bg-black/30 p-2.5 rounded-xl text-sm">
+                  <div className="flex items-center justify-between bg-brand-950 p-2.5 rounded-lg text-sm">
                     <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-700 text-white">Airtel Money</span>
                     <span className="font-mono font-bold text-white tracking-wide">0703464261</span>
                     <button
@@ -940,7 +940,7 @@ export default function KwanjulaBudgetPage() {
                     </button>
                   </div>
 
-                  <div className="flex items-center justify-between bg-black/30 p-2.5 rounded-xl text-sm">
+                  <div className="flex items-center justify-between bg-brand-950 p-2.5 rounded-lg text-sm">
                     <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-500 text-black">MTN Money</span>
                     <span className="font-mono font-bold text-white tracking-wide">0774324968</span>
                     <button
@@ -958,19 +958,19 @@ export default function KwanjulaBudgetPage() {
                 href="https://wa.me/256703464261?text=Hello%20Edwin,%20I%20have%20made%20a%20pledge%20for%20your%20Introduction%20Ceremony!"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-[#25D366] hover:bg-[#1ebd5b] text-white flex items-center justify-center gap-2 transition"
+                className="w-full py-2.5 px-4 rounded-lg text-sm font-bold bg-[#25D366] hover:bg-[#1ebd5b] text-white flex items-center justify-center gap-2 transition"
               >
                 <FaWhatsapp className="text-base" aria-hidden="true" /> Chat Edwin on WhatsApp
               </a>
             </div>
 
             {/* KMP Emitu */}
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+            <div className="bg-brand-900 rounded-lg p-6 border border-brand-800 flex flex-col justify-between">
               <div>
                 <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">Committee Member</div>
                 <h3 className="text-xl font-bold text-white mb-4">Mr. KMP Emitu Ezielkel</h3>
 
-                <div className="bg-black/30 p-2.5 rounded-xl text-sm flex items-center justify-between mb-6">
+                <div className="bg-brand-950 p-2.5 rounded-lg text-sm flex items-center justify-between mb-6">
                   <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-500 text-black">MTN Money</span>
                   <span className="font-mono font-bold text-white tracking-wide">0783987907</span>
                   <button
@@ -985,19 +985,19 @@ export default function KwanjulaBudgetPage() {
 
               <a
                 href="tel:0783987907"
-                className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-2 transition"
+                className="w-full py-2.5 px-4 rounded-lg text-sm font-bold bg-brand-800 hover:bg-brand-700 text-white flex items-center justify-center gap-2 transition"
               >
                 <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
               </a>
             </div>
 
             {/* Emmanuel Tinkasimire */}
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
+            <div className="bg-brand-900 rounded-lg p-6 border border-brand-800 flex flex-col justify-between">
               <div>
                 <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">Committee Member</div>
                 <h3 className="text-xl font-bold text-white mb-4">Mr. Tinkasimire Emmanuel</h3>
 
-                <div className="bg-black/30 p-2.5 rounded-xl text-sm flex items-center justify-between mb-6">
+                <div className="bg-brand-950 p-2.5 rounded-lg text-sm flex items-center justify-between mb-6">
                   <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-700 text-white">Airtel Money</span>
                   <span className="font-mono font-bold text-white tracking-wide">0706171109</span>
                   <button
@@ -1012,7 +1012,7 @@ export default function KwanjulaBudgetPage() {
 
               <a
                 href="tel:0706171109"
-                className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-2 transition"
+                className="w-full py-2.5 px-4 rounded-lg text-sm font-bold bg-brand-800 hover:bg-brand-700 text-white flex items-center justify-center gap-2 transition"
               >
                 <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
               </a>
@@ -1021,18 +1021,18 @@ export default function KwanjulaBudgetPage() {
           </div>
 
           {/* Quick USSD Steps */}
-          <div className="bg-black/25 rounded-2xl p-4 sm:p-5 border border-white/10 text-xs text-brand-200">
+          <div className="bg-brand-900 rounded-lg p-4 sm:p-5 border border-brand-800 text-xs text-brand-200">
             <div className="font-bold text-white text-sm mb-2 flex items-center gap-2">
               <FaCircleInfo className="text-accent-400" aria-hidden="true" /> Quick Mobile Money USSD Codes:
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-white/5 p-3 rounded-xl">
+              <div className="bg-brand-950 p-3 rounded-lg">
                 <span className="font-bold text-accent-300 block mb-1">Airtel Money:</span>
-                Dial <span className="font-mono font-bold text-white bg-black/40 px-1.5 py-0.5 rounded">*185#</span> &gt; Select 1 (Send Money) &gt; Enter <span className="font-mono text-white font-bold">0703464261</span> (Edwin Laston).
+                Dial <span className="font-mono font-bold text-white bg-brand-800 px-1.5 py-0.5 rounded">*185#</span> &gt; Select 1 (Send Money) &gt; Enter <span className="font-mono text-white font-bold">0703464261</span> (Edwin Laston).
               </div>
-              <div className="bg-white/5 p-3 rounded-xl">
+              <div className="bg-brand-950 p-3 rounded-lg">
                 <span className="font-bold text-accent-400 block mb-1">MTN Mobile Money:</span>
-                Dial <span className="font-mono font-bold text-white bg-black/40 px-1.5 py-0.5 rounded">*165#</span> &gt; Select 1 (Send Money) &gt; Enter <span className="font-mono text-white font-bold">0774324968</span> (Edwin Laston).
+                Dial <span className="font-mono font-bold text-white bg-brand-800 px-1.5 py-0.5 rounded">*165#</span> &gt; Select 1 (Send Money) &gt; Enter <span className="font-mono text-white font-bold">0774324968</span> (Edwin Laston).
               </div>
             </div>
           </div>

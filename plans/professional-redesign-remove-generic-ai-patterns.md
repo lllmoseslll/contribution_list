@@ -631,3 +631,50 @@ chip's computed `border-color` both resolve to `rgb(4, 120, 87)` (`brand-700`). 
 after a real `.focus()` call, `rgb(255, 255, 255) 0px 0px 0px 2px, rgb(217, 119, 6) 0px 0px 0px 4px`,
 matching the white-plus-accent-600 ring established there. 390px viewport: zero horizontal overflow on the
 scrollable tab row.
+
+### Step 6 — `Redesign_feat/payment-section: flat dark cards, no glass`
+
+**The payment-channels section keeps its dark background deliberately (D4) and loses everything else
+Context 5 named.** `bg-gradient-to-br from-brand-950 to-brand-950` (a same-color gradient that only ever
+rendered as flat brand-950 anyway) is now a literal flat `bg-brand-950`; `shadow-xl` on the section is
+gone. The uppercase pill badge above the section's own H2 ("VERIFIED PAYMENT CHANNELS," a second instance
+of the badge-above-heading tell Step 2 already removed from the hero) is now plain small-caps text with no
+background or border.
+
+**Every translucent glass surface is now a flat, layered fill.** The three contact cards move from
+`bg-white/10 backdrop-blur-md` / `bg-white/5 backdrop-blur-md` to a flat `bg-brand-900` with a plain
+1px border (`border-accent-700` on the groom's card to keep it visually primary, `border-brand-800` on the
+other two); the phone-number rows inside them move from `bg-black/30` to flat `bg-brand-950` — one shade
+darker than their `brand-900` parent, so the nested surface still reads as nested without needing
+transparency to do it. The two USSD-code inline chips (`*185#`, `*165#`), the last `bg-black/40` instances
+Context 5 named, become flat `bg-brand-800`. The WhatsApp and "Call Contact" buttons drop their own
+`bg-white/10`/`bg-white/20` hover translucency for flat `bg-brand-800`/`hover:bg-brand-700`.
+
+**Contrast was computed for every new flat pairing before shipping**, the same discipline Step 2 and Step 3
+established: white text on `brand-900` (9.72:1) and `brand-800` (7.68:1); `brand-200` on `brand-900`
+(7.58:1); `accent-300` on `brand-900` (6.74:1) and on `brand-950` (10.51:1); `neutral-300` (the idle copy
+icon color) on `brand-950` (10.21:1). All clear AA with room to spare.
+
+**One pre-existing contrast issue was found and left alone, deliberately.** White text on the WhatsApp
+button's own brand green (`#25D366`) measures 1.98:1 — well under AA — but this color is a third-party
+brand mark, not something this redesign introduced or is touching the hue of, the same category the prior
+plan's Step 6 already carved out an exemption for (Airtel/MTN brand colors). Named here rather than
+silently fixed or silently ignored: it predates this step, its color is WhatsApp's own, and fixing it
+would mean either abandoning WhatsApp's brand green or picking a compromise color that is neither this
+app's palette nor WhatsApp's recognizable brand — a call for the repo owner, not an incidental fix inside
+a "remove glass" step.
+
+**The General Pledge Callout and the Roll of Honor section were folded into this commit** (both were named
+in Step 6's own scope): the callout's two-stop gradient becomes a flat `bg-accent-50`, and its action
+button recolors from accent to brand — "Make General Pledge" is a primary action, and D2 already moved
+the hero's and each item card's equivalent buttons to brand; leaving this one gold would have reintroduced
+the exact inconsistency D2 set out to close. The Roll of Honor section and its individual cards drop
+`rounded-3xl`/`rounded-2xl` and `shadow-md`/`hover:shadow` to the Step-1 `rounded-lg`/border-only
+convention; its "View All" toggle drops `rounded-full` to `rounded-md`, reserving full-round for the
+avatar circles inside each card, which are genuinely circular.
+
+**Verified:** built and loaded in the browser — clicking the Airtel copy button both copies the number and
+shows the correct toast; the WhatsApp deep link and the `tel:` links resolve to their correct targets
+unchanged. 390px viewport: zero horizontal overflow across the whole section. A scoped grep for
+`backdrop-blur|bg-white/10|bg-white/5|bg-black/|shadow-xl|shadow-lg` outside the (untouched, out-of-scope
+for this step) modal close-button icon returns nothing.
