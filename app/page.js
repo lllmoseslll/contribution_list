@@ -383,8 +383,8 @@ export default function KwanjulaBudgetPage() {
               {liveConnected ? 'Live Sync Active' : 'Connecting...'}
             </span>
             <span className="hidden sm:inline text-brand-400/40">•</span>
-            <span className="text-brand-100 font-medium">
-              <FaCalendarDays className="text-accent-400 mr-1.5" aria-hidden="true" />
+            <span className="inline-flex items-center gap-1.5 text-brand-100 font-medium">
+              <FaCalendarDays className="text-accent-400" aria-hidden="true" />
               Ceremony Date: <strong>Friday, 27th November 2026</strong>
             </span>
           </div>
