@@ -132,6 +132,9 @@ export default function KwanjulaBudgetPage() {
     const poll = async () => {
       try {
         const res = await fetch('/api/budget');
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
         const data = await res.json();
         if (cancelled) return;
 
@@ -164,7 +167,10 @@ export default function KwanjulaBudgetPage() {
         seenPledgeIdsRef.current = new Set(currentPledges.keys());
       } catch (err) {
         console.error('Error fetching budget:', err);
-        if (!cancelled) setLiveConnected(false);
+        if (!cancelled) {
+          setIsLoading(false);
+          setLiveConnected(false);
+        }
       }
     };
 
