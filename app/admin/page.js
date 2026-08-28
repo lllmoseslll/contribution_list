@@ -512,7 +512,7 @@ export default function AdminPage() {
   }, [adminPledges, adminFilter, adminSearch]);
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-6 px-3 sm:px-4">
+    <div className="min-h-screen bg-neutral-50 py-6 px-5 sm:px-6">
 
       {/* Toast Alert */}
       {toast && (

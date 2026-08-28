@@ -427,7 +427,7 @@ export default function KwanjulaBudgetPage() {
       )}
 
       {/* Top Announcement Bar */}
-      <div className="bg-brand-950 text-brand-200 text-xs sm:text-sm py-2.5 px-4 border-b border-brand-800/50">
+      <div className="bg-brand-950 text-brand-200 text-xs sm:text-sm py-2.5 px-5 border-b border-brand-800/50">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-900 text-brand-300 border border-brand-700/60">
@@ -462,7 +462,7 @@ export default function KwanjulaBudgetPage() {
       </div>
 
       {/* Hero Banner */}
-      <header className="relative bg-brand-950 text-white py-12 sm:py-16 px-4 text-center border-b border-brand-800">
+      <header className="relative bg-brand-950 text-white py-12 sm:py-16 px-5 text-center border-b border-brand-800">
         <div className="relative max-w-4xl mx-auto">
           <p className="text-accent-400 text-xs font-bold tracking-widest uppercase mb-3">
             The Kwanjula Budget
@@ -687,7 +687,7 @@ export default function KwanjulaBudgetPage() {
       </header>
 
       {/* Main Budget Section */}
-      <main className="max-w-6xl mx-auto w-full px-4 mb-16" id="budgetSection">
+      <main className="max-w-6xl mx-auto w-full px-5 mb-16" id="budgetSection">
         
         {/* Controls & Search */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-6">
@@ -1254,7 +1254,7 @@ export default function KwanjulaBudgetPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto bg-brand-950 text-brand-300 py-8 px-4 border-t border-brand-900">
+      <footer className="mt-auto bg-brand-950 text-brand-300 py-8 px-5 border-t border-brand-900">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
           <div>
             <div className="font-bold text-white text-base">Mr. Edwin Laston & Jamirah Nakayemba</div>
