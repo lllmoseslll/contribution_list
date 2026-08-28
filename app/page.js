@@ -108,7 +108,10 @@ export default function KwanjulaBudgetPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const eventSourceRef = useRef(null);
+  // Every pledge id seen on the previous poll, so a newly-appeared one can be
+  // told apart from one that was already on the page — the polling
+  // replacement for the "PLEDGE_ADDED" event a push connection used to carry.
+  const seenPledgeIdsRef = useRef(null);
 
   // Show Toast
   const showToast = (msg, type = 'info') => {
@@ -116,69 +119,61 @@ export default function KwanjulaBudgetPage() {
     setTimeout(() => setToast(null), 5000);
   };
 
-  // Real-time Server-Sent Events (SSE) connection
+  // Polling instead of a push connection. Vercel's serverless functions don't
+  // share memory across invocations/instances and enforce execution-time
+  // limits, so an in-memory EventEmitter and a long-lived SSE stream — what
+  // this used to be — can't reliably reach every visitor once deployed there.
+  // Re-fetching every few seconds has none of that risk, and for a
+  // contribution counter, "updates within a few seconds" reads as live to a
+  // visitor even though nothing is actually pushed.
   useEffect(() => {
-    const connectSSE = () => {
-      try {
-        const es = new EventSource('/api/stream');
-        eventSourceRef.current = es;
+    let cancelled = false;
 
-        es.onopen = () => {
-          setLiveConnected(true);
-        };
-
-        es.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            if (data.type === 'INITIAL_STATE') {
-              setBudget(data.payload);
-              setIsLoading(false);
-            } else if (data.type === 'PLEDGE_ADDED') {
-              setBudget(data.state);
-              const p = data.pledge;
-              const amt = p.amount ? formatUGX(p.amount) : 'a generous contribution';
-              showToast(`🎉 ${p.name} just pledged ${amt} for ${p.itemName}!`, 'success');
-            } else if (data.type === 'BUDGET_UPDATED') {
-              setBudget(data.state);
-            }
-          } catch (e) {
-            console.error('Failed to parse SSE event:', e);
-          }
-        };
-
-        es.onerror = () => {
-          setLiveConnected(false);
-          es.close();
-          // Fallback fetch after 3s
-          setTimeout(() => {
-            fetchInitialBudget();
-            connectSSE();
-          }, 3000);
-        };
-      } catch (err) {
-        console.error('SSE initialization error:', err);
-        fetchInitialBudget();
-      }
-    };
-
-    const fetchInitialBudget = async () => {
+    const poll = async () => {
       try {
         const res = await fetch('/api/budget');
         const data = await res.json();
+        if (cancelled) return;
+
         setBudget(data);
         setIsLoading(false);
+        setLiveConnected(true);
+
+        // Item-level pledges don't carry the item's own name (see
+        // lib/budget-service.js's recentPledges mapping), so it's captured
+        // here from the enclosing item while it's in scope.
+        const currentPledges = new Map();
+        for (const sec of data.sections || []) {
+          for (const item of sec.items || []) {
+            for (const p of item.recentPledges || []) {
+              currentPledges.set(p.id, { ...p, itemName: item.name });
+            }
+          }
+        }
+        for (const p of data.recentGeneralPledges || []) currentPledges.set(p.id, p);
+
+        // The very first poll seeds the baseline — every pledge on it is
+        // "already there", not new, so no toast fires for a page load.
+        if (seenPledgeIdsRef.current) {
+          for (const [id, p] of currentPledges) {
+            if (seenPledgeIdsRef.current.has(id)) continue;
+            const amt = p.amount ? formatUGX(p.amount) : 'a generous contribution';
+            showToast(`🎉 ${p.name} just pledged ${amt} for ${p.itemName}!`, 'success');
+          }
+        }
+        seenPledgeIdsRef.current = new Set(currentPledges.keys());
       } catch (err) {
         console.error('Error fetching budget:', err);
+        if (!cancelled) setLiveConnected(false);
       }
     };
 
-    fetchInitialBudget();
-    connectSSE();
+    poll();
+    const intervalId = setInterval(poll, 7000);
 
     return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-      }
+      cancelled = true;
+      clearInterval(intervalId);
     };
   }, []);
 

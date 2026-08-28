@@ -27,7 +27,7 @@ export async function GET(req) {
   const denied = requireAdmin(req);
   if (denied) return denied;
 
-  return NextResponse.json(withoutSecrets(getSettings()));
+  return NextResponse.json(withoutSecrets(await getSettings()));
 }
 
 export async function POST(req) {
@@ -49,5 +49,5 @@ export async function POST(req) {
     safe.smtp = smtp;
   }
 
-  return NextResponse.json({ success: true, settings: withoutSecrets(updateSettings(safe)) });
+  return NextResponse.json({ success: true, settings: withoutSecrets(await updateSettings(safe)) });
 }

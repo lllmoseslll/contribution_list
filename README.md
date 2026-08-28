@@ -10,7 +10,7 @@
 This is a modern, real-time web application built for the Introduction (Kwanjula) ceremony of **Mr. Edwin Laston & Jamirah Nakayemba**. It digitizes the official budget PDF, allowing friends, family, and in-laws to view itemized expenses, make pledges for specific items or sections, and watch remaining balances subtract in real-time.
 
 Every time someone submits a pledge:
-1. **Real-time Subtraction:** The item's remaining balance, section balance, and the grand total budget balance subtract immediately across all connected browsers without page refreshing (powered by WebSockets).
+1. **Real-time Subtraction:** The item's remaining balance, section balance, and the grand total budget balance subtract across all connected browsers without page refreshing (the browser polls for updates every few seconds).
 2. **Contributor Wall & Item Listing:** The contributor's name, pledged amount, and personal message are added under that specific item as well as on the Roll of Honor.
 3. **Automated Email Notification:** An alert email is generated and dispatched to the groom/organizer (**Mr. Edwin Laston** at `edwinlaston@gmail.com`) with the contributor's contact details, pledged item, amount, and the updated remaining balance.
 4. **Instant Receipt:** The pledger receives an on-screen acknowledgement slip and (if email was provided) a confirmation email.
@@ -31,9 +31,16 @@ Every time someone submits a pledge:
 
 ### 1. Requirements
 - Node.js (v18 or newer)
+- A Postgres database (local via Docker, or a hosted one — see below)
 - Modern web browser
 
-### 2. Run the Application
+### 2. Configure
+Copy `.env.example` to `.env` and fill in `POSTGRES_URL`, `ADMIN_PIN` and `ADMIN_SESSION_SECRET` (see the comments in that file for how to generate/obtain each one). Then create the schema:
+```bash
+npm run db:migrate
+```
+
+### 3. Run the Application
 Open a terminal in this directory and execute:
 ```bash
 npm start
@@ -43,6 +50,18 @@ Then visit in your web browser:
 ```
 http://localhost:3000
 ```
+
+---
+
+## 🗄️ Data Persistence & Deploying to Vercel
+
+Pledges, admin settings and the notification outbox are stored in Postgres (see `lib/db.js`), not in local files — this is what lets the app run on Vercel's serverless, read-only filesystem. Only `data/budget.json` (the curated list of ceremony budget items) still ships as a bundled read-only file, since it's never written to at runtime.
+
+To deploy:
+1. Provision a Postgres database — **Vercel Postgres** or **Supabase** both work out of the box (the app connects with the standard `pg` driver, no proprietary client needed).
+2. In the Vercel project's **Environment Variables**, set `POSTGRES_URL`, `ADMIN_PIN`, `ADMIN_SESSION_SECRET`, and optionally `OWNER_EMAIL`.
+3. Run `npm run db:migrate` once (locally, with `POSTGRES_URL` pointed at the new production database) to create the schema — and to carry over any existing `data/*.json` pledges if you're migrating from an earlier, file-based deployment.
+4. Deploy as normal (`vercel` or a Git push if the project is linked). Live budget updates reach every visitor via polling, so no persistent connections or WebSocket infrastructure are required.
 
 ---
 

@@ -9,7 +9,7 @@ export async function POST(req) {
   const denied = requireAdmin(req);
   if (denied) return denied;
 
-  const settings = getSettings();
+  const settings = await getSettings();
   const { recipientEmail } = await req.json().catch(() => ({}));
   const targetEmail = recipientEmail || settings.notifyEmail || settings.ownerEmail;
 

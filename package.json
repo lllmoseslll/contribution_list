@@ -7,7 +7,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
-    "server-legacy": "node server.cjs"
+    "server-legacy": "node server.cjs",
+    "db:migrate": "node scripts/migrate-json-to-postgres.mjs"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +25,7 @@
     "next": "^16.3.3",
     "nodemailer": "^9.0.5",
     "pdfkit": "^0.20.1",
+    "pg": "^8.23.0",
     "postcss": "^8.5.26",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

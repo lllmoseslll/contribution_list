@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { calculateBudgetState, getPledges, savePledges, budgetEvents } from '@/lib/budget-service';
+import { calculateBudgetState, addPledge } from '@/lib/budget-service';
 import { sendPledgeNotifications } from '@/lib/mailer';
 import fs from 'fs';
 import path from 'path';
@@ -38,7 +38,10 @@ export async function POST(req) {
       }
     }
 
-    const newPledge = {
+    // date is intentionally not set here — addPledge() returns the pledge
+    // with its created_at timestamp from Postgres, which is the single
+    // source of truth used everywhere below instead of an app-server clock.
+    const newPledge = await addPledge({
       id: 'pledge-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
       name: name.trim(),
       phone: (phone || '').trim(),
@@ -53,16 +56,11 @@ export async function POST(req) {
       paymentMethod: paymentMethod || 'Mobile Money',
       isAnonymous: Boolean(isAnonymous),
       hideAmount: Boolean(hideAmount),
-      status: 'pledged',
-      date: new Date().toISOString()
-    };
-
-    const pledges = getPledges();
-    pledges.unshift(newPledge);
-    savePledges(pledges);
+      status: 'pledged'
+    });
 
     // Compute updated state immediately
-    const updatedState = calculateBudgetState();
+    const updatedState = await calculateBudgetState();
 
     let itemInfo = null;
     if (selectedItem) {
@@ -84,21 +82,6 @@ export async function POST(req) {
     // Trigger email notification asynchronously
     sendPledgeNotifications(newPledge, itemInfo, updatedState.stats).catch(err => {
       console.error('Error sending notification:', err);
-    });
-
-    // Emit event for real-time SSE stream to update all connected clients
-    budgetEvents.emit('update', {
-      type: 'PLEDGE_ADDED',
-      pledge: {
-        id: newPledge.id,
-        name: newPledge.isAnonymous ? 'Generous Well-wisher' : newPledge.name,
-        amount: newPledge.hideAmount ? null : newPledge.amount,
-        itemName: newPledge.itemName,
-        itemId: newPledge.itemId,
-        message: newPledge.message,
-        date: newPledge.date
-      },
-      state: updatedState
     });
 
     return NextResponse.json({

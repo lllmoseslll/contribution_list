@@ -8,5 +8,5 @@ export async function GET(req) {
   const denied = requireAdmin(req);
   if (denied) return denied;
 
-  return NextResponse.json(getNotifications());
+  return NextResponse.json(await getNotifications());
 }

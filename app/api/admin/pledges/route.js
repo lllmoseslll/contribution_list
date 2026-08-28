@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getPledges, savePledges, calculateBudgetState, budgetEvents } from '@/lib/budget-service';
+import { getPledges, addPledge, calculateBudgetState } from '@/lib/budget-service';
 import { requireAdmin } from '@/lib/admin-auth';
 import fs from 'fs';
 import path from 'path';
@@ -10,7 +10,7 @@ export async function GET(req) {
   const denied = requireAdmin(req);
   if (denied) return denied;
 
-  const pledges = getPledges();
+  const pledges = await getPledges();
   return NextResponse.json(pledges);
 }
 
@@ -49,7 +49,7 @@ export async function POST(req) {
       }
     }
 
-    const newPledge = {
+    const newPledge = await addPledge({
       id: 'pledge-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
       name: name.trim(),
       phone: (phone || '').trim(),
@@ -64,20 +64,10 @@ export async function POST(req) {
       paymentMethod: paymentMethod || 'Cash / Hand Delivery',
       isAnonymous: false,
       hideAmount: false,
-      status: status || 'paid', // default to paid if entered by committee as offline receipt
-      date: new Date().toISOString()
-    };
-
-    const pledges = getPledges();
-    pledges.unshift(newPledge);
-    savePledges(pledges);
-
-    const updatedState = calculateBudgetState();
-    budgetEvents.emit('update', {
-      type: 'PLEDGE_ADDED',
-      pledge: newPledge,
-      state: updatedState
+      status: status || 'paid' // default to paid if entered by committee as offline receipt
     });
+
+    const updatedState = await calculateBudgetState();
 
     return NextResponse.json({
       success: true,

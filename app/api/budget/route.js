@@ -4,8 +4,8 @@ import { calculateBudgetState, getSettings } from '@/lib/budget-service';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const budgetState = calculateBudgetState();
-  const settings = getSettings();
+  const budgetState = await calculateBudgetState();
+  const settings = await getSettings();
 
   return NextResponse.json({
     ...budgetState,

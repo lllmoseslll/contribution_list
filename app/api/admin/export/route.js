@@ -11,7 +11,7 @@ export async function GET(req) {
   const denied = requireAdmin(req);
   if (denied) return denied;
 
-  const pledges = getPledges();
+  const pledges = await getPledges();
   const headers = ['Pledge ID', 'Date', 'Contributor Name', 'Phone', 'Email', 'Item Name', 'Section', 'Amount (UGX)', 'Payment Method', 'Status', 'Message'];
 
   const rows = pledges.map(p => [

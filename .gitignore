@@ -33,9 +33,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Live application data — secrets and contributor PII, never committed.
-# Copy data/settings.example.json to data/settings.json to configure.
-# pledges.json and notifications.json are created empty on first run.
+# Legacy pre-Postgres data files. Pledges, settings and notifications now
+# live in Postgres (see lib/db.js) and these are no longer read or written
+# at runtime; ignored in case leftover copies exist locally from before the
+# migration (scripts/migrate-json-to-postgres.mjs). data/budget.json is NOT
+# ignored — it's a curated, read-only file bundled with the app.
 /data/settings.json
 /data/pledges.json
 /data/notifications.json
