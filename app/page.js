@@ -597,14 +597,10 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
-          {/* Ceremony Funding Milestone Journey */}
+          {/* Ceremony Funding Milestone Journey — no repeat of the "Live" badge or the
+              couple's name/date, both already shown above (the top announcement bar and
+              the hero H1) and at the top of this same card. */}
           <div className="mt-5 pt-5 border-t border-brand-800">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-brand-800 text-brand-200 border border-brand-700">
-                Live Ceremony Progress
-              </span>
-              <span className="text-xs text-brand-300 font-medium">Edwin & Jamirah Kwanjula • 27 Nov 2026</span>
-            </div>
             <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2 mb-4">
               <FaTrophy className="text-accent-400" aria-hidden="true" /> Ceremony Funding Milestone Journey
             </h3>
@@ -670,16 +666,11 @@ export default function KwanjulaBudgetPage() {
 
             </div>
 
-            {/* Milestone track bar */}
-            <div className="relative w-full h-3 bg-brand-950 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-brand-400 rounded-full transition-all duration-700"
-                style={{ width: `${Math.min(100, Math.max(3, stats.totalPercentage))}%` }}
-              ></div>
-            </div>
-
-            {/* Motivational Bottom Callout */}
-            <div className="mt-5 pt-4 border-t border-brand-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            {/* Motivational Bottom Callout — no second progress bar here; the budget
+                progress bar at the top of this card already visualises the same
+                percentage, so repeating it as a thin bar right below the checkpoints
+                would just be the same fill shown twice in one card. */}
+            <div className="pt-4 border-t border-brand-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
               <p className="text-brand-200 text-center sm:text-left">
                 <strong className="text-white">Together We Build:</strong> Every pledge directly reduces the remaining ceremony balance and brings Edwin & Jamirah closer to 27th Nov 2026!
               </p>
