@@ -50,6 +50,13 @@ function formatUGX(num) {
   }).format(num || 0);
 }
 
+/** Rounds a pledge amount to the nearest 1,000 UGX — the smallest denomination Mobile Money actually moves in. */
+function roundToNearestThousand(val) {
+  const n = Number(val);
+  if (!n || isNaN(n)) return 0;
+  return Math.round(n / 1000) * 1000;
+}
+
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
@@ -245,7 +252,7 @@ export default function KwanjulaBudgetPage() {
       showToast('Please enter your name.', 'error');
       return;
     }
-    const numAmt = Number(formData.amount);
+    const numAmt = roundToNearestThousand(formData.amount);
     if (!numAmt || numAmt < 5000) {
       showToast('Please enter an amount of 5,000 UGX or more.', 'error');
       return;
@@ -256,7 +263,7 @@ export default function KwanjulaBudgetPage() {
       const res = await fetch('/api/pledge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, amount: numAmt })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to submit pledge');
@@ -1386,10 +1393,13 @@ export default function KwanjulaBudgetPage() {
                     type="number"
                     required
                     min="5000"
-                    step="5000"
+                    step="1000"
                     placeholder="e.g. 50,000"
                     value={formData.amount}
                     onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                    onBlur={() => setFormData(prev => (
+                      prev.amount ? { ...prev, amount: String(roundToNearestThousand(prev.amount)) } : prev
+                    ))}
                     className="w-full pl-13 pr-3 py-2 text-sm font-bold bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
