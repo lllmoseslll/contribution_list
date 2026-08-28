@@ -628,3 +628,46 @@ portal to the passcode prompt and the next `/api/admin/pledges` is 401.
 **The SSE dependency array is deliberately still `[adminAuthenticated, adminPin]`.** Nothing in that
 effect needs the passcode any more, so the dependency is now purely vestigial — but Step 4 owns that fix,
 and moving it here would blur which commit to blame if the live feed regresses.
+
+### Step 4 — `Admin_feat/route: move the committee console to /admin`
+
+**The public page lost 943 lines and 16 hooks.** `app/page.js` went 2195 → 1252 lines and 31 → **15**
+`useState` calls — better than the ~18 the plan estimated, because the offline-pledge form and the
+settings object took eleven of them with it. `app/admin/page.js` is 995 lines with 17 hooks. Every
+visitor to the public page previously downloaded and hydrated all of it.
+
+**The move was mechanical, and that was the point.** Five line-ranges came out of `app/page.js` bottom-up
+— the modals (`1559-2192`), the `filteredAdminPledges` memo, the handlers, the mount-time session check
+and the admin state block — and went into the new route unchanged. The only edits to the moved JSX were
+the three the medium forced: the modal backdrop and its `max-h-[92vh] overflow-y-auto flex-1` shell became
+a page card, and the close button became a "Back to site" `<Link>`. A console that is a page does not need
+a way to be dismissed.
+
+**`app/admin/layout.js` deliberately contains no auth check**, and says so in a comment. Context 18's
+guidance is that a layout does not re-render on navigation and does not control whether the rest of the
+route renders — an auth check there would look like one without being one. The route's protection is
+where it already was: `requireAdmin()` on every `/api/admin/*` handler, plus the page asking the server
+whether a session exists before rendering anything. The layout does add `robots: { index: false }`.
+
+**Context 9 is closed, and the network capture proves it.** With the passcode field gone from the public
+page, the SSE dependency array becomes `[]` and the two `if (adminAuthenticated) loadAdminPledges()` calls
+inside the stream handler are deleted. A fresh load of `/` now opens **one** `/api/stream` connection.
+(Two `/api/budget` requests remain — that is React StrictMode double-invoking the effect in dev, which
+predates this branch and does not happen in a production build.)
+
+**Walked every capability on the new route rather than assuming the move was clean.** Logged in; all
+three tabs render (`Pledges (1)`, `Email Outbox (1)`, `Settings & SMTP`); added an offline pledge and the
+table went 1 → 2 rows; toggled its status Paid → Pledged; deleted it and the table went back to 1.
+`data/pledges.json` is byte-for-byte what it was before the walk — one real pledge, status `pledged`.
+Saved settings ("Settings saved successfully!") and confirmed `data/settings.json` kept all six keys and
+its nested `smtp` object intact. Enabled SMTP to make the test-email control render and clicked it: it
+reports *"SMTP is not enabled or credentials (user/password) are empty in settings."* rather than
+throwing. Reloading `/admin` comes back signed in.
+
+**The live feed still works across pages.** Posting a pledge to `/api/pledge` with the public page open
+put the contributor's name onto the item card and into the Roll of Honor with no refresh; deleting it
+through the admin API restored the file.
+
+**The public page carries no admin markup at all** — `adminPin`, `adminAuthenticated`, `adminSettings`,
+`adminPledges`, `adminNotifs`, `x-admin-pin` and `/api/admin/` all return zero matches in `app/page.js`.
+Both former entry points are now `<Link href="/admin">`.
