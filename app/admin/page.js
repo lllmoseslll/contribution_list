@@ -148,7 +148,10 @@ export default function AdminPage() {
   // Load Admin Pledges directly from dedicated API
   const loadAdminPledges = async () => {
     try {
-      const res = await fetch('/api/admin/pledges');
+      const res = await fetch(`/api/admin/pledges?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
       if (res.ok) {
         const data = await res.json();
         setAdminPledges(data);
@@ -161,7 +164,10 @@ export default function AdminPage() {
   // Load Admin Notifications
   const loadAdminNotifications = async () => {
     try {
-      const res = await fetch('/api/admin/notifications');
+      const res = await fetch(`/api/admin/notifications?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
       if (res.ok) {
         const data = await res.json();
         setAdminNotifs(data);
@@ -174,7 +180,10 @@ export default function AdminPage() {
   // Load Admin Settings
   const loadAdminSettings = async () => {
     try {
-      const res = await fetch('/api/admin/settings');
+      const res = await fetch(`/api/admin/settings?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
       if (res.ok) {
         const data = await res.json();
         setAdminSettings(data);

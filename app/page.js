@@ -131,7 +131,13 @@ export default function KwanjulaBudgetPage() {
 
     const poll = async () => {
       try {
-        const res = await fetch('/api/budget');
+        const res = await fetch(`/api/budget?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+          }
+        });
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         }
@@ -245,6 +251,9 @@ export default function KwanjulaBudgetPage() {
       } catch (e) {}
 
       setIsSuccessModalOpen(true);
+      // Immediately refresh budget state
+      poll();
+
       // Reset form
       setFormData({
         name: '',
