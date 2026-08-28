@@ -719,19 +719,11 @@ export default function KwanjulaBudgetPage() {
                 return (
                   <div
                     key={item.id}
-                    className={`relative bg-white rounded-2xl border overflow-hidden transition-all duration-200 hover:shadow-md ${
-                      isCovered ? 'border-brand-300 bg-brand-50/20' : 'border-neutral-200/90 hover:border-neutral-300'
+                    className={`bg-white rounded-lg border transition-colors duration-200 ${
+                      isCovered ? 'border-brand-300 bg-brand-50/20' : 'border-neutral-200 hover:border-neutral-300'
                     }`}
                   >
-                    {/* Status Rail */}
-                    <span
-                      aria-hidden="true"
-                      className={`absolute inset-y-0 left-0 w-1.5 ${
-                        isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-500' : 'bg-neutral-300'
-                      }`}
-                    ></span>
-
-                    <div className="pl-5 pr-4 sm:pl-6 sm:pr-5 py-4 sm:py-5">
+                    <div className="px-5 py-4 sm:px-6 sm:py-5">
                       {/* Main Row */}
                       <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
 
@@ -739,14 +731,16 @@ export default function KwanjulaBudgetPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
                             <h4 className="font-bold text-neutral-900 text-base leading-snug">{item.name}</h4>
-                            <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap ${
-                              isCovered
-                                ? 'bg-brand-100 text-brand-800 border border-brand-300'
-                                : isPartial
-                                ? 'bg-accent-100 text-accent-800 border border-accent-300'
-                                : 'bg-neutral-100 text-neutral-700 border border-neutral-300'
-                            }`}>
-                              {isCovered ? (item.remarks === 'Covered' ? 'Covered' : '100% Funded') : (isPartial ? `${item.percentage}% Supported` : 'Needs Support')}
+                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap">
+                              <span
+                                aria-hidden="true"
+                                className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-500' : 'bg-neutral-400'
+                                }`}
+                              ></span>
+                              <span className={isCovered ? 'text-brand-700' : isPartial ? 'text-accent-700' : 'text-neutral-600'}>
+                                {isCovered ? (item.remarks === 'Covered' ? 'Covered' : '100% Funded') : (isPartial ? `${item.percentage}% Supported` : 'Needs Support')}
+                              </span>
                             </span>
                           </div>
 
@@ -778,7 +772,7 @@ export default function KwanjulaBudgetPage() {
                           </div>
                           <div className="w-full h-2 bg-neutral-200 rounded-full overflow-hidden">
                             <div
-                              className={`h-full rounded-full transition-all duration-500 ${isCovered ? 'bg-brand-600' : 'bg-gradient-to-r from-accent-500 to-accent-600'}`}
+                              className={`h-full rounded-full transition-all duration-500 ${isCovered ? 'bg-brand-600' : 'bg-accent-600'}`}
                               style={{ width: `${Math.max(item.percentage, isCovered ? 100 : 0)}%` }}
                             ></div>
                           </div>
@@ -789,16 +783,16 @@ export default function KwanjulaBudgetPage() {
                           {isCovered ? (
                             <button
                               disabled
-                              className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-neutral-500 bg-neutral-100 cursor-not-allowed flex items-center justify-center gap-1.5"
+                              className="w-full py-2.5 px-4 rounded-lg text-xs font-bold text-neutral-500 bg-neutral-100 cursor-not-allowed flex items-center justify-center gap-1.5"
                             >
                               <FaCheckDouble className="text-brand-700" aria-hidden="true" /> Fully Sponsored
                             </button>
                           ) : (
                             <button
                               onClick={() => openPledgeModal(item)}
-                              className="w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-brand-950 bg-brand-50 hover:bg-brand-900 hover:text-white border border-brand-300 transition flex items-center justify-center gap-2 shadow-sm"
+                              className="group w-full py-2.5 px-4 rounded-lg text-xs sm:text-sm font-bold text-brand-950 bg-brand-50 hover:bg-brand-900 hover:text-white border border-brand-300 transition flex items-center justify-center gap-2"
                             >
-                              <FaHandHoldingHeart className="text-accent-500" aria-hidden="true" /> Pledge for this Item
+                              <FaHandHoldingHeart className="text-brand-700 group-hover:text-white" aria-hidden="true" /> Pledge for this Item
                             </button>
                           )}
                         </div>

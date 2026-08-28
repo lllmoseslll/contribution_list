@@ -552,3 +552,50 @@ Supporters) still read the live `stats` object correctly; the progress bar's inl
 confirmed at the real computed `4%`, not a hardcoded placeholder. A scoped grep of this section's JSX for
 `shadow-lg|shadow-xl|shadow-md|hover:-translate|bg-gradient|rounded-2xl` (plus the old
 icon-in-square container shape) returns nothing. 390px viewport: zero horizontal overflow.
+
+### Step 4 — `Redesign_feat/item-cards: dot-and-text status, no rail`
+
+**The plan's own diagnosis of the "Pledge for this Item" button was slightly off, and the actual state
+was less work than the plan assumed.** Step 4's write-up said the button "recolors from accent to brand" —
+but on inspection its background/border/text (`bg-brand-50 hover:bg-brand-900 border-brand-300
+text-brand-950`) were already brand; only the `<FaHandHoldingHeart>` icon inside it was accent-colored.
+Recorded here rather than left to look like the plan and the diff disagree: the fix was recoloring one
+icon (`text-accent-500` → `text-brand-700`, with `group-hover:text-white` added and a `group` class added
+to the button so the icon follows the button's own hover-fill), not the whole button.
+
+**The status rail (Context 2, a named checklist tell) is deleted outright** — the `absolute inset-y-0
+left-0 w-1.5` span and the `overflow-hidden`/`relative` positioning it required on the card wrapper are
+both gone, since nothing else in the card needed the card to clip its own children. The card's
+`hover:shadow-md` also drops (D6) in favor of the existing `hover:border-neutral-300`, so hover state is a
+border color change only, never an added shadow.
+
+**The funding badge (Context 8) is now a small colored dot plus plain-weight text**, replacing
+`text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider` with a coloured background
+*and* border *and* uppercase tracking stacked on one label. The three states keep their existing colour
+logic (brand/accent/neutral) — only *how* that colour is expressed changed, from a heavy bordered pill to
+a 6px dot beside `text-xs font-semibold` text.
+
+**Risk 3's information-parity question was checked, not assumed.** Every one of the three funding states
+still carries a text label that alone disambiguates it ("Covered" / "100% Funded" / "X% Supported" /
+"Needs Support" were always the actual source of truth, never the rail's position) — and the covered
+state additionally keeps its own card-level tell independent of anything this step touched: the wrapper's
+`border-brand-300 bg-brand-50/20` highlight for `isCovered` cards was already there before this step and
+is untouched, so a covered card is still visually distinct from a glance at the whole card, not only from
+reading its dot. The dot itself adds a second, redundant signal for partial vs. needs-support that the
+rail also used to carry (colour), so nothing that was previously conveyed only by colour is now conveyed
+only by text — colour is still present, just relocated from a 6px-wide strip down the entire card height
+to a 6px dot beside the label it describes.
+
+**The item-card's own per-item progress-bar fill lost its gradient too** (`bg-gradient-to-r from-accent-500
+to-accent-600` → flat `bg-accent-600`) — this is a *different* progress bar from the page-level one Step 3
+already flattened, and Step 3 never claimed to reach it; fixing it here keeps the whole item-card redesign
+in one step rather than leaving one flagged gradient for a later pass to rediscover.
+
+**Verified:** built and loaded in the browser. A covered card's dot computes to `rgb(5, 150, 105)`
+(`brand-600`) with its card border at `rgb(110, 231, 183)` (`brand-300`) and its disabled "Fully
+Sponsored" button present; contrast for all three dot-label text colours on white — `accent-700` 5.02:1,
+`neutral-600` 7.58:1, `brand-700` 5.48:1 — clears AA. Clicking "Pledge for this Item" still opens the
+pledge modal with the correct item pre-selected. The contributor `<details>` disclosure (prior plan's
+Step 8) still opens/closes correctly after the wrapper restructuring. A scoped grep of the item-card JSX
+for the rail, the pill-badge shape, any remaining gradient, and `hover:shadow-md` returns nothing. 390px
+viewport: zero horizontal overflow.
