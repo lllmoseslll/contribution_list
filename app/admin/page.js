@@ -331,8 +331,8 @@ export default function AdminPage() {
       return;
     }
     const numAmt = Number(offlineForm.amount);
-    if (!numAmt || numAmt <= 0) {
-      showToast('Please enter a valid amount.', 'error');
+    if (!numAmt || numAmt < 5000) {
+      showToast('Please enter an amount of 5,000 UGX or more.', 'error');
       return;
     }
 

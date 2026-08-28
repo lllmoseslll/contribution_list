@@ -27,8 +27,8 @@ export async function POST(req) {
     }
 
     const numAmount = Number(amount);
-    if (isNaN(numAmount) || numAmount <= 0) {
-      return NextResponse.json({ error: 'Please enter a valid amount greater than 0.' }, { status: 400 });
+    if (isNaN(numAmount) || numAmount < 5000) {
+      return NextResponse.json({ error: 'Please enter a valid amount of 5,000 UGX or more.' }, { status: 400 });
     }
 
     // Read current budget to resolve item name

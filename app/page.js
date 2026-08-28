@@ -201,6 +201,32 @@ export default function KwanjulaBudgetPage() {
     setTimeout(() => setCopiedText(null), 2500);
   };
 
+  const [testEmailAddress, setTestEmailAddress] = useState('edwinlaston@gmail.com');
+  const [testEmailLoading, setTestEmailLoading] = useState(false);
+  const [testEmailResult, setTestEmailResult] = useState(null);
+
+  const handleSendLiveTestEmail = async (e) => {
+    if (e) e.preventDefault();
+    setTestEmailLoading(true);
+    setTestEmailResult(null);
+    try {
+      const res = await fetch('/api/test-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipientEmail: testEmailAddress })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to send test email');
+      setTestEmailResult({ success: true, msg: data.message });
+      showToast('Live test email dispatched! Check inbox.', 'success');
+    } catch (err) {
+      setTestEmailResult({ success: false, msg: err.message });
+      showToast(err.message, 'error');
+    } finally {
+      setTestEmailLoading(false);
+    }
+  };
+
   // Open Pledge modal for specific item
   const openPledgeModal = (item = null) => {
     setSelectedItem(item);
@@ -220,8 +246,8 @@ export default function KwanjulaBudgetPage() {
       return;
     }
     const numAmt = Number(formData.amount);
-    if (!numAmt || numAmt <= 0) {
-      showToast('Please enter a valid contribution amount.', 'error');
+    if (!numAmt || numAmt < 5000) {
+      showToast('Please enter an amount of 5,000 UGX or more.', 'error');
       return;
     }
 
@@ -239,7 +265,9 @@ export default function KwanjulaBudgetPage() {
       setReceiptData({
         name: formData.name,
         amount: numAmt,
-        item: data.pledge?.itemName || 'Ceremony Contribution'
+        item: data.pledge?.itemName || (selectedItem ? selectedItem.name : 'Ceremony Contribution'),
+        spilloverInfo: data.spilloverInfo,
+        serverMessage: data.message
       });
 
       // Confetti burst!
@@ -1167,6 +1195,62 @@ export default function KwanjulaBudgetPage() {
           </div>
         </section>
 
+        {/* ================= TEST EMAIL NOTIFICATION SECTION ================= */}
+        <section className="bg-gradient-to-br from-brand-900 via-brand-950 to-neutral-900 text-white rounded-2xl p-6 sm:p-8 border border-brand-800 shadow-md mb-16" id="testEmailSection">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-brand-700 text-white border border-brand-600">
+                  Live System Test
+                </span>
+                <span className="text-xs text-brand-300 font-semibold">Instant Alert Verification</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+                <FaPaperPlane className="text-accent-400" aria-hidden="true" /> Test Real-Time Pledge Email Alert
+              </h3>
+              <p className="text-xs sm:text-sm text-brand-200 mt-1">
+                Verify that email notifications are delivered instantly when a contribution is made. Enter any email address below to receive a live test pledge notification.
+              </p>
+            </div>
+
+            <form onSubmit={handleSendLiveTestEmail} className="w-full md:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <div className="relative">
+                <FaEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-400 text-xs" aria-hidden="true" />
+                <input
+                  type="email"
+                  required
+                  placeholder="Enter email (e.g. edwinlaston@gmail.com)"
+                  value={testEmailAddress}
+                  onChange={(e) => setTestEmailAddress(e.target.value)}
+                  className="w-full sm:w-72 pl-9 pr-3 py-2.5 bg-brand-950/80 border border-brand-700 rounded-xl text-xs text-white placeholder-brand-400 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:bg-brand-950 transition"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={testEmailLoading}
+                className="px-5 py-2.5 bg-accent-600 hover:bg-accent-500 text-neutral-950 font-bold rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2 shrink-0 disabled:opacity-60"
+              >
+                {testEmailLoading ? (
+                  <>
+                    <FaSpinner className="animate-spin" aria-hidden="true" /> Sending...
+                  </>
+                ) : (
+                  <>
+                    <FaPaperPlane aria-hidden="true" /> Send Test Email
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+
+          {testEmailResult && (
+            <div className={`mt-4 p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${testEmailResult.success ? 'bg-brand-800/80 text-brand-100 border border-brand-600' : 'bg-red-950/80 text-red-200 border border-red-800'}`}>
+              {testEmailResult.success ? <FaCircleCheck className="text-accent-400 shrink-0 text-sm" aria-hidden="true" /> : <FaCircleInfo className="text-red-400 shrink-0 text-sm" aria-hidden="true" />}
+              <span>{testEmailResult.msg}</span>
+            </div>
+          )}
+        </section>
+
       </main>
 
       {/* Footer */}
@@ -1179,6 +1263,9 @@ export default function KwanjulaBudgetPage() {
           <div className="flex flex-wrap items-center gap-4">
             <a href="/api/budget/pdf" target="_blank" rel="noopener noreferrer" className="underline hover:text-white flex items-center gap-1">
               <FaFilePdf className="text-accent-400" aria-hidden="true" /> Pledge Report
+            </a>
+            <a href="#testEmailSection" className="underline hover:text-white flex items-center gap-1">
+              <FaPaperPlane className="text-accent-400" aria-hidden="true" /> Test Email
             </a>
             <button onClick={() => openPledgeModal(null)} className="underline hover:text-white">Make a Pledge</button>
             <Link href="/admin" className="underline hover:text-white">Committee Admin Portal</Link>
@@ -1197,7 +1284,7 @@ export default function KwanjulaBudgetPage() {
                 <h3 className="text-lg font-bold flex items-center gap-2">
                   <FaHandHoldingHeart className="text-accent-400" aria-hidden="true" /> Make a Pledge
                 </h3>
-                <p className="text-xs text-brand-200">Enter your name and contribution details</p>
+                <p className="text-xs text-brand-200">Enter your name and contribution details (Minimum 5,000 UGX)</p>
               </div>
               <button
                 onClick={() => setIsPledgeModalOpen(false)}
@@ -1303,24 +1390,37 @@ export default function KwanjulaBudgetPage() {
 
               {/* Amount */}
               <div>
-                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Pledge Amount (UGX) *</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-xs font-bold text-neutral-700 uppercase">Pledge Amount (UGX) *</label>
+                  <span className="text-[11px] font-bold text-brand-700">Min: 5,000 UGX</span>
+                </div>
                 <div className="relative">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-neutral-500">UGX</span>
                   <input
                     type="number"
                     required
-                    min="1000"
+                    min="5000"
                     step="5000"
-                    placeholder="e.g. 100,000"
+                    placeholder="e.g. 50,000"
                     value={formData.amount}
                     onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
                     className="w-full pl-13 pr-3 py-2 text-sm font-bold bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
 
+                {/* Live Spillover Notice */}
+                {selectedItem && Number(formData.amount) > selectedItem.remainingAmount && selectedItem.remainingAmount > 0 && (
+                  <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-900 mt-2 flex items-start gap-2">
+                    <span className="text-base shrink-0">🎉</span>
+                    <div>
+                      <strong>100% Item Cover + Excess Spillover:</strong> Pledging <strong>{formatUGX(Number(formData.amount))}</strong> will completely fund <strong>{selectedItem.name}</strong> 100% ({formatUGX(selectedItem.remainingAmount)}), and your extra <strong>{formatUGX(Number(formData.amount) - selectedItem.remainingAmount)}</strong> will automatically be added to the <strong>General Ceremony Fund</strong>!
+                    </div>
+                  </div>
+                )}
+
                 {/* Quick Chips */}
                 <div className="flex flex-wrap gap-1.5 mt-2">
-                  {[50000, 100000, 200000, 500000, 1000000].map(val => (
+                  {[5000, 20000, 50000, 100000, 200000, 500000].map(val => (
                     <button
                       key={val}
                       type="button"
@@ -1440,9 +1540,26 @@ export default function KwanjulaBudgetPage() {
             <h3 className="text-xl font-bold text-brand-950 mb-1">
               Thank You for Your Blessing!
             </h3>
-            <p className="text-xs text-neutral-500 mb-5">
+            <p className="text-xs text-neutral-500 mb-4">
               Your contribution has been recorded and subtracted from the ceremony budget in real-time.
             </p>
+
+            {/* 100% Item Cover Celebration Banner */}
+            {receiptData.spilloverInfo?.covered100 && (
+              <div className="bg-amber-50 border border-amber-300 rounded-2xl p-3.5 text-xs text-amber-900 mb-4 text-left">
+                <div className="font-black text-amber-950 flex items-center gap-1.5 mb-1">
+                  <FaTrophy className="text-accent-600" aria-hidden="true" /> 100% Item Fully Funded!
+                </div>
+                <div>
+                  You have completely covered <strong>{receiptData.spilloverInfo.itemName}</strong>!
+                  {receiptData.spilloverInfo.spilloverAmount > 0 && (
+                    <span className="block mt-1 font-semibold text-brand-800">
+                      + Your extra {formatUGX(receiptData.spilloverInfo.spilloverAmount)} was added to the General Ceremony Fund.
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-4 text-left space-y-2 text-xs mb-5">
               <div className="flex justify-between">
@@ -1454,13 +1571,13 @@ export default function KwanjulaBudgetPage() {
                 <strong className="text-neutral-800">{receiptData.item}</strong>
               </div>
               <div className="flex justify-between pt-2 border-t border-neutral-200 text-sm font-bold">
-                <span className="text-neutral-700">Amount:</span>
+                <span className="text-neutral-700">Total Amount:</span>
                 <span className="text-brand-700">{formatUGX(receiptData.amount)}</span>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="text-neutral-500">Notification Alert:</span>
                 <span className="text-[11px] font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded-full">
-                  <FaEnvelope className="mr-1" aria-hidden="true" /> Dispatched to Edwin
+                  <FaEnvelope className="mr-1" aria-hidden="true" /> Dispatched to Inboxes
                 </span>
               </div>
             </div>
