@@ -352,25 +352,25 @@ export default function AdminPage() {
   }, [adminPledges, adminFilter, adminSearch]);
 
   return (
-    <div className="min-h-screen bg-slate-50 py-6 px-3 sm:px-4">
+    <div className="min-h-screen bg-neutral-50 py-6 px-3 sm:px-4">
 
       {/* Toast Alert */}
       {toast && (
         <div className={`fixed top-4 right-4 z-[60] px-4 py-3 rounded-xl shadow-lg text-sm font-semibold text-white ${
-          toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-700'
+          toast.type === 'error' ? 'bg-accent-800' : 'bg-brand-700'
         }`}>
           {toast.msg}
         </div>
       )}
 
-      <div className="mx-auto max-w-5xl bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+      <div className="mx-auto max-w-5xl bg-white rounded-3xl shadow-lg border border-neutral-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-950 to-teal-950 text-white p-5 flex justify-between items-center">
+        <div className="bg-gradient-to-r from-brand-950 to-brand-950 text-white p-5 flex justify-between items-center">
           <div>
             <h3 className="font-serif-royal text-lg font-bold flex items-center gap-2">
-              <i className="fa-solid fa-lock text-amber-400"></i> Committee Admin Portal
+              <i className="fa-solid fa-lock text-accent-400"></i> Committee Admin Portal
             </h3>
-            <p className="text-xs text-emerald-300">Manage pledges, verify Mobile Money receipts, email alerts & settings</p>
+            <p className="text-xs text-brand-300">Manage pledges, verify Mobile Money receipts, email alerts & settings</p>
           </div>
           <div className="flex items-center gap-2">
             {adminAuthenticated && (
@@ -397,11 +397,11 @@ export default function AdminPage() {
           {!adminAuthenticated ? (
             /* Login Box */
             <form onSubmit={handleAdminLogin} className="max-w-xs mx-auto text-center py-8">
-              <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-2xl mx-auto mb-3">
+              <div className="w-14 h-14 rounded-full bg-accent-50 text-accent-700 flex items-center justify-center text-2xl mx-auto mb-3">
                 <i className="fa-solid fa-shield-halved"></i>
               </div>
-              <h4 className="font-bold text-slate-900 text-base mb-1">Committee Passcode</h4>
-              <p className="text-xs text-slate-500 mb-4">Enter PIN to access committee records</p>
+              <h4 className="font-bold text-neutral-900 text-base mb-1">Committee Passcode</h4>
+              <p className="text-xs text-neutral-500 mb-4">Enter PIN to access committee records</p>
               
               <div className="relative mb-3">
                 <input
@@ -410,19 +410,19 @@ export default function AdminPage() {
                   placeholder="Committee passcode"
                   value={adminPin}
                   onChange={(e) => setAdminPin(e.target.value)}
-                  className="w-full text-center font-bold tracking-widest p-2.5 pr-9 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                  className="w-full text-center font-bold tracking-widest p-2.5 pr-9 border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-700"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPin(!showPin)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-600"
                 >
                   <i className={`fa-regular ${showPin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                 </button>
               </div>
               <button
                 type="submit"
-                className="w-full py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs rounded-xl transition shadow"
+                className="w-full py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold text-xs rounded-xl transition shadow"
               >
                 Unlock Admin Portal
               </button>
@@ -431,7 +431,7 @@ export default function AdminPage() {
             /* Unlocked Admin Dashboard */
             <div>
               {/* Tabs */}
-              <div className="flex border-b border-slate-200 mb-6 gap-2">
+              <div className="flex border-b border-neutral-200 mb-6 gap-2">
                 {[
                   { id: 'pledges', label: `Pledges (${adminPledges.length})`, icon: 'fa-list-check' },
                   { id: 'notifications', label: `Email Outbox (${adminNotifs.length})`, icon: 'fa-envelope-open-text' },
@@ -447,8 +447,8 @@ export default function AdminPage() {
                     }}
                     className={`pb-3 px-4 text-xs font-bold border-b-2 flex items-center gap-2 transition ${
                       adminTab === t.id
-                        ? 'border-emerald-800 text-emerald-900'
-                        : 'border-transparent text-slate-400 hover:text-slate-600'
+                        ? 'border-brand-800 text-brand-900'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-600'
                     }`}
                   >
                     <i className={`fa-solid ${t.icon}`}></i> {t.label}
@@ -473,8 +473,8 @@ export default function AdminPage() {
                           onClick={() => setAdminFilter(f.id)}
                           className={`px-3 py-1 rounded-full text-xs font-bold border transition ${
                             adminFilter === f.id
-                              ? 'bg-emerald-800 text-white border-emerald-800'
-                              : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                              ? 'bg-brand-800 text-white border-brand-800'
+                              : 'bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200'
                           }`}
                         >
                           {f.label}
@@ -488,19 +488,19 @@ export default function AdminPage() {
                         placeholder="Search contributor / item..."
                         value={adminSearch}
                         onChange={(e) => setAdminSearch(e.target.value)}
-                        className="text-xs p-2 border border-slate-300 rounded-lg flex-1 md:w-48 focus:outline-none focus:ring-1 focus:ring-emerald-700"
+                        className="text-xs p-2 border border-neutral-300 rounded-lg flex-1 md:w-48 focus:outline-none focus:ring-1 focus:ring-brand-700"
                       />
                       <button
                         type="button"
                         onClick={handleExportCsv}
-                        className="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 hover:bg-emerald-100 shrink-0"
+                        className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-50 text-brand-800 border border-brand-200 flex items-center gap-1.5 hover:bg-brand-100 shrink-0"
                         title="Export all records as CSV spreadsheet"
                       >
                         <i className="fa-solid fa-file-csv"></i> Export CSV
                       </button>
                       <button
                         onClick={() => setIsOfflineModalOpen(true)}
-                        className="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-800 text-white flex items-center gap-1.5 hover:bg-emerald-900 shrink-0"
+                        className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-800 text-white flex items-center gap-1.5 hover:bg-brand-900 shrink-0"
                       >
                         <i className="fa-solid fa-plus"></i> Add Offline Pledge
                       </button>
@@ -508,15 +508,15 @@ export default function AdminPage() {
                   </div>
 
                   {/* Total summary */}
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 text-xs flex justify-between items-center">
+                  <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-3 mb-4 text-xs flex justify-between items-center">
                     <span>Total Pledges Recorded: <strong>{adminPledges.length}</strong></span>
-                    <span>Total Value: <strong className="text-emerald-700 font-bold">{formatUGX(adminPledges.reduce((s, p) => s + (p.amount || 0), 0))}</strong></span>
+                    <span>Total Value: <strong className="text-brand-700 font-bold">{formatUGX(adminPledges.reduce((s, p) => s + (p.amount || 0), 0))}</strong></span>
                   </div>
 
                   {/* Table */}
-                  <div className="overflow-x-auto border border-slate-200 rounded-xl">
+                  <div className="overflow-x-auto border border-neutral-200 rounded-xl">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-slate-50 text-slate-500 font-bold uppercase text-[10px] border-b">
+                      <thead className="bg-neutral-50 text-neutral-500 font-bold uppercase text-[10px] border-b">
                         <tr>
                           <th className="p-3">Date</th>
                           <th className="p-3">Contributor Contact</th>
@@ -527,10 +527,10 @@ export default function AdminPage() {
                           <th className="p-3 text-right">Actions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
+                      <tbody className="divide-y divide-neutral-100">
                         {filteredAdminPledges.length === 0 ? (
                           <tr>
-                            <td colSpan="7" className="p-6 text-center text-slate-400">
+                            <td colSpan="7" className="p-6 text-center text-neutral-500">
                               No pledges found matching your filters.
                             </td>
                           </tr>
@@ -538,34 +538,34 @@ export default function AdminPage() {
                           filteredAdminPledges.map((p, i) => {
                             const isPaid = p.status === 'paid';
                             return (
-                              <tr key={p.id || i} className="hover:bg-slate-50">
-                                <td className="p-3 text-slate-500 whitespace-nowrap">{formatDate(p.date)}</td>
+                              <tr key={p.id || i} className="hover:bg-neutral-50">
+                                <td className="p-3 text-neutral-500 whitespace-nowrap">{formatDate(p.date)}</td>
                                 <td className="p-3">
-                                  <div className="font-bold text-slate-900">{p.name}</div>
+                                  <div className="font-bold text-neutral-900">{p.name}</div>
                                   {p.phone && (
-                                    <div className="text-[11px] text-slate-500">
-                                      <i className="fa-solid fa-phone text-[9px] mr-1 text-slate-400"></i>
+                                    <div className="text-[11px] text-neutral-500">
+                                      <i className="fa-solid fa-phone text-[9px] mr-1 text-neutral-500"></i>
                                       <a href={`tel:${p.phone}`} className="hover:underline">{p.phone}</a>
                                     </div>
                                   )}
                                   {p.email && (
-                                    <div className="text-[10px] text-slate-400">{p.email}</div>
+                                    <div className="text-[10px] text-neutral-500">{p.email}</div>
                                   )}
                                   {p.isAnonymous && (
-                                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">Anonymous on Wall</span>
+                                    <span className="text-[9px] bg-neutral-100 text-neutral-600 px-1.5 py-0.5 rounded">Anonymous on Wall</span>
                                   )}
                                 </td>
                                 <td className="p-3">
-                                  <div className="font-semibold text-slate-800">{p.itemName}</div>
-                                  <div className="text-[10px] text-slate-400">{p.sectionTitle || 'General'}</div>
+                                  <div className="font-semibold text-neutral-800">{p.itemName}</div>
+                                  <div className="text-[10px] text-neutral-500">{p.sectionTitle || 'General'}</div>
                                 </td>
-                                <td className="p-3 font-bold text-slate-900 whitespace-nowrap">
+                                <td className="p-3 font-bold text-neutral-900 whitespace-nowrap">
                                   {formatUGX(p.amount)}
                                 </td>
-                                <td className="p-3 text-slate-600">
+                                <td className="p-3 text-neutral-600">
                                   <div className="text-[11px]">{p.paymentMethod || 'Mobile Money'}</div>
                                   {p.message && (
-                                    <div className="text-[10px] text-slate-400 italic line-clamp-1" title={p.message}>
+                                    <div className="text-[10px] text-neutral-500 italic line-clamp-1" title={p.message}>
                                       "{p.message}"
                                     </div>
                                   )}
@@ -573,8 +573,8 @@ export default function AdminPage() {
                                 <td className="p-3">
                                   <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
                                     isPaid
-                                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                                      : 'bg-amber-100 text-amber-800 border border-amber-200'
+                                      ? 'bg-brand-100 text-brand-800 border border-brand-200'
+                                      : 'bg-accent-100 text-accent-800 border border-accent-200'
                                   }`}>
                                     <i className={`fa-solid ${isPaid ? 'fa-check-double' : 'fa-clock'}`}></i>
                                     {isPaid ? 'Paid & Received' : 'Pledged / Pending'}
@@ -586,8 +586,8 @@ export default function AdminPage() {
                                       onClick={() => handleUpdatePledgeStatus(p.id, isPaid ? 'pledged' : 'paid')}
                                       className={`px-2 py-1 rounded text-[11px] font-bold border transition ${
                                         isPaid
-                                          ? 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
-                                          : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                                          ? 'bg-accent-50 text-accent-800 border-accent-200 hover:bg-accent-100'
+                                          : 'bg-brand-50 text-brand-800 border-brand-200 hover:bg-brand-100'
                                       }`}
                                       title={isPaid ? 'Mark as Pledged / Pending' : 'Mark as Paid / Received'}
                                     >
@@ -603,7 +603,7 @@ export default function AdminPage() {
                                     </button>
                                     <button
                                       onClick={() => handleDeletePledge(p.id, p.name)}
-                                      className="p-1 text-slate-400 hover:text-rose-600 rounded hover:bg-rose-50 transition"
+                                      className="p-1 text-neutral-500 hover:text-accent-800 rounded hover:bg-accent-50 transition"
                                       title="Void / Delete pledge"
                                     >
                                       <i className="fa-regular fa-trash-can"></i>
@@ -624,41 +624,41 @@ export default function AdminPage() {
               {adminTab === 'notifications' && (
                 <div className="space-y-3">
                   <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-neutral-500">
                       Automated email alerts generated for Edwin Laston on new contributions:
                     </p>
                     <button
                       onClick={() => loadAdminNotifications()}
-                      className="text-xs text-emerald-800 font-bold hover:underline flex items-center gap-1"
+                      className="text-xs text-brand-800 font-bold hover:underline flex items-center gap-1"
                     >
                       <i className="fa-solid fa-arrows-rotate"></i> Refresh
                     </button>
                   </div>
 
                   {adminNotifs.length === 0 ? (
-                    <div className="text-center py-12 text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
-                      <i className="fa-regular fa-envelope text-2xl mb-2 block text-slate-300"></i>
+                    <div className="text-center py-12 text-neutral-500 text-xs border border-dashed border-neutral-200 rounded-xl">
+                      <i className="fa-regular fa-envelope text-2xl mb-2 block text-neutral-300"></i>
                       No email alerts generated yet. They will appear here immediately as pledges are made.
                     </div>
                   ) : (
                     adminNotifs.map((n, i) => (
-                      <div key={n.id || i} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-xs space-y-1.5">
-                        <div className="flex justify-between text-slate-400 text-[11px]">
+                      <div key={n.id || i} className="p-3.5 rounded-xl border border-neutral-200 bg-neutral-50 text-xs space-y-1.5">
+                        <div className="flex justify-between text-neutral-500 text-[11px]">
                           <span>To: <strong>{n.recipient}</strong></span>
                           <span>{formatDate(n.date)}</span>
                         </div>
-                        <div className="font-bold text-slate-800">
+                        <div className="font-bold text-neutral-800">
                           🎉 New Pledge: {n.pledgerName} ({formatUGX(n.amount)}) for {n.item}
                         </div>
                         <div className="flex justify-between items-center pt-1">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            n.status === 'sent_smtp' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
+                            n.status === 'sent_smtp' ? 'bg-brand-100 text-brand-800' : 'bg-neutral-200 text-neutral-700'
                           }`}>
                             Status: {n.status === 'sent_smtp' ? 'Delivered via SMTP' : 'Saved in Outbox'}
                           </span>
                           <button
                             onClick={() => setPreviewEmailHtml(n.htmlPreview)}
-                            className="text-xs text-emerald-700 font-bold hover:underline flex items-center gap-1"
+                            className="text-xs text-brand-700 font-bold hover:underline flex items-center gap-1"
                           >
                             <i className="fa-regular fa-file-lines"></i> Preview HTML Email
                           </button>
@@ -674,36 +674,36 @@ export default function AdminPage() {
                 <form onSubmit={handleSaveSettings} className="space-y-4 text-xs">
 
                   {/* Pledge alert notifications */}
-                  <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200">
+                  <div className="p-4 rounded-xl bg-brand-50/60 border border-brand-200">
                     <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
-                      <h5 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                        <i className="fa-solid fa-bell text-emerald-600"></i> Pledge Alert Notifications
+                      <h5 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
+                        <i className="fa-solid fa-bell text-brand-700"></i> Pledge Alert Notifications
                       </h5>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={adminSettings.emailNotificationsEnabled !== false}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, emailNotificationsEnabled: e.target.checked }))}
-                          className="rounded text-emerald-700"
+                          className="rounded text-brand-700"
                         />
-                        <span className="font-bold text-emerald-800">Send alerts</span>
+                        <span className="font-bold text-brand-800">Send alerts</span>
                       </label>
                     </div>
-                    <p className="text-slate-500 mb-3">
+                    <p className="text-neutral-500 mb-3">
                       Every new pledge sends an alert to this address. It is private: it is never shown on the public page
                       and never returned to an unauthenticated caller.
                     </p>
 
-                    <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Send alerts to</label>
+                    <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Send alerts to</label>
                     <input
                       type="email"
                       placeholder="committee@example.com"
                       value={adminSettings.notifyEmail || ''}
                       onChange={(e) => setAdminSettings(prev => ({ ...prev, notifyEmail: e.target.value }))}
-                      className="w-full sm:w-80 p-2 border border-slate-300 rounded-lg text-xs"
+                      className="w-full sm:w-80 p-2 border border-neutral-300 rounded-lg text-xs"
                     />
                     {!adminSettings.notifyEmail && adminSettings.ownerEmail && (
-                      <p className="text-[11px] text-amber-700 mt-1.5">
+                      <p className="text-[11px] text-accent-700 mt-1.5">
                         <i className="fa-solid fa-circle-info"></i> Empty, so alerts fall back to the public contact address
                         ({adminSettings.ownerEmail}).
                       </p>
@@ -714,13 +714,13 @@ export default function AdminPage() {
                         type="button"
                         onClick={handleSendTestEmail}
                         disabled={testEmailStatus?.loading}
-                        className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 flex items-center gap-1.5"
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-accent-50 text-accent-800 border border-accent-300 hover:bg-accent-100 flex items-center gap-1.5"
                       >
                         <i className={`fa-solid ${testEmailStatus?.loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'}`}></i>
                         Send Test Email
                       </button>
                       {testEmailStatus?.msg && (
-                        <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-emerald-700' : 'text-rose-600'}`}>
+                        <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-brand-700' : 'text-accent-700'}`}>
                           {testEmailStatus.msg}
                         </span>
                       )}
@@ -728,38 +728,38 @@ export default function AdminPage() {
                   </div>
 
                   {/* Public committee contacts */}
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                    <h5 className="font-bold text-slate-900 mb-1 text-sm flex items-center gap-2">
-                      <i className="fa-solid fa-user-shield text-emerald-600"></i> Public Committee Contacts
+                  <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200">
+                    <h5 className="font-bold text-neutral-900 mb-1 text-sm flex items-center gap-2">
+                      <i className="fa-solid fa-user-shield text-brand-700"></i> Public Committee Contacts
                     </h5>
-                    <p className="text-slate-500 mb-3">Shown to contributors on the public page. Not used for alerts.</p>
+                    <p className="text-neutral-500 mb-3">Shown to contributors on the public page. Not used for alerts.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Primary Organizer Name</label>
+                        <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Primary Organizer Name</label>
                         <input
                           type="text"
                           value={adminSettings.ownerName || ''}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, ownerName: e.target.value }))}
-                          className="w-full p-2 border border-slate-300 rounded-lg text-xs"
+                          className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Public Contact Email</label>
+                        <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Public Contact Email</label>
                         <input
                           type="email"
                           value={adminSettings.ownerEmail || ''}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                          className="w-full p-2 border border-slate-300 rounded-lg text-xs"
+                          className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Live SMTP Dispatch */}
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200">
                     <div className="flex justify-between items-center mb-1">
-                      <h5 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                        <i className="fa-solid fa-server text-emerald-600"></i> Live SMTP Email Dispatch
+                      <h5 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
+                        <i className="fa-solid fa-server text-brand-700"></i> Live SMTP Email Dispatch
                       </h5>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -769,32 +769,32 @@ export default function AdminPage() {
                             ...prev,
                             smtp: { ...prev.smtp, enabled: e.target.checked }
                           }))}
-                          className="rounded text-emerald-700"
+                          className="rounded text-brand-700"
                         />
-                        <span className="font-bold text-emerald-800">Enable Live SMTP</span>
+                        <span className="font-bold text-brand-800">Enable Live SMTP</span>
                       </label>
                     </div>
-                    <p className="text-slate-500 mb-3">Deliver alerts directly to Edwin's Gmail inbox and send instant receipts to contributors.</p>
+                    <p className="text-neutral-500 mb-3">Deliver alerts directly to Edwin's Gmail inbox and send instant receipts to contributors.</p>
 
                     {adminSettings.smtp?.enabled && (
-                      <div className="space-y-3 pt-2 border-t border-slate-200">
+                      <div className="space-y-3 pt-2 border-t border-neutral-200">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">SMTP Service</label>
+                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">SMTP Service</label>
                             <select
                               value={adminSettings.smtp?.service || 'gmail'}
                               onChange={(e) => setAdminSettings(prev => ({
                                 ...prev,
                                 smtp: { ...prev.smtp, service: e.target.value }
                               }))}
-                              className="w-full p-2 border border-slate-300 rounded-lg text-xs"
+                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
                             >
                               <option value="gmail">Google Gmail</option>
                               <option value="custom">Custom SMTP Server</option>
                             </select>
                           </div>
                           <div>
-                            <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Email / User</label>
+                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Email / User</label>
                             <input
                               type="text"
                               placeholder="e.g. edwinlaston@gmail.com"
@@ -803,14 +803,14 @@ export default function AdminPage() {
                                 ...prev,
                                 smtp: { ...prev.smtp, user: e.target.value }
                               }))}
-                              className="w-full p-2 border border-slate-300 rounded-lg text-xs"
+                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Google App Password (16 letters)</label>
+                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Google App Password (16 letters)</label>
                             <input
                               type="password"
                               placeholder={adminSettings.smtp?.hasPassword ? 'Saved. Leave blank to keep it.' : '16-letter App Password'}
@@ -819,11 +819,11 @@ export default function AdminPage() {
                                 ...prev,
                                 smtp: { ...prev.smtp, pass: e.target.value }
                               }))}
-                              className="w-full p-2 border border-slate-300 rounded-lg text-xs font-mono"
+                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs font-mono"
                             />
                           </div>
                           <div>
-                            <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">From Header</label>
+                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">From Header</label>
                             <input
                               type="text"
                               value={adminSettings.smtp?.from || 'Edwin & Jamirah Kwanjula <noreply@edwinlaston.org>'}
@@ -831,7 +831,7 @@ export default function AdminPage() {
                                 ...prev,
                                 smtp: { ...prev.smtp, from: e.target.value }
                               }))}
-                              className="w-full p-2 border border-slate-300 rounded-lg text-xs"
+                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
                             />
                           </div>
                         </div>
@@ -844,7 +844,7 @@ export default function AdminPage() {
                     <button
                       type="submit"
                       disabled={isSavingSettings}
-                      className="px-5 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-white font-bold rounded-xl transition shadow flex items-center gap-2"
+                      className="px-5 py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl transition shadow flex items-center gap-2"
                     >
                       {isSavingSettings ? (
                         <>
@@ -869,10 +869,10 @@ export default function AdminPage() {
       {isOfflineModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
           <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
-            <div className="bg-emerald-900 text-white p-5 flex justify-between items-center">
+            <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
               <div>
                 <h3 className="font-serif-royal text-lg font-bold">Add Offline / Phone Pledge</h3>
-                <p className="text-xs text-emerald-200">Record pledges received via phone calls or cash in hand</p>
+                <p className="text-xs text-brand-200">Record pledges received via phone calls or cash in hand</p>
               </div>
               <button
                 onClick={() => setIsOfflineModalOpen(false)}
@@ -884,11 +884,11 @@ export default function AdminPage() {
 
             <form onSubmit={handleOfflinePledgeSubmit} className="p-5 space-y-3.5 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 uppercase mb-1">Target Item</label>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Target Item</label>
                 <select
                   value={offlineForm.itemId}
                   onChange={(e) => setOfflineForm(prev => ({ ...prev, itemId: e.target.value }))}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl"
+                  className="w-full p-2.5 bg-neutral-50 border border-neutral-300 rounded-xl"
                 >
                   <option value="general">✨ General Ceremony Contribution</option>
                   {budget?.sections?.map(sec => (
@@ -904,30 +904,30 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 uppercase mb-1">Contributor Full Name *</label>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Contributor Full Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Mzee Peter"
                   value={offlineForm.name}
                   onChange={(e) => setOfflineForm(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full p-2.5 border border-slate-300 rounded-xl"
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase mb-1">Phone Number</label>
+                  <label className="block font-bold text-neutral-700 uppercase mb-1">Phone Number</label>
                   <input
                     type="tel"
                     placeholder="0772 000000"
                     value={offlineForm.phone}
                     onChange={(e) => setOfflineForm(prev => ({ ...prev, phone: e.target.value }))}
-                    className="w-full p-2.5 border border-slate-300 rounded-xl"
+                    className="w-full p-2.5 border border-neutral-300 rounded-xl"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase mb-1">Pledge Amount (UGX) *</label>
+                  <label className="block font-bold text-neutral-700 uppercase mb-1">Pledge Amount (UGX) *</label>
                   <input
                     type="number"
                     required
@@ -935,18 +935,18 @@ export default function AdminPage() {
                     placeholder="e.g. 200,000"
                     value={offlineForm.amount}
                     onChange={(e) => setOfflineForm(prev => ({ ...prev, amount: e.target.value }))}
-                    className="w-full p-2.5 border border-slate-300 rounded-xl font-bold"
+                    className="w-full p-2.5 border border-neutral-300 rounded-xl font-bold"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase mb-1">Payment Method</label>
+                  <label className="block font-bold text-neutral-700 uppercase mb-1">Payment Method</label>
                   <select
                     value={offlineForm.paymentMethod}
                     onChange={(e) => setOfflineForm(prev => ({ ...prev, paymentMethod: e.target.value }))}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl"
+                    className="w-full p-2.5 bg-neutral-50 border border-neutral-300 rounded-xl"
                   >
                     <option value="Cash / Hand Delivery">Cash / Hand Delivery</option>
                     <option value="Airtel Money (0703464261)">Airtel Money</option>
@@ -956,11 +956,11 @@ export default function AdminPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 uppercase mb-1">Status</label>
+                  <label className="block font-bold text-neutral-700 uppercase mb-1">Status</label>
                   <select
                     value={offlineForm.status}
                     onChange={(e) => setOfflineForm(prev => ({ ...prev, status: e.target.value }))}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl"
+                    className="w-full p-2.5 bg-neutral-50 border border-neutral-300 rounded-xl"
                   >
                     <option value="paid">Paid & Received (Default)</option>
                     <option value="pledged">Pledged / Pending Payment</option>
@@ -969,13 +969,13 @@ export default function AdminPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 uppercase mb-1">Note / Blessing Message</label>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Note / Blessing Message</label>
                 <textarea
                   rows="2"
                   placeholder="Optional note"
                   value={offlineForm.message}
                   onChange={(e) => setOfflineForm(prev => ({ ...prev, message: e.target.value }))}
-                  className="w-full p-2.5 border border-slate-300 rounded-xl"
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
                 ></textarea>
               </div>
 
@@ -983,14 +983,14 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => setIsOfflineModalOpen(false)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-semibold"
+                  className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-xl font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmittingOffline}
-                  className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 text-white rounded-xl font-bold flex items-center gap-1.5"
+                  className="px-4 py-2 bg-brand-800 hover:bg-brand-900 text-white rounded-xl font-bold flex items-center gap-1.5"
                 >
                   {isSubmittingOffline ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-check"></i>}
                   Save Offline Record
@@ -1005,9 +1005,9 @@ export default function AdminPage() {
       {previewEmailHtml && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
           <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in duration-200">
-            <div className="p-4 bg-slate-900 text-white flex justify-between items-center">
+            <div className="p-4 bg-neutral-900 text-white flex justify-between items-center">
               <h4 className="font-bold text-sm flex items-center gap-2">
-                <i className="fa-regular fa-envelope-open text-amber-400"></i> Formatted Notification Email Preview
+                <i className="fa-regular fa-envelope-open text-accent-400"></i> Formatted Notification Email Preview
               </h4>
               <button
                 onClick={() => setPreviewEmailHtml(null)}
@@ -1016,9 +1016,9 @@ export default function AdminPage() {
                 <i className="fa-solid fa-xmark"></i>
               </button>
             </div>
-            <div className="p-4 overflow-y-auto flex-1 bg-slate-100">
+            <div className="p-4 overflow-y-auto flex-1 bg-neutral-100">
               <div
-                className="bg-white rounded-xl p-4 shadow border border-slate-200"
+                className="bg-white rounded-xl p-4 shadow border border-neutral-200"
                 dangerouslySetInnerHTML={{ __html: previewEmailHtml }}
               />
             </div>

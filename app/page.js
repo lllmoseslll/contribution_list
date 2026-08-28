@@ -268,12 +268,12 @@ export default function KwanjulaBudgetPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-50 text-slate-900 selection:bg-emerald-200">
+    <div className="flex-1 flex flex-col bg-neutral-50 text-neutral-900 selection:bg-brand-200">
       
       {/* Toast Alert */}
       {toast && (
         <div className={`fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium transition-all ${
-          toast.type === 'success' ? 'bg-emerald-900 text-emerald-100 border-l-4 border-emerald-400' : 'bg-slate-900 text-white border-l-4 border-amber-500'
+          toast.type === 'success' ? 'bg-brand-900 text-brand-100 border-l-4 border-brand-400' : 'bg-neutral-900 text-white border-l-4 border-accent-500'
         }`}>
           <span>{toast.msg}</span>
           <button onClick={() => setToast(null)} className="opacity-70 hover:opacity-100 ml-2">
@@ -283,16 +283,16 @@ export default function KwanjulaBudgetPage() {
       )}
 
       {/* Top Announcement Bar */}
-      <div className="bg-emerald-950 text-emerald-200 text-xs sm:text-sm py-2.5 px-4 border-b border-emerald-800/50">
+      <div className="bg-brand-950 text-brand-200 text-xs sm:text-sm py-2.5 px-4 border-b border-brand-800/50">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-900 text-emerald-300 border border-emerald-700/60">
-              <span className={`w-2 h-2 rounded-full ${liveConnected ? 'bg-emerald-400 pulse-dot' : 'bg-amber-400'}`}></span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-900 text-brand-300 border border-brand-700/60">
+              <span className={`w-2 h-2 rounded-full ${liveConnected ? 'bg-brand-400 pulse-dot' : 'bg-accent-400'}`}></span>
               {liveConnected ? 'Live Sync Active' : 'Connecting...'}
             </span>
-            <span className="hidden sm:inline text-emerald-400/40">•</span>
-            <span className="text-emerald-100 font-medium">
-              <i className="fa-solid fa-calendar-days text-amber-400 mr-1.5"></i>
+            <span className="hidden sm:inline text-brand-400/40">•</span>
+            <span className="text-brand-100 font-medium">
+              <i className="fa-solid fa-calendar-days text-accent-400 mr-1.5"></i>
               Ceremony Date: <strong>Friday, 27th November 2026</strong>
             </span>
           </div>
@@ -302,14 +302,14 @@ export default function KwanjulaBudgetPage() {
               href="/introduction-budget-edwin-laston.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-emerald-200 bg-emerald-900/60 hover:bg-emerald-800 border border-emerald-700/60 transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-brand-200 bg-brand-900/60 hover:bg-brand-800 border border-brand-700/60 transition"
               title="View original official PDF"
             >
-              <i className="fa-solid fa-file-pdf text-rose-400"></i> Official PDF
+              <i className="fa-solid fa-file-pdf text-accent-400"></i> Official PDF
             </a>
             <Link
               href="/admin"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-accent-300 bg-accent-500/10 hover:bg-accent-500/20 border border-accent-500/30 transition"
             >
               <i className="fa-solid fa-lock text-[10px]"></i> Committee Portal
             </Link>
@@ -318,36 +318,36 @@ export default function KwanjulaBudgetPage() {
       </div>
 
       {/* Hero Banner */}
-      <header className="relative bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900 text-white py-14 sm:py-18 px-4 text-center overflow-hidden border-b-4 border-amber-500 shadow-xl">
+      <header className="relative bg-gradient-to-br from-brand-950 via-brand-900 to-brand-900 text-white py-14 sm:py-18 px-4 text-center overflow-hidden border-b-4 border-accent-500 shadow-xl">
         <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:24px_24px]"></div>
         
         <div className="relative max-w-4xl mx-auto z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/15 border border-amber-400/40 text-amber-300 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
-            <i className="fa-solid fa-gem text-amber-400"></i> The Kwanjula Budget
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/15 border border-accent-400/40 text-accent-300 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
+            <i className="fa-solid fa-gem text-accent-400"></i> The Kwanjula Budget
           </div>
 
           <h1 className="font-serif-royal text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 drop-shadow-md">
-            Mr. Edwin Laston <span className="text-amber-400 italic font-serif">&</span> Jamirah Nakayemba
+            Mr. Edwin Laston <span className="text-accent-400 italic font-serif">&</span> Jamirah Nakayemba
           </h1>
 
-          <p className="text-lg sm:text-2xl text-emerald-200 font-medium mb-3">
+          <p className="text-lg sm:text-2xl text-brand-200 font-medium mb-3">
             Official Introduction Ceremony Contribution & Pledges Board
           </p>
 
-          <p className="max-w-2xl mx-auto text-slate-200 text-sm sm:text-base leading-relaxed mb-8">
+          <p className="max-w-2xl mx-auto text-neutral-200 text-sm sm:text-base leading-relaxed mb-8">
             Welcome family, relatives, and dear friends! Stand with Edwin & Jamirah as they take this blessed step. Choose any item from our official budget below to make a pledge and write your name. All contributions deduct from the remaining total in real-time.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => openPledgeModal(null)}
-              className="px-6 py-3 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-lg shadow-amber-600/30 transition transform hover:-translate-y-0.5 flex items-center gap-2"
+              className="px-6 py-3 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white shadow-lg shadow-accent-600/30 transition transform hover:-translate-y-0.5 flex items-center gap-2"
             >
               <i className="fa-solid fa-heart-circle-check"></i> Make a Pledge Now
             </button>
             <a
               href="#budgetSection"
-              className="px-6 py-3 rounded-xl font-semibold text-sm sm:text-base bg-white text-emerald-950 hover:bg-slate-100 shadow-md transition transform hover:-translate-y-0.5 flex items-center gap-2"
+              className="px-6 py-3 rounded-xl font-semibold text-sm sm:text-base bg-white text-brand-950 hover:bg-neutral-100 shadow-md transition transform hover:-translate-y-0.5 flex items-center gap-2"
             >
               <i className="fa-solid fa-list-check"></i> View Budget Items
             </a>
@@ -355,13 +355,13 @@ export default function KwanjulaBudgetPage() {
               href="/introduction-budget-edwin-laston.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-emerald-950/80 hover:bg-emerald-900 border border-amber-400/40 text-amber-300 transition flex items-center gap-2 shadow-md"
+              className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-brand-950/80 hover:bg-brand-900 border border-accent-400/40 text-accent-300 transition flex items-center gap-2 shadow-md"
             >
-              <i className="fa-solid fa-file-pdf text-rose-400"></i> Download Official PDF
+              <i className="fa-solid fa-file-pdf text-accent-400"></i> Download Official PDF
             </a>
             <a
               href="#paymentSection"
-              className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-emerald-800/60 hover:bg-emerald-800 border border-emerald-600/40 text-emerald-100 transition flex items-center gap-2"
+              className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-brand-800/60 hover:bg-brand-800 border border-brand-600/40 text-brand-100 transition flex items-center gap-2"
             >
               <i className="fa-solid fa-mobile-screen-button"></i> Mobile Money
             </a>
@@ -373,63 +373,63 @@ export default function KwanjulaBudgetPage() {
       <section className="max-w-6xl mx-auto w-full px-4 -mt-8 relative z-20 mb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-slate-200/80 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl shrink-0">
+          <div className="bg-white p-5 rounded-2xl shadow-lg border border-neutral-200/80 flex items-center gap-4 transition hover:-translate-y-1">
+            <div className="w-13 h-13 rounded-xl bg-accent-50 text-accent-700 flex items-center justify-center text-xl shrink-0">
               <i className="fa-solid fa-coins"></i>
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Budget</div>
-              <div className="text-xl sm:text-2xl font-black text-slate-900">{formatUGX(stats.totalBudget)}</div>
-              <div className="text-xs text-slate-400">Official Ceremony Budget</div>
+              <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Total Budget</div>
+              <div className="text-xl sm:text-2xl font-black text-neutral-900">{formatUGX(stats.totalBudget)}</div>
+              <div className="text-xs text-neutral-500">Official Ceremony Budget</div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-emerald-200 bg-gradient-to-br from-white to-emerald-50/50 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+          <div className="bg-white p-5 rounded-2xl shadow-lg border border-brand-200 bg-gradient-to-br from-white to-brand-50/50 flex items-center gap-4 transition hover:-translate-y-1">
+            <div className="w-13 h-13 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center text-xl shrink-0">
               <i className="fa-solid fa-circle-check"></i>
             </div>
             <div>
-              <div className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Total Raised & Pledged</div>
-              <div className="text-xl sm:text-2xl font-black text-emerald-700">{formatUGX(stats.totalCoveredAndPledged)}</div>
-              <div className="text-xs font-bold text-emerald-600">{stats.totalPercentage}% Funded</div>
+              <div className="text-xs font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
+              <div className="text-xl sm:text-2xl font-black text-brand-700">{formatUGX(stats.totalCoveredAndPledged)}</div>
+              <div className="text-xs font-bold text-brand-700">{stats.totalPercentage}% Funded</div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-amber-200 bg-gradient-to-br from-white to-amber-50/50 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl shrink-0">
+          <div className="bg-white p-5 rounded-2xl shadow-lg border border-accent-200 bg-gradient-to-br from-white to-accent-50/50 flex items-center gap-4 transition hover:-translate-y-1">
+            <div className="w-13 h-13 rounded-xl bg-accent-100 text-accent-700 flex items-center justify-center text-xl shrink-0">
               <i className="fa-solid fa-scale-balanced"></i>
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Remaining Balance</div>
-              <div className="text-xl sm:text-2xl font-black text-amber-600">{formatUGX(stats.totalRemaining)}</div>
-              <div className="text-xs font-semibold text-rose-600 flex items-center gap-1">
+              <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Remaining Balance</div>
+              <div className="text-xl sm:text-2xl font-black text-accent-700">{formatUGX(stats.totalRemaining)}</div>
+              <div className="text-xs font-semibold text-accent-700 flex items-center gap-1">
                 <i className="fa-solid fa-arrow-down"></i> Live subtracting
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-slate-200/80 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl shrink-0">
+          <div className="bg-white p-5 rounded-2xl shadow-lg border border-neutral-200/80 flex items-center gap-4 transition hover:-translate-y-1">
+            <div className="w-13 h-13 rounded-xl bg-neutral-200 text-neutral-700 flex items-center justify-center text-xl shrink-0">
               <i className="fa-solid fa-users"></i>
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">Supporters</div>
-              <div className="text-xl sm:text-2xl font-black text-slate-900">{stats.pledgersCount} Contributors</div>
-              <div className="text-xs text-slate-400">{stats.totalPledgesCount} pledges recorded</div>
+              <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Supporters</div>
+              <div className="text-xl sm:text-2xl font-black text-neutral-900">{stats.pledgersCount} Contributors</div>
+              <div className="text-xs text-neutral-500">{stats.totalPledgesCount} pledges recorded</div>
             </div>
           </div>
 
         </div>
 
         {/* Overall Progress Meter */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-md border border-slate-200/80">
-          <div className="flex justify-between items-center text-xs sm:text-sm font-semibold text-slate-700 mb-2">
+        <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-md border border-neutral-200/80">
+          <div className="flex justify-between items-center text-xs sm:text-sm font-semibold text-neutral-700 mb-2">
             <span>Ceremony Funding Milestone</span>
-            <span className="text-emerald-700 font-bold">{stats.totalPercentage}% of {formatUGX(stats.totalBudget)} ({formatUGX(stats.totalRemaining)} remaining)</span>
+            <span className="text-brand-700 font-bold">{stats.totalPercentage}% of {formatUGX(stats.totalBudget)} ({formatUGX(stats.totalRemaining)} remaining)</span>
           </div>
-          <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+          <div className="w-full h-3 bg-neutral-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-amber-500 via-emerald-600 to-emerald-500 rounded-full transition-all duration-700"
+              className="h-full bg-gradient-to-r from-accent-500 via-brand-600 to-brand-500 rounded-full transition-all duration-700"
               style={{ width: `${Math.min(100, Math.max(3, stats.totalPercentage))}%` }}
             ></div>
           </div>
@@ -442,24 +442,24 @@ export default function KwanjulaBudgetPage() {
         {/* Controls & Search */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-6">
           <div>
-            <h2 className="font-serif-royal text-2xl sm:text-3xl font-bold text-emerald-950">Budget Sections & Items</h2>
-            <p className="text-slate-500 text-sm mt-1">Select any item below to sponsor all or part of it.</p>
+            <h2 className="font-serif-royal text-2xl sm:text-3xl font-bold text-brand-950">Budget Sections & Items</h2>
+            <p className="text-neutral-500 text-sm mt-1">Select any item below to sponsor all or part of it.</p>
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="w-full sm:w-80 relative">
-              <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+              <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 text-sm"></i>
               <input
                 type="text"
                 placeholder="Search items (e.g. Cows, Rice, Suitcase)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 text-sm bg-white border border-slate-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent transition"
+                className="w-full pl-9 pr-8 py-2 text-sm bg-white border border-neutral-300 rounded-full focus:outline-none focus:ring-2 focus:ring-brand-700 focus:border-transparent transition"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-600"
                 >
                   <i className="fa-solid fa-xmark text-sm"></i>
                 </button>
@@ -470,10 +470,10 @@ export default function KwanjulaBudgetPage() {
               href="/introduction-budget-edwin-laston.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-full transition whitespace-nowrap"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand-900 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-full transition whitespace-nowrap"
               title="Inspect official signed budget"
             >
-              <i className="fa-solid fa-file-pdf text-rose-500"></i> PDF
+              <i className="fa-solid fa-file-pdf text-accent-500"></i> PDF
             </a>
           </div>
         </div>
@@ -492,8 +492,8 @@ export default function KwanjulaBudgetPage() {
               onClick={() => setActiveCategory(tab.id)}
               className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap flex items-center gap-2 border transition ${
                 activeCategory === tab.id
-                  ? 'bg-emerald-900 border-emerald-900 text-white shadow-md'
-                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                  ? 'bg-brand-900 border-brand-900 text-white shadow-md'
+                  : 'bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-100'
               }`}
             >
               <i className={`fa-solid ${tab.icon}`}></i> {tab.label}
@@ -503,7 +503,7 @@ export default function KwanjulaBudgetPage() {
 
         {/* Filter Chips */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
-          <span className="text-xs font-semibold text-slate-400 mr-1 flex items-center gap-1">
+          <span className="text-xs font-semibold text-neutral-500 mr-1 flex items-center gap-1">
             <i className="fa-solid fa-filter"></i> Filter:
           </span>
           {[
@@ -517,8 +517,8 @@ export default function KwanjulaBudgetPage() {
               onClick={() => setActiveFilter(chip.id)}
               className={`px-3 py-1 rounded-md text-xs font-medium border transition ${
                 activeFilter === chip.id
-                  ? 'bg-amber-100 border-amber-400 text-amber-900 font-bold'
-                  : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
+                  ? 'bg-accent-100 border-accent-400 text-accent-900 font-bold'
+                  : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300'
               }`}
             >
               {chip.label}
@@ -527,21 +527,21 @@ export default function KwanjulaBudgetPage() {
         </div>
 
         {/* General Pledge Callout */}
-        <div className="bg-gradient-to-r from-amber-50 to-amber-100/60 border border-amber-200 rounded-2xl p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+        <div className="bg-gradient-to-r from-accent-50 to-accent-100/60 border border-accent-200 rounded-2xl p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-amber-500 text-white flex items-center justify-center text-xl shrink-0">
+            <div className="w-12 h-12 rounded-full bg-accent-500 text-white flex items-center justify-center text-xl shrink-0">
               <i className="fa-solid fa-hand-holding-dollar"></i>
             </div>
             <div>
-              <h3 className="font-bold text-amber-950 text-base sm:text-lg">Prefer to make a General Contribution?</h3>
-              <p className="text-amber-800 text-xs sm:text-sm mt-0.5">
+              <h3 className="font-bold text-accent-950 text-base sm:text-lg">Prefer to make a General Contribution?</h3>
+              <p className="text-accent-800 text-xs sm:text-sm mt-0.5">
                 Support the overall ceremony expenses with any amount without selecting a specific single item.
               </p>
             </div>
           </div>
           <button
             onClick={() => openPledgeModal(null)}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-md transition shrink-0 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-bold bg-accent-600 hover:bg-accent-700 text-white shadow-md transition shrink-0 flex items-center justify-center gap-2"
           >
             <i className="fa-solid fa-gift"></i> Make General Pledge
           </button>
@@ -549,21 +549,21 @@ export default function KwanjulaBudgetPage() {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="text-center py-16 text-slate-500">
-            <div className="w-10 h-10 border-4 border-slate-200 border-t-emerald-700 rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="text-center py-16 text-neutral-500">
+            <div className="w-10 h-10 border-4 border-neutral-200 border-t-emerald-700 rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-sm font-medium">Loading real-time budget data...</p>
           </div>
         )}
 
         {/* Empty Search / Filter Result */}
         {!isLoading && filteredSections.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200">
-            <i className="fa-solid fa-magnifying-glass text-slate-300 text-4xl mb-3"></i>
-            <h3 className="text-base font-bold text-slate-700">No matching items found</h3>
-            <p className="text-xs text-slate-400 mt-1">Try resetting your search query or selecting "All Items".</p>
+          <div className="text-center py-16 bg-white rounded-2xl border border-neutral-200">
+            <i className="fa-solid fa-magnifying-glass text-neutral-300 text-4xl mb-3"></i>
+            <h3 className="text-base font-bold text-neutral-700">No matching items found</h3>
+            <p className="text-xs text-neutral-500 mt-1">Try resetting your search query or selecting "All Items".</p>
             <button
               onClick={() => { setSearchQuery(''); setActiveCategory('all'); setActiveFilter('all'); }}
-              className="mt-4 px-4 py-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-lg border border-emerald-200 transition"
+              className="mt-4 px-4 py-1.5 text-xs font-semibold text-brand-800 bg-brand-50 hover:bg-brand-100 rounded-lg border border-brand-200 transition"
             >
               Reset All Filters
             </button>
@@ -574,23 +574,23 @@ export default function KwanjulaBudgetPage() {
         {!isLoading && filteredSections.map(sec => (
           <div key={sec.id} className="mb-12">
             {/* Section Header */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-slate-200 mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b-2 border-neutral-200 mb-6">
               <div className="flex items-center gap-3">
-                <span className="w-9 h-9 rounded-lg bg-emerald-900 text-white font-extrabold flex items-center justify-center text-sm shadow">
+                <span className="w-9 h-9 rounded-lg bg-brand-900 text-white font-extrabold flex items-center justify-center text-sm shadow">
                   {sec.code}
                 </span>
                 <div>
-                  <h3 className="font-serif-royal text-xl sm:text-2xl font-bold text-emerald-950">
+                  <h3 className="font-serif-royal text-xl sm:text-2xl font-bold text-brand-950">
                     Section {sec.code}: {sec.title}
                   </h3>
-                  <p className="text-xs text-slate-500">{sec.description}</p>
+                  <p className="text-xs text-neutral-500">{sec.description}</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-xs sm:text-sm text-slate-600">
+              <div className="flex items-center gap-4 text-xs sm:text-sm text-neutral-600">
                 <span>Target: <strong>{formatUGX(sec.totalCost)}</strong></span>
-                <span>Remaining: <strong className="text-amber-600 font-bold">{formatUGX(sec.remainingAmount)}</strong></span>
-                <span className="px-2.5 py-0.5 rounded-full bg-slate-100 font-bold text-slate-700 text-xs">
+                <span>Remaining: <strong className="text-accent-700 font-bold">{formatUGX(sec.remainingAmount)}</strong></span>
+                <span className="px-2.5 py-0.5 rounded-full bg-neutral-100 font-bold text-neutral-700 text-xs">
                   {sec.percentage}% Funded
                 </span>
               </div>
@@ -607,14 +607,14 @@ export default function KwanjulaBudgetPage() {
                   <div
                     key={item.id}
                     className={`relative bg-white rounded-2xl border overflow-hidden transition-all duration-200 hover:shadow-md ${
-                      isCovered ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200/90 hover:border-slate-300'
+                      isCovered ? 'border-brand-300 bg-brand-50/20' : 'border-neutral-200/90 hover:border-neutral-300'
                     }`}
                   >
                     {/* Status Rail */}
                     <span
                       aria-hidden="true"
                       className={`absolute inset-y-0 left-0 w-1.5 ${
-                        isCovered ? 'bg-emerald-600' : isPartial ? 'bg-amber-500' : 'bg-rose-300'
+                        isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-500' : 'bg-neutral-300'
                       }`}
                     ></span>
 
@@ -625,32 +625,32 @@ export default function KwanjulaBudgetPage() {
                         {/* Identity + Figures */}
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                            <h4 className="font-bold text-slate-900 text-base leading-snug">{item.name}</h4>
+                            <h4 className="font-bold text-neutral-900 text-base leading-snug">{item.name}</h4>
                             <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider whitespace-nowrap ${
                               isCovered
-                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                ? 'bg-brand-100 text-brand-800 border border-brand-300'
                                 : isPartial
-                                ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                                : 'bg-rose-50 text-rose-700 border border-rose-200'
+                                ? 'bg-accent-100 text-accent-800 border border-accent-300'
+                                : 'bg-neutral-100 text-neutral-700 border border-neutral-300'
                             }`}>
                               {isCovered ? (item.remarks === 'Covered' ? 'Covered' : '100% Funded') : (isPartial ? `${item.percentage}% Supported` : 'Needs Support')}
                             </span>
                           </div>
 
-                          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-slate-500 mt-2">
-                            <span>Qty <strong className="text-slate-800">{item.qty || '1'}</strong></span>
+                          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs text-neutral-500 mt-2">
+                            <span>Qty <strong className="text-neutral-800">{item.qty || '1'}</strong></span>
                             {item.unitCost ? (
                               <>
-                                <span className="text-slate-300">&bull;</span>
-                                <span>Unit <strong className="text-slate-800">{formatUGX(item.unitCost)}</strong></span>
+                                <span className="text-neutral-300" aria-hidden="true">&bull;</span>
+                                <span>Unit <strong className="text-neutral-800">{formatUGX(item.unitCost)}</strong></span>
                               </>
                             ) : null}
-                            <span className="text-slate-300">&bull;</span>
-                            <span>Target <strong className="text-slate-800">{formatUGX(item.totalCost)}</strong></span>
-                            <span className="text-slate-300">&bull;</span>
+                            <span className="text-neutral-300" aria-hidden="true">&bull;</span>
+                            <span>Target <strong className="text-neutral-800">{formatUGX(item.totalCost)}</strong></span>
+                            <span className="text-neutral-300" aria-hidden="true">&bull;</span>
                             <span>
                               Remaining{' '}
-                              <strong className={isCovered ? 'text-emerald-700' : 'text-amber-600'}>
+                              <strong className={isCovered ? 'text-brand-700' : 'text-accent-700'}>
                                 {formatUGX(item.remainingAmount)}
                               </strong>
                             </span>
@@ -659,13 +659,13 @@ export default function KwanjulaBudgetPage() {
 
                         {/* Progress */}
                         <div className="w-full lg:w-56 shrink-0">
-                          <div className="flex justify-between text-[11px] font-bold text-slate-500 mb-1">
+                          <div className="flex justify-between text-[11px] font-bold text-neutral-500 mb-1">
                             <span>Progress</span>
-                            <span className={isCovered ? 'text-emerald-700' : 'text-slate-700'}>{item.percentage}%</span>
+                            <span className={isCovered ? 'text-brand-700' : 'text-neutral-700'}>{item.percentage}%</span>
                           </div>
-                          <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                          <div className="w-full h-2 bg-neutral-200 rounded-full overflow-hidden">
                             <div
-                              className={`h-full rounded-full transition-all duration-500 ${isCovered ? 'bg-emerald-600' : 'bg-gradient-to-r from-amber-500 to-amber-600'}`}
+                              className={`h-full rounded-full transition-all duration-500 ${isCovered ? 'bg-brand-600' : 'bg-gradient-to-r from-accent-500 to-accent-600'}`}
                               style={{ width: `${Math.max(item.percentage, isCovered ? 100 : 0)}%` }}
                             ></div>
                           </div>
@@ -676,31 +676,31 @@ export default function KwanjulaBudgetPage() {
                           {isCovered ? (
                             <button
                               disabled
-                              className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-400 bg-slate-100 cursor-not-allowed flex items-center justify-center gap-1.5"
+                              className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-neutral-500 bg-neutral-100 cursor-not-allowed flex items-center justify-center gap-1.5"
                             >
-                              <i className="fa-solid fa-check-double text-emerald-600"></i> Fully Sponsored
+                              <i className="fa-solid fa-check-double text-brand-700"></i> Fully Sponsored
                             </button>
                           ) : (
                             <button
                               onClick={() => openPledgeModal(item)}
-                              className="w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-emerald-950 bg-emerald-50 hover:bg-emerald-900 hover:text-white border border-emerald-300 transition flex items-center justify-center gap-2 shadow-sm"
+                              className="w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-brand-950 bg-brand-50 hover:bg-brand-900 hover:text-white border border-brand-300 transition flex items-center justify-center gap-2 shadow-sm"
                             >
-                              <i className="fa-solid fa-hand-holding-heart text-amber-500"></i> Pledge for this Item
+                              <i className="fa-solid fa-hand-holding-heart text-accent-500"></i> Pledge for this Item
                             </button>
                           )}
                         </div>
                       </div>
 
                       {/* Supporters */}
-                      <div className="mt-4 pt-3 border-t border-dashed border-slate-200">
+                      <div className="mt-4 pt-3 border-t border-dashed border-neutral-200">
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <span className="text-[11px] font-bold uppercase text-slate-400 flex items-center gap-1.5 mr-1 shrink-0">
-                            <i className="fa-solid fa-users text-slate-400"></i> Supporters ({recentPledges.length}):
+                          <span className="text-[11px] font-bold uppercase text-neutral-500 flex items-center gap-1.5 mr-1 shrink-0">
+                            <i className="fa-solid fa-users text-neutral-500"></i> Supporters ({recentPledges.length}):
                           </span>
 
                           {isCovered && item.remarks === 'Covered' && recentPledges.length === 0 && (
-                            <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
-                              <i className="fa-solid fa-star text-amber-500 text-[10px]"></i> Pre-covered by Family
+                            <span className="text-xs bg-brand-50 text-brand-800 border border-brand-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
+                              <i className="fa-solid fa-star text-accent-500 text-[10px]"></i> Pre-covered by Family
                             </span>
                           )}
 
@@ -708,17 +708,17 @@ export default function KwanjulaBudgetPage() {
                             recentPledges.map((p, i) => (
                               <span
                                 key={p.id || i}
-                                className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 transition"
+                                className="text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 transition"
                                 title={p.message ? `"${p.message}"` : 'Pledged for this item'}
                               >
-                                <i className="fa-solid fa-check text-emerald-600 text-[10px]"></i>
+                                <i className="fa-solid fa-check text-brand-700 text-[10px]"></i>
                                 <strong>{p.name}</strong>
-                                {p.amount && <span className="text-emerald-700 font-bold">({formatUGX(p.amount)})</span>}
+                                {p.amount && <span className="text-brand-700 font-bold">({formatUGX(p.amount)})</span>}
                               </span>
                             ))
                           ) : (
                             !isCovered && (
-                              <span className="text-xs text-slate-400 italic">No pledges yet. Be the first!</span>
+                              <span className="text-xs text-neutral-500 italic">No pledges yet. Be the first!</span>
                             )
                           )}
                         </div>
@@ -732,20 +732,20 @@ export default function KwanjulaBudgetPage() {
         ))}
 
         {/* Contributor Roll of Honor & Blessings Wall */}
-        <section className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-md mb-16">
+        <section className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-md mb-16">
           <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
             <div>
-              <h2 className="font-serif-royal text-2xl font-bold text-emerald-950 flex items-center gap-2">
-                <i className="fa-solid fa-heart text-rose-500"></i> Contributor Roll of Honor & Blessings
+              <h2 className="font-serif-royal text-2xl font-bold text-brand-950 flex items-center gap-2">
+                <i className="fa-solid fa-heart text-accent-500"></i> Contributor Roll of Honor & Blessings
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+              <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
                 Thank you to everyone standing with Mr. Edwin Laston & Jamirah Nakayemba!
               </p>
             </div>
             {rollOfHonorPledges.length > 9 && (
               <button
                 onClick={() => setShowAllHonorPledges(!showAllHonorPledges)}
-                className="px-4 py-1.5 rounded-full text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition"
+                className="px-4 py-1.5 rounded-full text-xs font-bold text-brand-800 bg-brand-50 hover:bg-brand-100 border border-brand-200 transition"
               >
                 {showAllHonorPledges ? 'Show Less' : `View All (${rollOfHonorPledges.length})`}
               </button>
@@ -753,7 +753,7 @@ export default function KwanjulaBudgetPage() {
           </div>
 
           {rollOfHonorPledges.length === 0 ? (
-            <div className="text-center py-10 text-slate-400 text-sm">
+            <div className="text-center py-10 text-neutral-500 text-sm">
               <i className="fa-regular fa-comment-dots text-3xl mb-2 block"></i>
               No pledges recorded yet. Submit the first pledge and leave your warm wishes for the couple!
             </div>
@@ -762,24 +762,24 @@ export default function KwanjulaBudgetPage() {
               {(showAllHonorPledges ? rollOfHonorPledges : rollOfHonorPledges.slice(0, 9)).map((p, idx) => {
                 const initials = (p.name || 'W').split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
                 return (
-                  <div key={p.id || idx} className="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex flex-col gap-2.5 transition hover:bg-white hover:shadow">
+                  <div key={p.id || idx} className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200 flex flex-col gap-2.5 transition hover:bg-white hover:shadow">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-emerald-800 text-white font-bold text-sm flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-brand-800 text-white font-bold text-sm flex items-center justify-center shrink-0">
                         {initials}
                       </div>
                       <div className="min-w-0">
-                        <div className="font-bold text-slate-900 text-sm truncate">{p.name}</div>
-                        <div className="text-[11px] text-slate-400">{formatDate(p.date)}</div>
+                        <div className="font-bold text-neutral-900 text-sm truncate">{p.name}</div>
+                        <div className="text-[11px] text-neutral-500">{formatDate(p.date)}</div>
                       </div>
                     </div>
 
-                    <div className="bg-emerald-50 text-xs px-3 py-1.5 rounded-lg flex justify-between items-center text-emerald-950 font-medium">
-                      <span className="truncate mr-2"><i className="fa-solid fa-gift text-emerald-700 mr-1"></i> {p.itemName}</span>
-                      <strong className="text-emerald-700 shrink-0">{p.amount ? formatUGX(p.amount) : 'Generous'}</strong>
+                    <div className="bg-brand-50 text-xs px-3 py-1.5 rounded-lg flex justify-between items-center text-brand-950 font-medium">
+                      <span className="truncate mr-2"><i className="fa-solid fa-gift text-brand-700 mr-1"></i> {p.itemName}</span>
+                      <strong className="text-brand-700 shrink-0">{p.amount ? formatUGX(p.amount) : 'Generous'}</strong>
                     </div>
 
                     {p.message && (
-                      <p className="text-xs text-slate-600 italic border-l-2 border-amber-400 pl-2.5 line-clamp-3">
+                      <p className="text-xs text-neutral-600 italic border-l-2 border-accent-400 pl-2.5 line-clamp-3">
                         "{p.message}"
                       </p>
                     )}
@@ -791,13 +791,13 @@ export default function KwanjulaBudgetPage() {
         </section>
 
         {/* Mobile Money Payment Channels Section */}
-        <section className="bg-gradient-to-br from-emerald-950 to-teal-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl" id="paymentSection">
+        <section className="bg-gradient-to-br from-brand-950 to-brand-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl" id="paymentSection">
           <div className="text-center max-w-2xl mx-auto mb-8">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-400/20 text-amber-300 border border-amber-400/30 uppercase tracking-wider mb-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent-400/20 text-accent-300 border border-accent-400/30 uppercase tracking-wider mb-2">
               <i className="fa-solid fa-shield-check"></i> Verified Payment Channels
             </span>
             <h2 className="font-serif-royal text-2xl sm:text-3xl font-bold mb-2">How to Fulfill Your Pledge</h2>
-            <p className="text-emerald-200 text-xs sm:text-sm">
+            <p className="text-brand-200 text-xs sm:text-sm">
               Please send your contribution directly via Mobile Money to the Groom or Committee Members below. Use your <strong>Name</strong> and <strong>Pledged Item</strong> as reference.
             </p>
           </div>
@@ -805,33 +805,33 @@ export default function KwanjulaBudgetPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
             
             {/* Edwin Laston */}
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-amber-400/50 flex flex-col justify-between shadow-lg">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-accent-400/50 flex flex-col justify-between shadow-lg">
               <div>
-                <div className="text-[11px] font-extrabold text-amber-300 tracking-wider uppercase mb-1">Groom / Primary Organizer</div>
+                <div className="text-[11px] font-extrabold text-accent-300 tracking-wider uppercase mb-1">Groom / Primary Organizer</div>
                 <h3 className="text-xl font-bold text-white mb-4">Mr. Edwin Laston</h3>
 
                 <div className="space-y-2 mb-6">
                   <div className="flex items-center justify-between bg-black/30 p-2.5 rounded-xl text-sm">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-red-600 text-white">Airtel Money</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-700 text-white">Airtel Money</span>
                     <span className="font-mono font-bold text-white tracking-wide">0703464261</span>
                     <button
                       onClick={() => handleCopy('0703464261')}
-                      className="p-1.5 text-slate-300 hover:text-white"
+                      className="p-1.5 text-neutral-300 hover:text-white"
                       title="Copy Airtel number"
                     >
-                      <i className={`fa-${copiedText === '0703464261' ? 'solid fa-check text-emerald-400' : 'regular fa-copy'}`}></i>
+                      <i className={`fa-${copiedText === '0703464261' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
                     </button>
                   </div>
 
                   <div className="flex items-center justify-between bg-black/30 p-2.5 rounded-xl text-sm">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500 text-black">MTN Money</span>
+                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-500 text-black">MTN Money</span>
                     <span className="font-mono font-bold text-white tracking-wide">0774324968</span>
                     <button
                       onClick={() => handleCopy('0774324968')}
-                      className="p-1.5 text-slate-300 hover:text-white"
+                      className="p-1.5 text-neutral-300 hover:text-white"
                       title="Copy MTN number"
                     >
-                      <i className={`fa-${copiedText === '0774324968' ? 'solid fa-check text-emerald-400' : 'regular fa-copy'}`}></i>
+                      <i className={`fa-${copiedText === '0774324968' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
                     </button>
                   </div>
                 </div>
@@ -850,18 +850,18 @@ export default function KwanjulaBudgetPage() {
             {/* KMP Emitu */}
             <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
               <div>
-                <div className="text-[11px] font-extrabold text-emerald-300 tracking-wider uppercase mb-1">Committee Member</div>
+                <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">Committee Member</div>
                 <h3 className="text-xl font-bold text-white mb-4">Mr. KMP Emitu Ezielkel</h3>
 
                 <div className="bg-black/30 p-2.5 rounded-xl text-sm flex items-center justify-between mb-6">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-amber-500 text-black">MTN Money</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-500 text-black">MTN Money</span>
                   <span className="font-mono font-bold text-white tracking-wide">0783987907</span>
                   <button
                     onClick={() => handleCopy('0783987907')}
-                    className="p-1.5 text-slate-300 hover:text-white"
+                    className="p-1.5 text-neutral-300 hover:text-white"
                     title="Copy number"
                   >
-                    <i className={`fa-${copiedText === '0783987907' ? 'solid fa-check text-emerald-400' : 'regular fa-copy'}`}></i>
+                    <i className={`fa-${copiedText === '0783987907' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
                   </button>
                 </div>
               </div>
@@ -877,18 +877,18 @@ export default function KwanjulaBudgetPage() {
             {/* Emmanuel Tinkasimire */}
             <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 flex flex-col justify-between">
               <div>
-                <div className="text-[11px] font-extrabold text-emerald-300 tracking-wider uppercase mb-1">Committee Member</div>
+                <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">Committee Member</div>
                 <h3 className="text-xl font-bold text-white mb-4">Mr. Tinkasimire Emmanuel</h3>
 
                 <div className="bg-black/30 p-2.5 rounded-xl text-sm flex items-center justify-between mb-6">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-red-600 text-white">Airtel Money</span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-700 text-white">Airtel Money</span>
                   <span className="font-mono font-bold text-white tracking-wide">0706171109</span>
                   <button
                     onClick={() => handleCopy('0706171109')}
-                    className="p-1.5 text-slate-300 hover:text-white"
+                    className="p-1.5 text-neutral-300 hover:text-white"
                     title="Copy number"
                   >
-                    <i className={`fa-${copiedText === '0706171109' ? 'solid fa-check text-emerald-400' : 'regular fa-copy'}`}></i>
+                    <i className={`fa-${copiedText === '0706171109' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
                   </button>
                 </div>
               </div>
@@ -904,17 +904,17 @@ export default function KwanjulaBudgetPage() {
           </div>
 
           {/* Quick USSD Steps */}
-          <div className="bg-black/25 rounded-2xl p-4 sm:p-5 border border-white/10 text-xs text-emerald-200">
+          <div className="bg-black/25 rounded-2xl p-4 sm:p-5 border border-white/10 text-xs text-brand-200">
             <div className="font-bold text-white text-sm mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-circle-info text-amber-400"></i> Quick Mobile Money USSD Codes:
+              <i className="fa-solid fa-circle-info text-accent-400"></i> Quick Mobile Money USSD Codes:
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="bg-white/5 p-3 rounded-xl">
-                <span className="font-bold text-red-400 block mb-1">Airtel Money:</span>
+                <span className="font-bold text-accent-300 block mb-1">Airtel Money:</span>
                 Dial <span className="font-mono font-bold text-white bg-black/40 px-1.5 py-0.5 rounded">*185#</span> &gt; Select 1 (Send Money) &gt; Enter <span className="font-mono text-white font-bold">0703464261</span> (Edwin Laston).
               </div>
               <div className="bg-white/5 p-3 rounded-xl">
-                <span className="font-bold text-amber-400 block mb-1">MTN Mobile Money:</span>
+                <span className="font-bold text-accent-400 block mb-1">MTN Mobile Money:</span>
                 Dial <span className="font-mono font-bold text-white bg-black/40 px-1.5 py-0.5 rounded">*165#</span> &gt; Select 1 (Send Money) &gt; Enter <span className="font-mono text-white font-bold">0774324968</span> (Edwin Laston).
               </div>
             </div>
@@ -924,7 +924,7 @@ export default function KwanjulaBudgetPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto bg-emerald-950 text-emerald-300 py-8 px-4 border-t border-emerald-900">
+      <footer className="mt-auto bg-brand-950 text-brand-300 py-8 px-4 border-t border-brand-900">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
           <div>
             <div className="font-serif-royal font-bold text-white text-base">Mr. Edwin Laston & Jamirah Nakayemba</div>
@@ -932,7 +932,7 @@ export default function KwanjulaBudgetPage() {
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <a href="/introduction-budget-edwin-laston.pdf" target="_blank" rel="noopener noreferrer" className="underline hover:text-white flex items-center gap-1">
-              <i className="fa-solid fa-file-pdf text-rose-400"></i> Official PDF
+              <i className="fa-solid fa-file-pdf text-accent-400"></i> Official PDF
             </a>
             <button onClick={() => openPledgeModal(null)} className="underline hover:text-white">Make a Pledge</button>
             <Link href="/admin" className="underline hover:text-white">Committee Admin Portal</Link>
@@ -946,12 +946,12 @@ export default function KwanjulaBudgetPage() {
           <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
             
             {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-900 to-teal-900 text-white p-5 flex justify-between items-center">
+            <div className="bg-gradient-to-r from-brand-900 to-brand-900 text-white p-5 flex justify-between items-center">
               <div>
                 <h3 className="font-serif-royal text-lg font-bold flex items-center gap-2">
-                  <i className="fa-solid fa-hand-holding-heart text-amber-400"></i> Make a Pledge
+                  <i className="fa-solid fa-hand-holding-heart text-accent-400"></i> Make a Pledge
                 </h3>
-                <p className="text-xs text-emerald-200">Enter your name and contribution details</p>
+                <p className="text-xs text-brand-200">Enter your name and contribution details</p>
               </div>
               <button
                 onClick={() => setIsPledgeModalOpen(false)}
@@ -966,30 +966,30 @@ export default function KwanjulaBudgetPage() {
               
               {/* Selected Item Banner or Dropdown */}
               {selectedItem ? (
-                <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl flex justify-between items-center">
+                <div className="bg-brand-50 border border-brand-200 p-3.5 rounded-2xl flex justify-between items-center">
                   <div>
-                    <span className="text-[10px] font-extrabold uppercase text-emerald-800">Target Item</span>
-                    <h4 className="font-bold text-slate-900 text-sm sm:text-base">{selectedItem.name} {selectedItem.qty ? `(${selectedItem.qty})` : ''}</h4>
-                    <div className="text-xs text-slate-500 flex gap-3 mt-0.5">
+                    <span className="text-[10px] font-extrabold uppercase text-brand-800">Target Item</span>
+                    <h4 className="font-bold text-neutral-900 text-sm sm:text-base">{selectedItem.name} {selectedItem.qty ? `(${selectedItem.qty})` : ''}</h4>
+                    <div className="text-xs text-neutral-500 flex gap-3 mt-0.5">
                       <span>Total: <strong>{formatUGX(selectedItem.totalCost)}</strong></span>
-                      <span>Remaining: <strong className="text-amber-600">{formatUGX(selectedItem.remainingAmount)}</strong></span>
+                      <span>Remaining: <strong className="text-accent-700">{formatUGX(selectedItem.remainingAmount)}</strong></span>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={() => setSelectedItem(null)}
-                    className="text-xs font-semibold text-emerald-800 hover:underline"
+                    className="text-xs font-semibold text-brand-800 hover:underline"
                   >
                     Change
                   </button>
                 </div>
               ) : (
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Select Item to Support *</label>
+                  <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Select Item to Support *</label>
                   <select
                     value={formData.itemId}
                     onChange={(e) => setFormData(prev => ({ ...prev, itemId: e.target.value }))}
-                    className="w-full p-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                    className="w-full p-2.5 text-sm bg-neutral-50 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   >
                     <option value="general">✨ General Ceremony Contribution</option>
                     {budget?.sections?.map(sec => (
@@ -1007,58 +1007,58 @@ export default function KwanjulaBudgetPage() {
 
               {/* Name */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Your Full Name *</label>
+                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Your Full Name *</label>
                 <div className="relative">
-                  <i className="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <i className="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"></i>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Uncle David / Aunt Sarah / Moses"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                    className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Phone */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Phone Number (MTN / Airtel) *</label>
+                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Phone Number (MTN / Airtel) *</label>
                 <div className="relative">
-                  <i className="fa-solid fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <i className="fa-solid fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"></i>
                   <input
                     type="tel"
                     required
                     placeholder="e.g. 0772 123456"
                     value={formData.phone}
                     onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                    className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
-                <span className="text-[11px] text-slate-400 mt-0.5 block">Used by the committee to verify Mobile Money and send receipts</span>
+                <span className="text-[11px] text-neutral-500 mt-0.5 block">Used by the committee to verify Mobile Money and send receipts</span>
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address (Optional)</label>
+                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Email Address (Optional)</label>
                 <div className="relative">
-                  <i className="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                  <i className="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"></i>
                   <input
                     type="email"
                     placeholder="e.g. you@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                    className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
-                <span className="text-[11px] text-slate-400 mt-0.5 block">Receive an automated confirmation email receipt</span>
+                <span className="text-[11px] text-neutral-500 mt-0.5 block">Receive an automated confirmation email receipt</span>
               </div>
 
               {/* Amount */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Pledge Amount (UGX) *</label>
+                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Pledge Amount (UGX) *</label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-slate-400">UGX</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-neutral-500">UGX</span>
                   <input
                     type="number"
                     required
@@ -1067,7 +1067,7 @@ export default function KwanjulaBudgetPage() {
                     placeholder="e.g. 100,000"
                     value={formData.amount}
                     onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                    className="w-full pl-13 pr-3 py-2 text-sm font-bold bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                    className="w-full pl-13 pr-3 py-2 text-sm font-bold bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
 
@@ -1078,7 +1078,7 @@ export default function KwanjulaBudgetPage() {
                       key={val}
                       type="button"
                       onClick={() => applyQuickAmount(val)}
-                      className="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                      className="px-2.5 py-1 rounded-full text-xs font-semibold bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition"
                     >
                       +{formatUGX(val)}
                     </button>
@@ -1087,7 +1087,7 @@ export default function KwanjulaBudgetPage() {
                     <button
                       type="button"
                       onClick={() => applyQuickAmount(selectedItem.remainingAmount)}
-                      className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 hover:bg-emerald-200 text-emerald-800 border border-emerald-300 transition"
+                      className="px-2.5 py-1 rounded-full text-xs font-bold bg-brand-100 hover:bg-brand-200 text-brand-800 border border-brand-300 transition"
                     >
                       Cover Remaining ({formatUGX(selectedItem.remainingAmount)})
                     </button>
@@ -1097,11 +1097,11 @@ export default function KwanjulaBudgetPage() {
 
               {/* Payment Method */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Fulfillment Mode</label>
+                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Fulfillment Mode</label>
                 <select
                   value={formData.paymentMethod}
                   onChange={(e) => setFormData(prev => ({ ...prev, paymentMethod: e.target.value }))}
-                  className="w-full p-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                  className="w-full p-2.5 text-sm bg-neutral-50 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                 >
                   <option value="Airtel Money (0703464261)">Airtel Money (0703464261 - Edwin Laston)</option>
                   <option value="MTN Mobile Money (0774324968)">MTN Mobile Money (0774324968 - Edwin Laston)</option>
@@ -1113,41 +1113,41 @@ export default function KwanjulaBudgetPage() {
 
               {/* Blessing Message */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Warm Blessing / Note to Couple</label>
+                <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Warm Blessing / Note to Couple</label>
                 <textarea
                   rows="2"
                   placeholder="e.g. Wishing Edwin & Jamirah God's richest blessings and joy!"
                   value={formData.message}
                   onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                  className="w-full p-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-700 focus:outline-none"
+                  className="w-full p-2.5 text-sm bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                 ></textarea>
               </div>
 
               {/* Privacy Checkboxes */}
-              <div className="bg-slate-50 p-3 rounded-xl space-y-2 text-xs">
-                <label className="flex items-center gap-2 text-slate-700 cursor-pointer">
+              <div className="bg-neutral-50 p-3 rounded-xl space-y-2 text-xs">
+                <label className="flex items-center gap-2 text-neutral-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.isAnonymous}
                     onChange={(e) => setFormData(prev => ({ ...prev, isAnonymous: e.target.checked }))}
-                    className="rounded text-emerald-700 focus:ring-emerald-600"
+                    className="rounded text-brand-700 focus:ring-brand-600"
                   />
                   <span>Display name as <strong>"Generous Well-wisher"</strong> on public wall</span>
                 </label>
-                <label className="flex items-center gap-2 text-slate-700 cursor-pointer">
+                <label className="flex items-center gap-2 text-neutral-700 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.hideAmount}
                     onChange={(e) => setFormData(prev => ({ ...prev, hideAmount: e.target.checked }))}
-                    className="rounded text-emerald-700 focus:ring-emerald-600"
+                    className="rounded text-brand-700 focus:ring-brand-600"
                   />
                   <span>Keep exact amount private on public wall</span>
                 </label>
               </div>
 
               {/* Notice */}
-              <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 flex items-start gap-2">
-                <i className="fa-solid fa-bell text-amber-600 mt-0.5"></i>
+              <div className="bg-accent-50 border border-accent-200 p-3 rounded-xl text-xs text-accent-900 flex items-start gap-2">
+                <i className="fa-solid fa-bell text-accent-700 mt-0.5"></i>
                 <span>An instant email alert is dispatched to Mr. Edwin Laston, and the budget balance subtracts in real-time across all connected screens.</span>
               </div>
 
@@ -1156,14 +1156,14 @@ export default function KwanjulaBudgetPage() {
                 <button
                   type="button"
                   onClick={() => setIsPledgeModalOpen(false)}
-                  className="px-4 py-2 text-xs sm:text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
+                  className="px-4 py-2 text-xs sm:text-sm font-semibold text-neutral-600 bg-neutral-100 hover:bg-neutral-200 rounded-xl transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-emerald-800 hover:bg-emerald-900 rounded-xl shadow transition flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2 text-xs sm:text-sm font-bold text-white bg-brand-800 hover:bg-brand-900 rounded-xl shadow transition flex items-center gap-2 disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
@@ -1186,45 +1186,45 @@ export default function KwanjulaBudgetPage() {
       {isSuccessModalOpen && receiptData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
           <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center animate-in zoom-in duration-200">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+            <div className="w-16 h-16 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-3xl mx-auto mb-4">
               <i className="fa-solid fa-circle-check"></i>
             </div>
 
-            <h3 className="font-serif-royal text-xl font-bold text-emerald-950 mb-1">
+            <h3 className="font-serif-royal text-xl font-bold text-brand-950 mb-1">
               Thank You for Your Blessing!
             </h3>
-            <p className="text-xs text-slate-500 mb-5">
+            <p className="text-xs text-neutral-500 mb-5">
               Your contribution has been recorded and subtracted from the ceremony budget in real-time.
             </p>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left space-y-2 text-xs mb-5">
+            <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-4 text-left space-y-2 text-xs mb-5">
               <div className="flex justify-between">
-                <span className="text-slate-500">Contributor:</span>
-                <strong className="text-slate-800">{receiptData.name}</strong>
+                <span className="text-neutral-500">Contributor:</span>
+                <strong className="text-neutral-800">{receiptData.name}</strong>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Pledged For:</span>
-                <strong className="text-slate-800">{receiptData.item}</strong>
+                <span className="text-neutral-500">Pledged For:</span>
+                <strong className="text-neutral-800">{receiptData.item}</strong>
               </div>
-              <div className="flex justify-between pt-2 border-t border-slate-200 text-sm font-bold">
-                <span className="text-slate-700">Amount:</span>
-                <span className="text-emerald-700">{formatUGX(receiptData.amount)}</span>
+              <div className="flex justify-between pt-2 border-t border-neutral-200 text-sm font-bold">
+                <span className="text-neutral-700">Amount:</span>
+                <span className="text-brand-700">{formatUGX(receiptData.amount)}</span>
               </div>
               <div className="flex justify-between pt-1">
-                <span className="text-slate-500">Notification Alert:</span>
-                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                <span className="text-neutral-500">Notification Alert:</span>
+                <span className="text-[11px] font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded-full">
                   <i className="fa-solid fa-envelope mr-1"></i> Dispatched to Edwin
                 </span>
               </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-xs text-amber-900 mb-5">
+            <div className="bg-accent-50 border border-accent-200 rounded-2xl p-3.5 text-xs text-accent-900 mb-5">
               <div className="font-bold mb-1">Fulfill via Mobile Money:</div>
               <div className="flex justify-around font-mono font-bold">
                 <span>Airtel: 0703464261</span>
                 <span>MTN: 0774324968</span>
               </div>
-              <div className="text-[10px] text-amber-700 mt-1">Ref: {receiptData.name} - {receiptData.item}</div>
+              <div className="text-[10px] text-accent-700 mt-1">Ref: {receiptData.name} - {receiptData.item}</div>
             </div>
 
             <div className="space-y-2">
@@ -1238,7 +1238,7 @@ export default function KwanjulaBudgetPage() {
               </a>
               <button
                 onClick={() => setIsSuccessModalOpen(false)}
-                className="w-full py-2.5 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 transition"
+                className="w-full py-2.5 rounded-xl text-xs font-bold bg-neutral-900 text-white hover:bg-neutral-800 transition"
               >
                 Done & Return to Budget
               </button>

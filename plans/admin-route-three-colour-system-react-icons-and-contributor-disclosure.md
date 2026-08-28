@@ -710,3 +710,47 @@ Authenticated → `smtp.pass` absent, `hasPassword` present. Set the recipient t
 `recipient: alerts-step5@example.com` — the alert followed `notifyEmail`, not `ownerEmail`. All probe
 rows were then removed and `data/settings.json`, `data/pledges.json` and `data/notifications.json` are
 back to their pre-step contents, plus the new `notifyEmail` key.
+
+### Step 6 — `Design_feat/palette: three colours in @theme, seven families collapsed`
+
+**Risk 5 was right: family does not equal role, in ten places.** A blanket `rose → accent` sweep would
+have turned "Needs Support" into a warning, and a blanket `slate → neutral` would have been fine but
+`purple → ?` had no answer at all. The specific list runs before the generic one and covers each: the
+"Needs Support" badge and its status rail become **neutral**, because the absence of a pledge is not an
+error; error text becomes `accent-700`/`accent-800` rather than `accent-600`, which is 3.4:1 on white and
+fails AA; the Supporters stat tile was purple only because it was the fourth tile, and its card was
+already neutral. 478 of the 488 occurrences then mapped 1:1.
+
+**`--color-*: initial` is the part that makes it hold.** Without it, three colours is a state the file is
+in until someone types `bg-emerald-800`. With it, Tailwind's default palette does not exist, so the old
+utilities resolve to nothing. This is also the diagnosis for Context 12: the previous token set was
+declared in a `:root` block inside `@layer base`, which generates custom properties but **no utilities** —
+which is exactly why the app ignored its own palette and `.pulse-dot` drifted to a different emerald.
+`white`, `black`, `transparent`, `current` and `inherit` are re-declared because the reset removes them
+too. `.pulse-dot` and `.modal-backdrop` now `color-mix()` from the tokens instead of hardcoding.
+
+**Measuring contrast found six real AA failures, all pre-existing.** The 1:1 shade map carried them over
+faithfully: `text-slate-400` at 2.45-2.56:1, `text-amber-600` money figures at 3.04-3.19:1, and
+`text-emerald-600` "% Funded" at 3.77:1. 42 utilities were bumped a shade — `neutral-400 → 500`,
+`accent-600 → 700`, `brand-600 → 700` — after checking none of them sit on a dark surface. Re-measured:
+**36 unique text/background pairs on the public page, one flagged**, and that one is the decorative `·`
+separator in the card meta line, now `aria-hidden="true"` so it is out of the accessible tree entirely.
+Composited by hand where Chrome reports oklab: brand-800 on the notifications card 7.46, neutral-500 body
+copy 4.62, accent-800 error text 7.09, accent-700 money 5.02, brand-700 5.48, white on accent-800 7.09.
+
+**The three funding states stay apart without hue** — read off the live DOM: covered is
+`brand-100 / brand-800 / brand-600 rail`, partial is `accent-100 / accent-800 / accent-500 rail`,
+needs-support is `neutral-100 / neutral-700 / neutral-300 rail`. Green and amber differ sharply in
+lightness, grey differs from both, and each badge carries a written label — "Covered", "34% Supported",
+"Needs Support" — so nothing depends on distinguishing the hues.
+
+**Risk 6 came due once, and it is worth the user's attention.** The Mobile Money channels used Airtel's
+brand red beside MTN's brand yellow. Under three colours both are accent: Airtel is `accent-700` on its
+chip and `accent-300` on the dark USSD panel, MTN keeps `accent-400`. The written labels still separate
+them, but a distinction that was carried by hue is now carried by shade and text. **Third-party brand
+marks are the one category where an exemption from the three-colour rule would be defensible** — flagged
+rather than quietly restored, because the request was explicit.
+
+**Proportions came out near the rule of thumb** without being aimed at: neutral 220, brand 170, accent 98
+across both pages — roughly 45/35/20, with neutral on surfaces and text, brand on structure and identity,
+accent on money and calls to action.
