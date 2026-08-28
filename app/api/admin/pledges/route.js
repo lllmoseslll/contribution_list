@@ -1,17 +1,14 @@
 import { NextResponse } from 'next/server';
-import { getSettings, getPledges, savePledges, calculateBudgetState, budgetEvents } from '@/lib/budget-service';
+import { getPledges, savePledges, calculateBudgetState, budgetEvents } from '@/lib/budget-service';
+import { requireAdmin } from '@/lib/admin-auth';
 import fs from 'fs';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
-  const pin = req.headers.get('x-admin-pin');
-  const settings = getSettings();
-
-  if (pin !== (settings.adminPin || 'edwin2026')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
   const pledges = getPledges();
   return NextResponse.json(pledges);
@@ -19,12 +16,8 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const pin = req.headers.get('x-admin-pin');
-    const settings = getSettings();
-
-    if (pin !== (settings.adminPin || 'edwin2026')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const denied = requireAdmin(req);
+    if (denied) return denied;
 
     const body = await req.json();
     const { name, phone, email, amount, itemId, message, paymentMethod, status } = body;

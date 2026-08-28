@@ -72,7 +72,6 @@ export default function KwanjulaBudgetPage() {
     ownerName: 'Mr. Edwin Laston',
     ownerEmail: 'edwinlaston@gmail.com',
     ownerPhone: '0703464261 / 0774324968',
-    adminPin: 'edwin2026',
     emailNotificationsEnabled: true,
     smtp: {
       enabled: false,
@@ -365,6 +364,29 @@ export default function KwanjulaBudgetPage() {
   };
 
   // Save Admin Settings
+  const handleExportCsv = async () => {
+    try {
+      const res = await fetch('/api/admin/export', {
+        headers: { 'x-admin-pin': adminPin }
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Export failed');
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `kwanjula-pledges-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     setIsSavingSettings(true);
@@ -379,10 +401,6 @@ export default function KwanjulaBudgetPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save settings');
-
-      if (adminSettings.adminPin && adminSettings.adminPin !== adminPin) {
-        setAdminPin(adminSettings.adminPin);
-      }
 
       showToast('Settings saved successfully!', 'success');
     } catch (err) {
@@ -1562,7 +1580,7 @@ export default function KwanjulaBudgetPage() {
                     <input
                       type={showPin ? 'text' : 'password'}
                       required
-                      placeholder="Enter PIN (Default: edwin2026)"
+                      placeholder="Committee passcode"
                       value={adminPin}
                       onChange={(e) => setAdminPin(e.target.value)}
                       className="w-full text-center font-bold tracking-widest p-2.5 pr-9 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-700"
@@ -1645,14 +1663,14 @@ export default function KwanjulaBudgetPage() {
                             onChange={(e) => setAdminSearch(e.target.value)}
                             className="text-xs p-2 border border-slate-300 rounded-lg flex-1 md:w-48 focus:outline-none focus:ring-1 focus:ring-emerald-700"
                           />
-                          <a
-                            href={`/api/admin/export?pin=${encodeURIComponent(adminPin)}`}
-                            target="_blank"
+                          <button
+                            type="button"
+                            onClick={handleExportCsv}
                             className="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5 hover:bg-emerald-100 shrink-0"
                             title="Export all records as CSV spreadsheet"
                           >
                             <i className="fa-solid fa-file-csv"></i> Export CSV
-                          </a>
+                          </button>
                           <button
                             onClick={() => setIsOfflineModalOpen(true)}
                             className="px-3 py-2 rounded-lg text-xs font-bold bg-emerald-800 text-white flex items-center gap-1.5 hover:bg-emerald-900 shrink-0"
@@ -1827,21 +1845,6 @@ export default function KwanjulaBudgetPage() {
                   {/* TAB 3: SETTINGS & SMTP */}
                   {adminTab === 'settings' && (
                     <form onSubmit={handleSaveSettings} className="space-y-4 text-xs">
-                      
-                      {/* Admin Passcode */}
-                      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                        <h5 className="font-bold text-slate-900 mb-1 text-sm flex items-center gap-2">
-                          <i className="fa-solid fa-key text-amber-500"></i> Committee Admin Passcode
-                        </h5>
-                        <p className="text-slate-500 mb-2">Change the secret PIN used to unlock this Committee Portal (Default: edwin2026).</p>
-                        <input
-                          type="text"
-                          required
-                          value={adminSettings.adminPin || 'edwin2026'}
-                          onChange={(e) => setAdminSettings(prev => ({ ...prev, adminPin: e.target.value }))}
-                          className="w-full sm:w-64 p-2 border border-slate-300 rounded-lg text-xs font-mono font-bold"
-                        />
-                      </div>
 
                       {/* Committee Owner & Recipient Email */}
                       <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">

@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
-import { getSettings, getPledges, savePledges, calculateBudgetState, budgetEvents } from '@/lib/budget-service';
+import { getPledges, savePledges, calculateBudgetState, budgetEvents } from '@/lib/budget-service';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req, { params }) {
-  const pin = req.headers.get('x-admin-pin');
-  const settings = getSettings();
-
-  if (pin !== (settings.adminPin || 'edwin2026')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
   const { id } = await params;
   const { status } = await req.json();

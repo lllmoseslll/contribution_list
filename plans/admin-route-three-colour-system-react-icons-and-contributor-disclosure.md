@@ -545,3 +545,47 @@ a page anyone could load, and it now exists in this branch's history inside the 
 `/introduction-budget-edwin-laston.pdf` still returns 200 against the running server; `git check-ignore`
 confirms all three data files ignored and `budget.json` tracked; `git grep edwin2026` outside `plans/`
 returns only `app/` (Step 2) and `server.cjs` (out of scope); `npx next build` clean, 13 routes.
+
+### Step 2 — `Sec_fix/passcode: require ADMIN_PIN and get it out of every url`
+
+**`lib/admin-auth.js` is the seam Step 3 needs.** It exports `getAdminPin()`, `matchesAdminPin()`,
+`isAdminRequest(req)` and `requireAdmin(req)`; the nine routes call `requireAdmin` and are now indifferent
+to *how* a caller proves itself. Step 3 changes this file's internals from a header to a cookie and
+touches no route. The comparison is constant-time — both sides are SHA-256'd first so `timingSafeEqual`
+gets equal-length buffers and the length of the submitted passcode does not leak through a throw.
+
+**The settings route needed two shapes, not one.** `GET /api/admin/settings` deliberately answers
+unauthenticated callers with a sanitised payload the public page depends on, so it uses `isAdminRequest()`
+rather than `requireAdmin()` and still returns 200 with no credential. That is why the probe below shows
+`/api/admin/settings` returning 200 with `ADMIN_PIN` unset while everything else returns 401 — it is
+correct, not a hole, and Step 5 is what removes the two email addresses still in that branch.
+
+**`POST /api/admin/settings` now strips `adminPin` from the incoming body.** Removing the field from the
+form is not sufficient on its own: the endpoint merged whatever it was handed straight into
+`data/settings.json` (`lib/budget-service.js:171-176`), so any stale client, cached bundle or hand-rolled
+request could write a credential back into the file Step 1 just finished getting out of git.
+
+**Two documentation lies were removed rather than left.** `.env.example` listed seven `SMTP_*` variables
+that nothing reads — `lib/mailer.js:4-28` builds its transport exclusively from `settings.smtp` — and
+`README.md:66` told the reader they could "set `SMTP_USER` and `SMTP_PASS` directly in the `.env` file",
+which has never been true. Both now say where SMTP is actually configured.
+
+**Probed against `next start`, both ways.** With `ADMIN_PIN=""`: every admin route 401s, including with
+the old default passcode, and the body reads *"ADMIN_PIN is not set on this server. Set it in .env (see
+.env.example) and restart."* With `ADMIN_PIN=edwin2026`: `/api/admin/pledges`, `/notifications`,
+`/settings`, `/export` and `POST /verify` all return 200 with the header and 401 without it or with a
+wrong one. `GET /api/admin/export?pin=edwin2026` returns **401** — the query-parameter path is gone.
+
+**Verified in the browser too.** Logging into the portal on the dev server: the passcode field's
+placeholder no longer advertises a default; the Settings tab now shows two cards ("Groom / Committee
+Contacts", "Live SMTP Email Dispatch") with the passcode card gone and the string "passcode" absent from
+the rendered page; Export CSV is a `<button>` with no `href`, and the fetch it makes returns
+`text/csv` with the same header row and `Content-Disposition` filename as before. Fourteen network
+requests were captured across a full login and none carries a credential in its URL.
+
+**The capture also reproduces Context 9 exactly** — three `GET /api/stream` connections and four
+`GET /api/budget` fetches for one login, because each keystroke in the passcode field re-ran the SSE
+effect. Step 4 fixes it.
+
+**`edwin2026` is still the working passcode** and still needs rotating; this step only makes `.env` the
+place to do it.

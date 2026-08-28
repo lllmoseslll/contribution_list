@@ -1,15 +1,15 @@
-import { getSettings, getPledges } from '@/lib/budget-service';
+import { getPledges } from '@/lib/budget-service';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
-  const { searchParams } = new URL(req.url);
-  const pin = searchParams.get('pin');
-  const settings = getSettings();
-
-  if (pin !== (settings.adminPin || 'edwin2026')) {
-    return new Response('Unauthorized', { status: 401 });
-  }
+  // Authenticated from the request header, not from a query parameter. A
+  // credential in a URL lands in browser history, server access logs and any
+  // proxy in between, so the client fetches this and saves the blob rather
+  // than following a credential-bearing link.
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
   const pledges = getPledges();
   const headers = ['Pledge ID', 'Date', 'Contributor Name', 'Phone', 'Email', 'Item Name', 'Section', 'Amount (UGX)', 'Payment Method', 'Status', 'Message'];

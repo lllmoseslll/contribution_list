@@ -1,16 +1,12 @@
 import { NextResponse } from 'next/server';
-import { getSettings, getNotifications } from '@/lib/budget-service';
+import { getNotifications } from '@/lib/budget-service';
+import { requireAdmin } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
-  const pin = req.headers.get('x-admin-pin');
-  const settings = getSettings();
+  const denied = requireAdmin(req);
+  if (denied) return denied;
 
-  if (pin !== (settings.adminPin || 'edwin2026')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const notifs = getNotifications();
-  return NextResponse.json(notifs);
+  return NextResponse.json(getNotifications());
 }

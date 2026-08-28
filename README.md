@@ -63,7 +63,7 @@ To deliver real emails directly into Edwin's Gmail inbox and send receipts to co
 5. Click **"Send Test Email to Verify"** to confirm instant delivery!
 6. Click **"Save Settings"**.
 
-*(Alternatively, you can set `SMTP_USER` and `SMTP_PASS` directly in the `.env` file).*
+*(SMTP credentials live in the admin portal, not in `.env` — the `SMTP_*` variables are not read by the application.)*
 
 ---
 
