@@ -606,11 +606,11 @@ export default function KwanjulaBudgetPage() {
             </h3>
 
             {/* Checkpoint Indicators Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 mb-4">
 
               {/* Checkpoint 1: 25% */}
               <div className={`p-3 sm:p-3.5 rounded-lg border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 25 ? 'bg-brand-800 border-brand-600' : 'bg-brand-950/40 border-brand-800'}`}>
-                <div className="flex justify-between items-center mb-2 gap-1.5">
+                <div className="flex flex-wrap justify-between items-center mb-2 gap-1.5">
                   <span className={`text-[9px] sm:text-[10px] font-extrabold uppercase px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap ${stats.totalPercentage >= 25 ? 'bg-brand-500 text-white' : 'bg-brand-800 text-brand-300'}`}>
                     {stats.totalPercentage >= 25 ? '25% Achieved' : 'Stage 1 • 25%'}
                   </span>
@@ -624,7 +624,7 @@ export default function KwanjulaBudgetPage() {
 
               {/* Checkpoint 2: 50% */}
               <div className={`p-3 sm:p-3.5 rounded-lg border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 50 ? 'bg-brand-800 border-brand-600' : stats.totalPercentage >= 25 ? 'bg-brand-900 border-accent-600' : 'bg-brand-950/40 border-brand-800'}`}>
-                <div className="flex justify-between items-center mb-2 gap-1.5">
+                <div className="flex flex-wrap justify-between items-center mb-2 gap-1.5">
                   <span className={`text-[9px] sm:text-[10px] font-extrabold uppercase px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap ${stats.totalPercentage >= 50 ? 'bg-brand-500 text-white' : stats.totalPercentage >= 25 ? 'bg-accent-600 text-white' : 'bg-brand-800 text-brand-300'}`}>
                     {stats.totalPercentage >= 50 ? '50% Achieved' : 'Stage 2 • 50%'}
                   </span>
@@ -638,7 +638,7 @@ export default function KwanjulaBudgetPage() {
 
               {/* Checkpoint 3: 75% */}
               <div className={`p-3 sm:p-3.5 rounded-lg border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 75 ? 'bg-brand-800 border-brand-600' : 'bg-brand-950/40 border-brand-800'}`}>
-                <div className="flex justify-between items-center mb-2 gap-1.5">
+                <div className="flex flex-wrap justify-between items-center mb-2 gap-1.5">
                   <span className={`text-[9px] sm:text-[10px] font-extrabold uppercase px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap ${stats.totalPercentage >= 75 ? 'bg-brand-500 text-white' : 'bg-brand-800 text-brand-300'}`}>
                     {stats.totalPercentage >= 75 ? '75% Achieved' : 'Stage 3 • 75%'}
                   </span>
@@ -652,7 +652,7 @@ export default function KwanjulaBudgetPage() {
 
               {/* Checkpoint 4: 100% */}
               <div className={`p-3 sm:p-3.5 rounded-lg border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 100 ? 'bg-brand-800 border-brand-500' : 'bg-brand-950/40 border-brand-800'}`}>
-                <div className="flex justify-between items-center mb-2 gap-1.5">
+                <div className="flex flex-wrap justify-between items-center mb-2 gap-1.5">
                   <span className={`text-[9px] sm:text-[10px] font-extrabold uppercase px-1.5 sm:px-2 py-0.5 rounded-md whitespace-nowrap ${stats.totalPercentage >= 100 ? 'bg-accent-600 text-white' : 'bg-brand-800 text-brand-300'}`}>
                     {stats.totalPercentage >= 100 ? '100% Victory' : 'Stage 4 • 100%'}
                   </span>

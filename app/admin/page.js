@@ -525,7 +525,7 @@ export default function AdminPage() {
 
       <div className="mx-auto max-w-5xl bg-white rounded-xl border border-neutral-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-brand-950 text-white p-5 flex justify-between items-center">
+        <div className="bg-brand-950 text-white p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
           <div>
             <h3 className="text-lg font-bold flex items-center gap-2">
               <FaLock className="text-accent-400" aria-hidden="true" /> Committee Admin Portal
@@ -536,7 +536,7 @@ export default function AdminPage() {
             {adminAuthenticated && (
               <button
                 onClick={handleAdminLogout}
-                className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5 whitespace-nowrap"
                 title="End this admin session"
               >
                 <FaRightFromBracket aria-hidden="true" /> Sign out
@@ -544,7 +544,7 @@ export default function AdminPage() {
             )}
             <Link
               href="/"
-              className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5 whitespace-nowrap"
               title="Back to the public budget page"
             >
               <FaArrowLeft aria-hidden="true" /> Back to site
@@ -647,13 +647,13 @@ export default function AdminPage() {
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-2 w-full md:w-auto">
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                       <input
                         type="text"
                         placeholder="Search contributor / item..."
                         value={adminSearch}
                         onChange={(e) => setAdminSearch(e.target.value)}
-                        className="text-xs p-2 border border-neutral-300 rounded-lg flex-1 md:w-48 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                        className="text-xs p-2 border border-neutral-300 rounded-lg flex-1 min-w-[140px] md:w-48 focus:outline-none focus:ring-1 focus:ring-brand-700"
                       />
                       <button
                         type="button"
