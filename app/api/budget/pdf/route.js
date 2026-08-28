@@ -137,10 +137,11 @@ export async function GET() {
 
     // Column header
     ensureSpace(16);
-    const cols = { name: PAGE_MARGIN, qty: 260, target: 320, remaining: 400, status: 480 };
+    const cols = { name: PAGE_MARGIN, qty: 210, pledged: 250, target: 322, remaining: 394, status: 466 };
     doc.font('Helvetica-Bold').fontSize(7.5).fillColor(NEUTRAL_LIGHT);
     doc.text('ITEM', cols.name, y, { width: cols.qty - cols.name - 6 });
-    doc.text('QTY', cols.qty, y, { width: cols.target - cols.qty - 6 });
+    doc.text('QTY', cols.qty, y, { width: cols.pledged - cols.qty - 6 });
+    doc.text('PLEDGED', cols.pledged, y, { width: cols.target - cols.pledged - 6 });
     doc.text('TARGET', cols.target, y, { width: cols.remaining - cols.target - 6 });
     doc.text('REMAINING', cols.remaining, y, { width: cols.status - cols.remaining - 6 });
     doc.text('STATUS', cols.status, y, { width: PAGE_WIDTH - PAGE_MARGIN - cols.status });
@@ -159,8 +160,9 @@ export async function GET() {
 
       doc.font('Helvetica').fontSize(8.5).fillColor(NEUTRAL);
       doc.text(item.name, cols.name, y, { width: cols.qty - cols.name - 6 });
-      doc.text(String(item.qty || 1), cols.qty, y, { width: cols.target - cols.qty - 6 });
-      doc.text(formatUGX(item.totalCost), cols.target, y, { width: cols.remaining - cols.target - 6 });
+      doc.text(String(item.qty || 1), cols.qty, y, { width: cols.pledged - cols.qty - 6 });
+      doc.fillColor(item.pledgedAmount > 0 ? BRAND : NEUTRAL_LIGHT).text(formatUGX(item.pledgedAmount), cols.pledged, y, { width: cols.target - cols.pledged - 6 });
+      doc.fillColor(NEUTRAL).text(formatUGX(item.totalCost), cols.target, y, { width: cols.remaining - cols.target - 6 });
       doc.fillColor(item.isFullyFunded ? BRAND : ACCENT).text(formatUGX(item.remainingAmount), cols.remaining, y, { width: cols.status - cols.remaining - 6 });
       doc.fillColor(statusColor).font('Helvetica-Bold').text(statusLabel, cols.status, y, { width: PAGE_WIDTH - PAGE_MARGIN - cols.status });
       y += 13;
@@ -210,14 +212,26 @@ export async function GET() {
   }
 
   // ------------------------------------------------------------ Page numbers
+  //
+  // Writing at PAGE_HEIGHT - 30 sits below the document's own bottom margin
+  // (created with margin: PAGE_MARGIN on every side), and PDFKit treats text
+  // placed beyond a page's margins as overflow — it silently inserts a *new*
+  // page to hold it, even when switchToPage() has pointed at an existing one.
+  // That turned a 3-page report into 6 (3 real pages, then 3 more holding
+  // nothing but a stray footer). Zeroing the bottom margin first tells PDFKit
+  // there is nothing left to protect below this text, so it draws directly
+  // onto the page already selected instead of manufacturing another one.
   const range = doc.bufferedPageRange();
   for (let i = 0; i < range.count; i++) {
     doc.switchToPage(i);
+    const bottomMargin = doc.page.margins.bottom;
+    doc.page.margins.bottom = 0;
     doc.font('Helvetica').fontSize(8).fillColor(NEUTRAL_LIGHT)
       .text(`Page ${i + 1} of ${range.count}`, PAGE_MARGIN, PAGE_HEIGHT - 30, {
         width: PAGE_WIDTH - PAGE_MARGIN * 2,
         align: 'center'
       });
+    doc.page.margins.bottom = bottomMargin;
   }
 
   doc.end();
