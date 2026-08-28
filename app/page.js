@@ -536,45 +536,53 @@ export default function KwanjulaBudgetPage() {
               </div>
             </div>
 
-            <div
-              className="relative h-7 sm:h-8 rounded-full bg-brand-950 overflow-hidden mb-3"
-              role="progressbar"
-              aria-valuenow={stats.totalPercentage}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label="Ceremony budget funded percentage"
-            >
+            {/* The bar itself, plus the Raised/Remaining figures docked onto its two ends as
+                solid-background badges — legible over either the fill or the track behind
+                them, wherever the fill percentage happens to put that edge. Remaining stays
+                accent-coloured so it's still the figure that draws the eye. */}
+            <div className="relative mb-3">
               <div
-                className="h-full bg-brand-700 relative overflow-hidden transition-[width] duration-500"
-                style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}
+                className="relative h-9 sm:h-10 rounded-full bg-brand-950 overflow-hidden"
+                role="progressbar"
+                aria-valuenow={stats.totalPercentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Ceremony budget funded percentage"
               >
                 <div
-                  className="absolute inset-x-0 top-0 h-3 opacity-30 water-wave"
-                  style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
-                  aria-hidden="true"
-                ></div>
-                <div
-                  className="absolute inset-x-0 top-0 h-3 opacity-20 water-wave-reverse"
-                  style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
-                  aria-hidden="true"
-                ></div>
+                  className="h-full bg-brand-700 relative overflow-hidden transition-[width] duration-500"
+                  style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}
+                >
+                  <div
+                    className="absolute inset-0 opacity-40 water-wave"
+                    style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
+                    aria-hidden="true"
+                  ></div>
+                  <div
+                    className="absolute inset-0 opacity-25 water-wave-reverse"
+                    style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
+                    aria-hidden="true"
+                  ></div>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-white tracking-wide">
+                  {stats.totalPercentage}% Funded
+                </div>
               </div>
-              <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-white tracking-wide">
-                {stats.totalPercentage}% Funded
+
+              <div className="absolute left-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 bg-brand-800 border border-brand-600 rounded-full pl-1.5 pr-2.5 py-1 shadow-sm">
+                <FaCircleCheck className="text-brand-300 text-[9px] shrink-0" aria-hidden="true" />
+                <span className="text-[10px] sm:text-[11px] font-bold text-white whitespace-nowrap">{formatUGX(stats.totalCoveredAndPledged)}</span>
+              </div>
+
+              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 bg-accent-700 border border-accent-500 rounded-full pl-1.5 pr-2.5 py-1 shadow-sm">
+                <FaScaleBalanced className="text-white text-[9px] shrink-0" aria-hidden="true" />
+                <span className="text-[10px] sm:text-[11px] font-black text-white whitespace-nowrap">{formatUGX(stats.totalRemaining)}</span>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <FaCircleCheck className="text-brand-400 text-sm shrink-0" aria-hidden="true" />
-                <span className="text-sm font-bold text-white">{formatUGX(stats.totalCoveredAndPledged)}</span>
-                <span className="text-[11px] text-brand-300 font-medium">Raised &amp; Pledged</span>
-              </div>
-              <div className="inline-flex items-center gap-2 bg-accent-700 border border-accent-600 rounded-md px-2.5 py-1.5">
-                <FaScaleBalanced className="text-white text-sm shrink-0" aria-hidden="true" />
-                <span className="text-sm font-black text-white">{formatUGX(stats.totalRemaining)}</span>
-                <span className="text-[11px] font-bold text-accent-100">Remaining</span>
-              </div>
+            <div className="flex items-center justify-between gap-2 text-[11px] font-medium text-brand-300">
+              <span>Raised &amp; Pledged</span>
+              <span className="text-accent-200 font-bold">Remaining</span>
             </div>
           </div>
 
