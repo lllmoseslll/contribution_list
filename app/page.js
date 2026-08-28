@@ -57,6 +57,11 @@ function roundToNearestThousand(val) {
   return Math.round(n / 1000) * 1000;
 }
 
+/** One repeatable wave-crest tile, used as a scrolling background layer to give the budget progress bar's fill a water-surface look. */
+const WATER_WAVE_SVG = `url("data:image/svg+xml,${encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'><path d='M0,10 C15,20 35,0 50,10 C65,20 85,0 100,10 L100,20 L0,20 Z' fill='white'/></svg>"
+)}")`;
+
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
@@ -527,19 +532,36 @@ export default function KwanjulaBudgetPage() {
               </div>
               <div className="flex items-center gap-1.5 text-xs font-bold text-brand-300">
                 <span className="w-2 h-2 rounded-full bg-brand-400 pulse-dot inline-block"></span>
-                <span>{stats.totalPercentage}% Funded</span>
+                <span>Live</span>
               </div>
             </div>
 
             <div
-              className="h-2.5 rounded-full bg-brand-950 overflow-hidden mb-3"
+              className="relative h-7 sm:h-8 rounded-full bg-brand-950 overflow-hidden mb-3"
               role="progressbar"
               aria-valuenow={stats.totalPercentage}
               aria-valuemin={0}
               aria-valuemax={100}
               aria-label="Ceremony budget funded percentage"
             >
-              <div className="h-full bg-brand-400" style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}></div>
+              <div
+                className="h-full bg-brand-700 relative overflow-hidden transition-[width] duration-500"
+                style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}
+              >
+                <div
+                  className="absolute inset-x-0 top-0 h-3 opacity-30 water-wave"
+                  style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
+                  aria-hidden="true"
+                ></div>
+                <div
+                  className="absolute inset-x-0 top-0 h-3 opacity-20 water-wave-reverse"
+                  style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
+                  aria-hidden="true"
+                ></div>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-white tracking-wide">
+                {stats.totalPercentage}% Funded
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-2">

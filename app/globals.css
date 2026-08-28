@@ -153,6 +153,25 @@
   100% { transform: scale(0.9); box-shadow: 0 0 0 0 transparent; }
 }
 
+/*
+ * A scrolling wave-crest tile (WATER_WAVE_SVG, app/page.js) layered twice inside the
+ * budget progress bar's fill, at different opacity/speed/direction, so the flat fill reads
+ * as a moving water surface instead of a static bar - a functional animation tied to the
+ * live funded percentage, not decorative page chrome.
+ */
+.water-wave {
+  animation: waterWaveScroll 2.2s linear infinite;
+}
+
+.water-wave-reverse {
+  animation: waterWaveScroll 3.6s linear infinite reverse;
+}
+
+@keyframes waterWaveScroll {
+  from { background-position-x: 0; }
+  to   { background-position-x: -100px; }
+}
+
 .modal-backdrop {
   background: color-mix(in srgb, var(--color-neutral-900) 75%, transparent);
   backdrop-filter: blur(4px);
