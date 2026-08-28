@@ -754,3 +754,41 @@ rather than quietly restored, because the request was explicit.
 **Proportions came out near the rule of thumb** without being aimed at: neutral 220, brand 170, accent 98
 across both pages — roughly 45/35/20, with neutral on surfaces and text, brand on structure and identity,
 accent on money and calls to action.
+
+### Step 7 — `Design_feat/icons: react-icons/fa6 in, the font-awesome cdn out`
+
+**All 79 icons across both pages mapped onto free `react-icons/fa6` exports**, one substitution short
+of exact: Font Awesome's `fa-shield-check` has no free FA6 equivalent (it is a Pro-only glyph), so the
+"Verified Payment Channels" badge takes `FaShieldHalved` instead — the same general-purpose security mark
+already used for the admin passcode screen. Nine dynamic icons (ternaries and small lookup objects keyed
+by an icon-name string, e.g. `{'fa-award': <FaAward />, ...}[tab.icon]`) were hand-converted rather than
+regexed, since a template-literal class name has no single string to parse. `fa-spin` — Font Awesome's own
+CSS animation modifier, not an icon — became Tailwind's `animate-spin` on the component instead of a
+mapping table entry.
+
+**`--color-*: initial` from Step 6 caught nothing here, deliberately: icons are SVG, not Tailwind colour
+utilities**, so no icon lost its colour in the swap — `className="text-accent-300"` on an `<i>` and on a
+`<FaXmark />` resolve through the same `currentColor` mechanism either way.
+
+**Seven icon-only interactive elements gained an `aria-label`**, matched by count to `grep -c
+"aria-label="`: the toast dismiss button, the search-clear button, the public pledge modal's close button
+on the public page; the passcode show/hide toggle, the per-row delete-pledge button (`Delete pledge from
+{name}`, one source location serving every row), and both remaining modal close buttons on `/admin`. Every
+other icon — the 72 that sit beside a text label, inside a heading, or as a purely decorative accent — is
+`aria-hidden="true"`, so a screen reader is not told "graphic" repeatedly for icons a sighted user reads as
+reinforcing text that is already announced.
+
+**Measured the size claim rather than assuming it.** Stashed this step's changes, rebuilt the pre-migration
+tree from a clean `.next`, and recorded `732K` total in `.next/static/chunks`; restored the stash and
+rebuilt again: `760K`. **+28K, about 3.8%** — the CDN stylesheet this replaces was a render-blocking
+request to a third-party origin on every load, so the trade is a small first-party bundle increase for one
+fewer external dependency and no more render-blocking third-party request.
+
+**Verified in the browser**, not just in the build: walked the hero, the metrics dashboard, an item card's
+status rail and supporter chip, the Roll of Honor, all three Mobile Money channel cards including the
+WhatsApp brand icon, the public pledge modal, and all three `/admin` tabs plus its offline-pledge and
+email-preview modals. Every icon renders as an SVG. `grep -rn '<i className'` and every Font Awesome style
+or class string (`fa-solid`, `fa-regular`, `fa-brands`) return nothing outside the two lookup objects'
+plain string *keys*, which are internal identifiers, not CSS classes reaching a stylesheet. Zero requests
+to `cdnjs.cloudflare.com` in a captured network trace. `lucide-react` is gone from `package.json` and
+`node_modules` — it was a dependency with zero imports anywhere in the repo before this step.

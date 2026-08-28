@@ -3,6 +3,47 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
+import {
+  FaArrowDown,
+  FaAward,
+  FaBasketShopping,
+  FaBell,
+  FaBorderAll,
+  FaCalendarDays,
+  FaCheck,
+  FaCheckDouble,
+  FaCircleCheck,
+  FaCircleInfo,
+  FaClapperboard,
+  FaCoins,
+  FaEnvelope,
+  FaFilePdf,
+  FaFilter,
+  FaGem,
+  FaGift,
+  FaHandHoldingDollar,
+  FaHandHoldingHeart,
+  FaHeart,
+  FaHeartCircleCheck,
+  FaListCheck,
+  FaLock,
+  FaMagnifyingGlass,
+  FaMobileScreenButton,
+  FaPaperPlane,
+  FaPhone,
+  FaRegCommentDots,
+  FaRegCopy,
+  FaRegEnvelope,
+  FaRegUser,
+  FaScaleBalanced,
+  FaShieldHalved,
+  FaShirt,
+  FaSpinner,
+  FaStar,
+  FaUsers,
+  FaWhatsapp,
+  FaXmark
+} from 'react-icons/fa6';
 
 function formatUGX(num) {
   return new Intl.NumberFormat('en-UG', {
@@ -276,8 +317,8 @@ export default function KwanjulaBudgetPage() {
           toast.type === 'success' ? 'bg-brand-900 text-brand-100 border-l-4 border-brand-400' : 'bg-neutral-900 text-white border-l-4 border-accent-500'
         }`}>
           <span>{toast.msg}</span>
-          <button onClick={() => setToast(null)} className="opacity-70 hover:opacity-100 ml-2">
-            <i className="fa-solid fa-xmark"></i>
+          <button onClick={() => setToast(null)} className="opacity-70 hover:opacity-100 ml-2" aria-label="Dismiss">
+            <FaXmark aria-hidden="true" />
           </button>
         </div>
       )}
@@ -292,7 +333,7 @@ export default function KwanjulaBudgetPage() {
             </span>
             <span className="hidden sm:inline text-brand-400/40">•</span>
             <span className="text-brand-100 font-medium">
-              <i className="fa-solid fa-calendar-days text-accent-400 mr-1.5"></i>
+              <FaCalendarDays className="text-accent-400 mr-1.5" aria-hidden="true" />
               Ceremony Date: <strong>Friday, 27th November 2026</strong>
             </span>
           </div>
@@ -305,13 +346,13 @@ export default function KwanjulaBudgetPage() {
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-brand-200 bg-brand-900/60 hover:bg-brand-800 border border-brand-700/60 transition"
               title="View original official PDF"
             >
-              <i className="fa-solid fa-file-pdf text-accent-400"></i> Official PDF
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Official PDF
             </a>
             <Link
               href="/admin"
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-accent-300 bg-accent-500/10 hover:bg-accent-500/20 border border-accent-500/30 transition"
             >
-              <i className="fa-solid fa-lock text-[10px]"></i> Committee Portal
+              <FaLock className="text-[10px]" aria-hidden="true" /> Committee Portal
             </Link>
           </div>
         </div>
@@ -323,7 +364,7 @@ export default function KwanjulaBudgetPage() {
         
         <div className="relative max-w-4xl mx-auto z-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/15 border border-accent-400/40 text-accent-300 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
-            <i className="fa-solid fa-gem text-accent-400"></i> The Kwanjula Budget
+            <FaGem className="text-accent-400" aria-hidden="true" /> The Kwanjula Budget
           </div>
 
           <h1 className="font-serif-royal text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 drop-shadow-md">
@@ -343,13 +384,13 @@ export default function KwanjulaBudgetPage() {
               onClick={() => openPledgeModal(null)}
               className="px-6 py-3 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white shadow-lg shadow-accent-600/30 transition transform hover:-translate-y-0.5 flex items-center gap-2"
             >
-              <i className="fa-solid fa-heart-circle-check"></i> Make a Pledge Now
+              <FaHeartCircleCheck aria-hidden="true" /> Make a Pledge Now
             </button>
             <a
               href="#budgetSection"
               className="px-6 py-3 rounded-xl font-semibold text-sm sm:text-base bg-white text-brand-950 hover:bg-neutral-100 shadow-md transition transform hover:-translate-y-0.5 flex items-center gap-2"
             >
-              <i className="fa-solid fa-list-check"></i> View Budget Items
+              <FaListCheck aria-hidden="true" /> View Budget Items
             </a>
             <a
               href="/introduction-budget-edwin-laston.pdf"
@@ -357,13 +398,13 @@ export default function KwanjulaBudgetPage() {
               rel="noopener noreferrer"
               className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-brand-950/80 hover:bg-brand-900 border border-accent-400/40 text-accent-300 transition flex items-center gap-2 shadow-md"
             >
-              <i className="fa-solid fa-file-pdf text-accent-400"></i> Download Official PDF
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Download Official PDF
             </a>
             <a
               href="#paymentSection"
               className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-brand-800/60 hover:bg-brand-800 border border-brand-600/40 text-brand-100 transition flex items-center gap-2"
             >
-              <i className="fa-solid fa-mobile-screen-button"></i> Mobile Money
+              <FaMobileScreenButton aria-hidden="true" /> Mobile Money
             </a>
           </div>
         </div>
@@ -375,7 +416,7 @@ export default function KwanjulaBudgetPage() {
           
           <div className="bg-white p-5 rounded-2xl shadow-lg border border-neutral-200/80 flex items-center gap-4 transition hover:-translate-y-1">
             <div className="w-13 h-13 rounded-xl bg-accent-50 text-accent-700 flex items-center justify-center text-xl shrink-0">
-              <i className="fa-solid fa-coins"></i>
+              <FaCoins aria-hidden="true" />
             </div>
             <div>
               <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Total Budget</div>
@@ -386,7 +427,7 @@ export default function KwanjulaBudgetPage() {
 
           <div className="bg-white p-5 rounded-2xl shadow-lg border border-brand-200 bg-gradient-to-br from-white to-brand-50/50 flex items-center gap-4 transition hover:-translate-y-1">
             <div className="w-13 h-13 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center text-xl shrink-0">
-              <i className="fa-solid fa-circle-check"></i>
+              <FaCircleCheck aria-hidden="true" />
             </div>
             <div>
               <div className="text-xs font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
@@ -397,20 +438,20 @@ export default function KwanjulaBudgetPage() {
 
           <div className="bg-white p-5 rounded-2xl shadow-lg border border-accent-200 bg-gradient-to-br from-white to-accent-50/50 flex items-center gap-4 transition hover:-translate-y-1">
             <div className="w-13 h-13 rounded-xl bg-accent-100 text-accent-700 flex items-center justify-center text-xl shrink-0">
-              <i className="fa-solid fa-scale-balanced"></i>
+              <FaScaleBalanced aria-hidden="true" />
             </div>
             <div>
               <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Remaining Balance</div>
               <div className="text-xl sm:text-2xl font-black text-accent-700">{formatUGX(stats.totalRemaining)}</div>
               <div className="text-xs font-semibold text-accent-700 flex items-center gap-1">
-                <i className="fa-solid fa-arrow-down"></i> Live subtracting
+                <FaArrowDown aria-hidden="true" /> Live subtracting
               </div>
             </div>
           </div>
 
           <div className="bg-white p-5 rounded-2xl shadow-lg border border-neutral-200/80 flex items-center gap-4 transition hover:-translate-y-1">
             <div className="w-13 h-13 rounded-xl bg-neutral-200 text-neutral-700 flex items-center justify-center text-xl shrink-0">
-              <i className="fa-solid fa-users"></i>
+              <FaUsers aria-hidden="true" />
             </div>
             <div>
               <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Supporters</div>
@@ -448,7 +489,7 @@ export default function KwanjulaBudgetPage() {
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="w-full sm:w-80 relative">
-              <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 text-sm"></i>
+              <FaMagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500 text-sm" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Search items (e.g. Cows, Rice, Suitcase)..."
@@ -460,8 +501,9 @@ export default function KwanjulaBudgetPage() {
                 <button
                   onClick={() => setSearchQuery('')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-600"
+                  aria-label="Clear search"
                 >
-                  <i className="fa-solid fa-xmark text-sm"></i>
+                  <FaXmark className="text-sm" aria-hidden="true" />
                 </button>
               )}
             </div>
@@ -473,7 +515,7 @@ export default function KwanjulaBudgetPage() {
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand-900 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-full transition whitespace-nowrap"
               title="Inspect official signed budget"
             >
-              <i className="fa-solid fa-file-pdf text-accent-500"></i> PDF
+              <FaFilePdf className="text-accent-500" aria-hidden="true" /> PDF
             </a>
           </div>
         </div>
@@ -496,7 +538,13 @@ export default function KwanjulaBudgetPage() {
                   : 'bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-100'
               }`}
             >
-              <i className={`fa-solid ${tab.icon}`}></i> {tab.label}
+              {{
+                'fa-border-all': <FaBorderAll aria-hidden="true" />,
+                'fa-award': <FaAward aria-hidden="true" />,
+                'fa-shirt': <FaShirt aria-hidden="true" />,
+                'fa-basket-shopping': <FaBasketShopping aria-hidden="true" />,
+                'fa-clapperboard': <FaClapperboard aria-hidden="true" />,
+              }[tab.icon]} {tab.label}
             </button>
           ))}
         </div>
@@ -504,7 +552,7 @@ export default function KwanjulaBudgetPage() {
         {/* Filter Chips */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
           <span className="text-xs font-semibold text-neutral-500 mr-1 flex items-center gap-1">
-            <i className="fa-solid fa-filter"></i> Filter:
+            <FaFilter aria-hidden="true" /> Filter:
           </span>
           {[
             { id: 'all', label: 'All Items' },
@@ -530,7 +578,7 @@ export default function KwanjulaBudgetPage() {
         <div className="bg-gradient-to-r from-accent-50 to-accent-100/60 border border-accent-200 rounded-2xl p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-accent-500 text-white flex items-center justify-center text-xl shrink-0">
-              <i className="fa-solid fa-hand-holding-dollar"></i>
+              <FaHandHoldingDollar aria-hidden="true" />
             </div>
             <div>
               <h3 className="font-bold text-accent-950 text-base sm:text-lg">Prefer to make a General Contribution?</h3>
@@ -543,7 +591,7 @@ export default function KwanjulaBudgetPage() {
             onClick={() => openPledgeModal(null)}
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-sm font-bold bg-accent-600 hover:bg-accent-700 text-white shadow-md transition shrink-0 flex items-center justify-center gap-2"
           >
-            <i className="fa-solid fa-gift"></i> Make General Pledge
+            <FaGift aria-hidden="true" /> Make General Pledge
           </button>
         </div>
 
@@ -558,7 +606,7 @@ export default function KwanjulaBudgetPage() {
         {/* Empty Search / Filter Result */}
         {!isLoading && filteredSections.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl border border-neutral-200">
-            <i className="fa-solid fa-magnifying-glass text-neutral-300 text-4xl mb-3"></i>
+            <FaMagnifyingGlass className="text-neutral-300 text-4xl mb-3" aria-hidden="true" />
             <h3 className="text-base font-bold text-neutral-700">No matching items found</h3>
             <p className="text-xs text-neutral-500 mt-1">Try resetting your search query or selecting "All Items".</p>
             <button
@@ -678,14 +726,14 @@ export default function KwanjulaBudgetPage() {
                               disabled
                               className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-neutral-500 bg-neutral-100 cursor-not-allowed flex items-center justify-center gap-1.5"
                             >
-                              <i className="fa-solid fa-check-double text-brand-700"></i> Fully Sponsored
+                              <FaCheckDouble className="text-brand-700" aria-hidden="true" /> Fully Sponsored
                             </button>
                           ) : (
                             <button
                               onClick={() => openPledgeModal(item)}
                               className="w-full py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold text-brand-950 bg-brand-50 hover:bg-brand-900 hover:text-white border border-brand-300 transition flex items-center justify-center gap-2 shadow-sm"
                             >
-                              <i className="fa-solid fa-hand-holding-heart text-accent-500"></i> Pledge for this Item
+                              <FaHandHoldingHeart className="text-accent-500" aria-hidden="true" /> Pledge for this Item
                             </button>
                           )}
                         </div>
@@ -695,12 +743,12 @@ export default function KwanjulaBudgetPage() {
                       <div className="mt-4 pt-3 border-t border-dashed border-neutral-200">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="text-[11px] font-bold uppercase text-neutral-500 flex items-center gap-1.5 mr-1 shrink-0">
-                            <i className="fa-solid fa-users text-neutral-500"></i> Supporters ({recentPledges.length}):
+                            <FaUsers className="text-neutral-500" aria-hidden="true" /> Supporters ({recentPledges.length}):
                           </span>
 
                           {isCovered && item.remarks === 'Covered' && recentPledges.length === 0 && (
                             <span className="text-xs bg-brand-50 text-brand-800 border border-brand-200 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
-                              <i className="fa-solid fa-star text-accent-500 text-[10px]"></i> Pre-covered by Family
+                              <FaStar className="text-accent-500 text-[10px]" aria-hidden="true" /> Pre-covered by Family
                             </span>
                           )}
 
@@ -711,7 +759,7 @@ export default function KwanjulaBudgetPage() {
                                 className="text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 transition"
                                 title={p.message ? `"${p.message}"` : 'Pledged for this item'}
                               >
-                                <i className="fa-solid fa-check text-brand-700 text-[10px]"></i>
+                                <FaCheck className="text-brand-700 text-[10px]" aria-hidden="true" />
                                 <strong>{p.name}</strong>
                                 {p.amount && <span className="text-brand-700 font-bold">({formatUGX(p.amount)})</span>}
                               </span>
@@ -736,7 +784,7 @@ export default function KwanjulaBudgetPage() {
           <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
             <div>
               <h2 className="font-serif-royal text-2xl font-bold text-brand-950 flex items-center gap-2">
-                <i className="fa-solid fa-heart text-accent-500"></i> Contributor Roll of Honor & Blessings
+                <FaHeart className="text-accent-500" aria-hidden="true" /> Contributor Roll of Honor & Blessings
               </h2>
               <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
                 Thank you to everyone standing with Mr. Edwin Laston & Jamirah Nakayemba!
@@ -754,7 +802,7 @@ export default function KwanjulaBudgetPage() {
 
           {rollOfHonorPledges.length === 0 ? (
             <div className="text-center py-10 text-neutral-500 text-sm">
-              <i className="fa-regular fa-comment-dots text-3xl mb-2 block"></i>
+              <FaRegCommentDots className="text-3xl mb-2 block" aria-hidden="true" />
               No pledges recorded yet. Submit the first pledge and leave your warm wishes for the couple!
             </div>
           ) : (
@@ -774,7 +822,7 @@ export default function KwanjulaBudgetPage() {
                     </div>
 
                     <div className="bg-brand-50 text-xs px-3 py-1.5 rounded-lg flex justify-between items-center text-brand-950 font-medium">
-                      <span className="truncate mr-2"><i className="fa-solid fa-gift text-brand-700 mr-1"></i> {p.itemName}</span>
+                      <span className="truncate mr-2"><FaGift className="text-brand-700 mr-1" aria-hidden="true" /> {p.itemName}</span>
                       <strong className="text-brand-700 shrink-0">{p.amount ? formatUGX(p.amount) : 'Generous'}</strong>
                     </div>
 
@@ -794,7 +842,7 @@ export default function KwanjulaBudgetPage() {
         <section className="bg-gradient-to-br from-brand-950 to-brand-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl" id="paymentSection">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent-400/20 text-accent-300 border border-accent-400/30 uppercase tracking-wider mb-2">
-              <i className="fa-solid fa-shield-check"></i> Verified Payment Channels
+              <FaShieldHalved aria-hidden="true" /> Verified Payment Channels
             </span>
             <h2 className="font-serif-royal text-2xl sm:text-3xl font-bold mb-2">How to Fulfill Your Pledge</h2>
             <p className="text-brand-200 text-xs sm:text-sm">
@@ -819,7 +867,7 @@ export default function KwanjulaBudgetPage() {
                       className="p-1.5 text-neutral-300 hover:text-white"
                       title="Copy Airtel number"
                     >
-                      <i className={`fa-${copiedText === '0703464261' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
+                      {copiedText === '0703464261' ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
                     </button>
                   </div>
 
@@ -831,7 +879,7 @@ export default function KwanjulaBudgetPage() {
                       className="p-1.5 text-neutral-300 hover:text-white"
                       title="Copy MTN number"
                     >
-                      <i className={`fa-${copiedText === '0774324968' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
+                      {copiedText === '0774324968' ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
                     </button>
                   </div>
                 </div>
@@ -843,7 +891,7 @@ export default function KwanjulaBudgetPage() {
                 rel="noreferrer"
                 className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-[#25D366] hover:bg-[#1ebd5b] text-white flex items-center justify-center gap-2 transition"
               >
-                <i className="fa-brands fa-whatsapp text-base"></i> Chat Edwin on WhatsApp
+                <FaWhatsapp className="text-base" aria-hidden="true" /> Chat Edwin on WhatsApp
               </a>
             </div>
 
@@ -861,7 +909,7 @@ export default function KwanjulaBudgetPage() {
                     className="p-1.5 text-neutral-300 hover:text-white"
                     title="Copy number"
                   >
-                    <i className={`fa-${copiedText === '0783987907' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
+                    {copiedText === '0783987907' ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
                   </button>
                 </div>
               </div>
@@ -870,7 +918,7 @@ export default function KwanjulaBudgetPage() {
                 href="tel:0783987907"
                 className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-2 transition"
               >
-                <i className="fa-solid fa-phone text-xs"></i> Call Contact
+                <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
               </a>
             </div>
 
@@ -888,7 +936,7 @@ export default function KwanjulaBudgetPage() {
                     className="p-1.5 text-neutral-300 hover:text-white"
                     title="Copy number"
                   >
-                    <i className={`fa-${copiedText === '0706171109' ? 'solid fa-check text-brand-400' : 'regular fa-copy'}`}></i>
+                    {copiedText === '0706171109' ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
                   </button>
                 </div>
               </div>
@@ -897,7 +945,7 @@ export default function KwanjulaBudgetPage() {
                 href="tel:0706171109"
                 className="w-full py-2.5 px-4 rounded-xl text-sm font-bold bg-white/10 hover:bg-white/20 text-white flex items-center justify-center gap-2 transition"
               >
-                <i className="fa-solid fa-phone text-xs"></i> Call Contact
+                <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
               </a>
             </div>
 
@@ -906,7 +954,7 @@ export default function KwanjulaBudgetPage() {
           {/* Quick USSD Steps */}
           <div className="bg-black/25 rounded-2xl p-4 sm:p-5 border border-white/10 text-xs text-brand-200">
             <div className="font-bold text-white text-sm mb-2 flex items-center gap-2">
-              <i className="fa-solid fa-circle-info text-accent-400"></i> Quick Mobile Money USSD Codes:
+              <FaCircleInfo className="text-accent-400" aria-hidden="true" /> Quick Mobile Money USSD Codes:
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="bg-white/5 p-3 rounded-xl">
@@ -932,7 +980,7 @@ export default function KwanjulaBudgetPage() {
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <a href="/introduction-budget-edwin-laston.pdf" target="_blank" rel="noopener noreferrer" className="underline hover:text-white flex items-center gap-1">
-              <i className="fa-solid fa-file-pdf text-accent-400"></i> Official PDF
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Official PDF
             </a>
             <button onClick={() => openPledgeModal(null)} className="underline hover:text-white">Make a Pledge</button>
             <Link href="/admin" className="underline hover:text-white">Committee Admin Portal</Link>
@@ -949,15 +997,16 @@ export default function KwanjulaBudgetPage() {
             <div className="bg-gradient-to-r from-brand-900 to-brand-900 text-white p-5 flex justify-between items-center">
               <div>
                 <h3 className="font-serif-royal text-lg font-bold flex items-center gap-2">
-                  <i className="fa-solid fa-hand-holding-heart text-accent-400"></i> Make a Pledge
+                  <FaHandHoldingHeart className="text-accent-400" aria-hidden="true" /> Make a Pledge
                 </h3>
                 <p className="text-xs text-brand-200">Enter your name and contribution details</p>
               </div>
               <button
                 onClick={() => setIsPledgeModalOpen(false)}
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
+                aria-label="Close"
               >
-                <i className="fa-solid fa-xmark"></i>
+                <FaXmark aria-hidden="true" />
               </button>
             </div>
 
@@ -1009,7 +1058,7 @@ export default function KwanjulaBudgetPage() {
               <div>
                 <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Your Full Name *</label>
                 <div className="relative">
-                  <i className="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                  <FaRegUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500" aria-hidden="true" />
                   <input
                     type="text"
                     required
@@ -1025,7 +1074,7 @@ export default function KwanjulaBudgetPage() {
               <div>
                 <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Phone Number (MTN / Airtel) *</label>
                 <div className="relative">
-                  <i className="fa-solid fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                  <FaPhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500" aria-hidden="true" />
                   <input
                     type="tel"
                     required
@@ -1042,7 +1091,7 @@ export default function KwanjulaBudgetPage() {
               <div>
                 <label className="block text-xs font-bold text-neutral-700 uppercase mb-1">Email Address (Optional)</label>
                 <div className="relative">
-                  <i className="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500"></i>
+                  <FaRegEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-500" aria-hidden="true" />
                   <input
                     type="email"
                     placeholder="e.g. you@example.com"
@@ -1147,7 +1196,7 @@ export default function KwanjulaBudgetPage() {
 
               {/* Notice */}
               <div className="bg-accent-50 border border-accent-200 p-3 rounded-xl text-xs text-accent-900 flex items-start gap-2">
-                <i className="fa-solid fa-bell text-accent-700 mt-0.5"></i>
+                <FaBell className="text-accent-700 mt-0.5" aria-hidden="true" />
                 <span>An instant email alert is dispatched to Mr. Edwin Laston, and the budget balance subtracts in real-time across all connected screens.</span>
               </div>
 
@@ -1167,11 +1216,11 @@ export default function KwanjulaBudgetPage() {
                 >
                   {isSubmitting ? (
                     <>
-                      <i className="fa-solid fa-spinner fa-spin"></i> Recording...
+                      <FaSpinner className="animate-spin" aria-hidden="true" /> Recording...
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-paper-plane"></i> Submit & Subtract
+                      <FaPaperPlane aria-hidden="true" /> Submit & Subtract
                     </>
                   )}
                 </button>
@@ -1187,7 +1236,7 @@ export default function KwanjulaBudgetPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
           <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center animate-in zoom-in duration-200">
             <div className="w-16 h-16 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-3xl mx-auto mb-4">
-              <i className="fa-solid fa-circle-check"></i>
+              <FaCircleCheck aria-hidden="true" />
             </div>
 
             <h3 className="font-serif-royal text-xl font-bold text-brand-950 mb-1">
@@ -1213,7 +1262,7 @@ export default function KwanjulaBudgetPage() {
               <div className="flex justify-between pt-1">
                 <span className="text-neutral-500">Notification Alert:</span>
                 <span className="text-[11px] font-bold text-brand-700 bg-brand-100 px-2 py-0.5 rounded-full">
-                  <i className="fa-solid fa-envelope mr-1"></i> Dispatched to Edwin
+                  <FaEnvelope className="mr-1" aria-hidden="true" /> Dispatched to Edwin
                 </span>
               </div>
             </div>
@@ -1234,7 +1283,7 @@ export default function KwanjulaBudgetPage() {
                 rel="noreferrer"
                 className="w-full py-2.5 rounded-xl text-xs font-bold bg-[#25D366] text-white flex items-center justify-center gap-2 hover:bg-[#1ebd5b] transition"
               >
-                <i className="fa-brands fa-whatsapp text-sm"></i> Share on WhatsApp
+                <FaWhatsapp className="text-sm" aria-hidden="true" /> Share on WhatsApp
               </a>
               <button
                 onClick={() => setIsSuccessModalOpen(false)}

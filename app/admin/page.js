@@ -2,6 +2,37 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import {
+  FaArrowLeft,
+  FaArrowsRotate,
+  FaBell,
+  FaCheck,
+  FaCheckDouble,
+  FaCircleInfo,
+  FaClock,
+  FaEnvelopeOpenText,
+  FaFileCsv,
+  FaFloppyDisk,
+  FaGear,
+  FaListCheck,
+  FaLock,
+  FaPaperPlane,
+  FaPhone,
+  FaPlus,
+  FaRegEnvelope,
+  FaRegEnvelopeOpen,
+  FaRegEye,
+  FaRegEyeSlash,
+  FaRegFileLines,
+  FaRegTrashCan,
+  FaRightFromBracket,
+  FaRotateLeft,
+  FaServer,
+  FaShieldHalved,
+  FaSpinner,
+  FaUserShield,
+  FaXmark
+} from 'react-icons/fa6';
 
 function formatUGX(num) {
   return new Intl.NumberFormat('en-UG', {
@@ -368,7 +399,7 @@ export default function AdminPage() {
         <div className="bg-gradient-to-r from-brand-950 to-brand-950 text-white p-5 flex justify-between items-center">
           <div>
             <h3 className="font-serif-royal text-lg font-bold flex items-center gap-2">
-              <i className="fa-solid fa-lock text-accent-400"></i> Committee Admin Portal
+              <FaLock className="text-accent-400" aria-hidden="true" /> Committee Admin Portal
             </h3>
             <p className="text-xs text-brand-300">Manage pledges, verify Mobile Money receipts, email alerts & settings</p>
           </div>
@@ -379,7 +410,7 @@ export default function AdminPage() {
                 className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
                 title="End this admin session"
               >
-                <i className="fa-solid fa-right-from-bracket"></i> Sign out
+                <FaRightFromBracket aria-hidden="true" /> Sign out
               </button>
             )}
             <Link
@@ -387,7 +418,7 @@ export default function AdminPage() {
               className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
               title="Back to the public budget page"
             >
-              <i className="fa-solid fa-arrow-left"></i> Back to site
+              <FaArrowLeft aria-hidden="true" /> Back to site
             </Link>
           </div>
         </div>
@@ -398,7 +429,7 @@ export default function AdminPage() {
             /* Login Box */
             <form onSubmit={handleAdminLogin} className="max-w-xs mx-auto text-center py-8">
               <div className="w-14 h-14 rounded-full bg-accent-50 text-accent-700 flex items-center justify-center text-2xl mx-auto mb-3">
-                <i className="fa-solid fa-shield-halved"></i>
+                <FaShieldHalved aria-hidden="true" />
               </div>
               <h4 className="font-bold text-neutral-900 text-base mb-1">Committee Passcode</h4>
               <p className="text-xs text-neutral-500 mb-4">Enter PIN to access committee records</p>
@@ -416,8 +447,9 @@ export default function AdminPage() {
                   type="button"
                   onClick={() => setShowPin(!showPin)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-600"
+                  aria-label={showPin ? 'Hide passcode' : 'Show passcode'}
                 >
-                  <i className={`fa-regular ${showPin ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                  {showPin ? <FaRegEyeSlash aria-hidden="true" /> : <FaRegEye aria-hidden="true" />}
                 </button>
               </div>
               <button
@@ -451,7 +483,11 @@ export default function AdminPage() {
                         : 'border-transparent text-neutral-500 hover:text-neutral-600'
                     }`}
                   >
-                    <i className={`fa-solid ${t.icon}`}></i> {t.label}
+                    {{
+                    'fa-list-check': <FaListCheck aria-hidden="true" />,
+                    'fa-envelope-open-text': <FaEnvelopeOpenText aria-hidden="true" />,
+                    'fa-gear': <FaGear aria-hidden="true" />,
+                  }[t.icon]} {t.label}
                   </button>
                 ))}
               </div>
@@ -496,13 +532,13 @@ export default function AdminPage() {
                         className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-50 text-brand-800 border border-brand-200 flex items-center gap-1.5 hover:bg-brand-100 shrink-0"
                         title="Export all records as CSV spreadsheet"
                       >
-                        <i className="fa-solid fa-file-csv"></i> Export CSV
+                        <FaFileCsv aria-hidden="true" /> Export CSV
                       </button>
                       <button
                         onClick={() => setIsOfflineModalOpen(true)}
                         className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-800 text-white flex items-center gap-1.5 hover:bg-brand-900 shrink-0"
                       >
-                        <i className="fa-solid fa-plus"></i> Add Offline Pledge
+                        <FaPlus aria-hidden="true" /> Add Offline Pledge
                       </button>
                     </div>
                   </div>
@@ -544,7 +580,7 @@ export default function AdminPage() {
                                   <div className="font-bold text-neutral-900">{p.name}</div>
                                   {p.phone && (
                                     <div className="text-[11px] text-neutral-500">
-                                      <i className="fa-solid fa-phone text-[9px] mr-1 text-neutral-500"></i>
+                                      <FaPhone className="text-[9px] mr-1 text-neutral-500" aria-hidden="true" />
                                       <a href={`tel:${p.phone}`} className="hover:underline">{p.phone}</a>
                                     </div>
                                   )}
@@ -576,7 +612,7 @@ export default function AdminPage() {
                                       ? 'bg-brand-100 text-brand-800 border border-brand-200'
                                       : 'bg-accent-100 text-accent-800 border border-accent-200'
                                   }`}>
-                                    <i className={`fa-solid ${isPaid ? 'fa-check-double' : 'fa-clock'}`}></i>
+                                    {isPaid ? <FaCheckDouble aria-hidden="true" /> : <FaClock aria-hidden="true" />}
                                     {isPaid ? 'Paid & Received' : 'Pledged / Pending'}
                                   </span>
                                 </td>
@@ -593,11 +629,11 @@ export default function AdminPage() {
                                     >
                                       {isPaid ? (
                                         <>
-                                          <i className="fa-solid fa-rotate-left mr-1"></i> Mark Pledged
+                                          <FaRotateLeft className="mr-1" aria-hidden="true" /> Mark Pledged
                                         </>
                                       ) : (
                                         <>
-                                          <i className="fa-solid fa-check mr-1"></i> Mark Paid
+                                          <FaCheck className="mr-1" aria-hidden="true" /> Mark Paid
                                         </>
                                       )}
                                     </button>
@@ -605,8 +641,9 @@ export default function AdminPage() {
                                       onClick={() => handleDeletePledge(p.id, p.name)}
                                       className="p-1 text-neutral-500 hover:text-accent-800 rounded hover:bg-accent-50 transition"
                                       title="Void / Delete pledge"
+                                      aria-label={`Delete pledge from ${p.name}`}
                                     >
-                                      <i className="fa-regular fa-trash-can"></i>
+                                      <FaRegTrashCan aria-hidden="true" />
                                     </button>
                                   </div>
                                 </td>
@@ -631,13 +668,13 @@ export default function AdminPage() {
                       onClick={() => loadAdminNotifications()}
                       className="text-xs text-brand-800 font-bold hover:underline flex items-center gap-1"
                     >
-                      <i className="fa-solid fa-arrows-rotate"></i> Refresh
+                      <FaArrowsRotate aria-hidden="true" /> Refresh
                     </button>
                   </div>
 
                   {adminNotifs.length === 0 ? (
                     <div className="text-center py-12 text-neutral-500 text-xs border border-dashed border-neutral-200 rounded-xl">
-                      <i className="fa-regular fa-envelope text-2xl mb-2 block text-neutral-300"></i>
+                      <FaRegEnvelope className="text-2xl mb-2 block text-neutral-300" aria-hidden="true" />
                       No email alerts generated yet. They will appear here immediately as pledges are made.
                     </div>
                   ) : (
@@ -660,7 +697,7 @@ export default function AdminPage() {
                             onClick={() => setPreviewEmailHtml(n.htmlPreview)}
                             className="text-xs text-brand-700 font-bold hover:underline flex items-center gap-1"
                           >
-                            <i className="fa-regular fa-file-lines"></i> Preview HTML Email
+                            <FaRegFileLines aria-hidden="true" /> Preview HTML Email
                           </button>
                         </div>
                       </div>
@@ -677,7 +714,7 @@ export default function AdminPage() {
                   <div className="p-4 rounded-xl bg-brand-50/60 border border-brand-200">
                     <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
                       <h5 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
-                        <i className="fa-solid fa-bell text-brand-700"></i> Pledge Alert Notifications
+                        <FaBell className="text-brand-700" aria-hidden="true" /> Pledge Alert Notifications
                       </h5>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -704,7 +741,7 @@ export default function AdminPage() {
                     />
                     {!adminSettings.notifyEmail && adminSettings.ownerEmail && (
                       <p className="text-[11px] text-accent-700 mt-1.5">
-                        <i className="fa-solid fa-circle-info"></i> Empty, so alerts fall back to the public contact address
+                        <FaCircleInfo aria-hidden="true" /> Empty, so alerts fall back to the public contact address
                         ({adminSettings.ownerEmail}).
                       </p>
                     )}
@@ -716,7 +753,7 @@ export default function AdminPage() {
                         disabled={testEmailStatus?.loading}
                         className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-accent-50 text-accent-800 border border-accent-300 hover:bg-accent-100 flex items-center gap-1.5"
                       >
-                        <i className={`fa-solid ${testEmailStatus?.loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'}`}></i>
+                        {testEmailStatus?.loading ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaPaperPlane aria-hidden="true" />}
                         Send Test Email
                       </button>
                       {testEmailStatus?.msg && (
@@ -730,7 +767,7 @@ export default function AdminPage() {
                   {/* Public committee contacts */}
                   <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200">
                     <h5 className="font-bold text-neutral-900 mb-1 text-sm flex items-center gap-2">
-                      <i className="fa-solid fa-user-shield text-brand-700"></i> Public Committee Contacts
+                      <FaUserShield className="text-brand-700" aria-hidden="true" /> Public Committee Contacts
                     </h5>
                     <p className="text-neutral-500 mb-3">Shown to contributors on the public page. Not used for alerts.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -759,7 +796,7 @@ export default function AdminPage() {
                   <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200">
                     <div className="flex justify-between items-center mb-1">
                       <h5 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
-                        <i className="fa-solid fa-server text-brand-700"></i> Live SMTP Email Dispatch
+                        <FaServer className="text-brand-700" aria-hidden="true" /> Live SMTP Email Dispatch
                       </h5>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -848,11 +885,11 @@ export default function AdminPage() {
                     >
                       {isSavingSettings ? (
                         <>
-                          <i className="fa-solid fa-spinner fa-spin"></i> Saving...
+                          <FaSpinner className="animate-spin" aria-hidden="true" /> Saving...
                         </>
                       ) : (
                         <>
-                          <i className="fa-solid fa-floppy-disk"></i> Save Settings
+                          <FaFloppyDisk aria-hidden="true" /> Save Settings
                         </>
                       )}
                     </button>
@@ -877,8 +914,9 @@ export default function AdminPage() {
               <button
                 onClick={() => setIsOfflineModalOpen(false)}
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
+                aria-label="Close"
               >
-                <i className="fa-solid fa-xmark"></i>
+                <FaXmark aria-hidden="true" />
               </button>
             </div>
 
@@ -992,7 +1030,7 @@ export default function AdminPage() {
                   disabled={isSubmittingOffline}
                   className="px-4 py-2 bg-brand-800 hover:bg-brand-900 text-white rounded-xl font-bold flex items-center gap-1.5"
                 >
-                  {isSubmittingOffline ? <i className="fa-solid fa-spinner fa-spin"></i> : <i className="fa-solid fa-check"></i>}
+                  {isSubmittingOffline ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaCheck aria-hidden="true" />}
                   Save Offline Record
                 </button>
               </div>
@@ -1007,13 +1045,14 @@ export default function AdminPage() {
           <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in duration-200">
             <div className="p-4 bg-neutral-900 text-white flex justify-between items-center">
               <h4 className="font-bold text-sm flex items-center gap-2">
-                <i className="fa-regular fa-envelope-open text-accent-400"></i> Formatted Notification Email Preview
+                <FaRegEnvelopeOpen className="text-accent-400" aria-hidden="true" /> Formatted Notification Email Preview
               </h4>
               <button
                 onClick={() => setPreviewEmailHtml(null)}
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
+                aria-label="Close"
               >
-                <i className="fa-solid fa-xmark"></i>
+                <FaXmark aria-hidden="true" />
               </button>
             </div>
             <div className="p-4 overflow-y-auto flex-1 bg-neutral-100">
