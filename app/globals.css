@@ -99,9 +99,36 @@
   box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-accent-600) !important;
 }
 
-.font-serif-royal {
-  font-family: 'Playfair Display', 'Cinzel', Georgia, serif;
-}
+/*
+ * Radius and shadow convention (Redesign_feat/foundations).
+ *
+ * A prior pass audited this app against a checklist of named "looks
+ * AI-generated" tells — see plans/professional-redesign-remove-generic-ai-patterns.md
+ * Research item 1 — and found `rounded-2xl`/`rounded-3xl` paired with
+ * `shadow-lg`/`shadow-xl`/`shadow-2xl` used as the *default* treatment for
+ * ordinary content sitting in normal page flow, rather than reserved for
+ * surfaces that are genuinely elevated above it. That pairing, applied
+ * everywhere, is itself one of the checklist's named tells.
+ *
+ * The convention going forward, matching the "borders, not shadows" pattern
+ * documented for Linear and Vercel (plan Research item 2):
+ *
+ *   - Cards, inputs, buttons, sections in normal page flow: `rounded-lg`,
+ *     at most `shadow-sm` — a 1px border carries the surface, not a shadow.
+ *   - `rounded-full` is reserved for things that are actually circular:
+ *     avatars, status dots, single-glyph icon buttons. Not pill-shaped
+ *     badges or buttons — those are `rounded-md`.
+ *   - `shadow-md` and heavier stay reserved for surfaces that interrupt the
+ *     page and sit above it: modals, dropdowns, toasts. A card that scrolls
+ *     with the page never gets modal-weight elevation.
+ *   - Hover state on a resting surface is a border or background-tint
+ *     change, never a `translate` lift — the floating-card affordance has
+ *     no corresponding pattern in the cited professional references.
+ *
+ * This is documentation, not enforcement — Tailwind utility classes are
+ * chosen inline per element, the same way the colour-role comment above this
+ * one documents `brand`/`accent`/`neutral` without a lint rule backing it.
+ */
 
 .pulse-dot {
   animation: pulseDot 1.8s infinite;

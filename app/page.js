@@ -424,7 +424,7 @@ export default function KwanjulaBudgetPage() {
             <FaGem className="text-accent-400" aria-hidden="true" /> The Kwanjula Budget
           </div>
 
-          <h1 className="font-serif-royal text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 drop-shadow-md">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 drop-shadow-md">
             Mr. Edwin Laston <span className="text-accent-400 italic font-serif">&</span> Jamirah Nakayemba
           </h1>
 
@@ -540,7 +540,7 @@ export default function KwanjulaBudgetPage() {
         {/* Controls & Search */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-6">
           <div>
-            <h2 className="font-serif-royal text-2xl sm:text-3xl font-bold text-brand-950">Budget Sections & Items</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-brand-950">Budget Sections & Items</h2>
             <p className="text-neutral-500 text-sm mt-1">Select any item below to sponsor all or part of it.</p>
           </div>
 
@@ -704,7 +704,7 @@ export default function KwanjulaBudgetPage() {
                   {sec.code}
                 </span>
                 <div>
-                  <h3 className="font-serif-royal text-xl sm:text-2xl font-bold text-brand-950">
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-950">
                     Section {sec.code}: {sec.title}
                   </h3>
                   <p className="text-xs text-neutral-500">{sec.description}</p>
@@ -880,7 +880,7 @@ export default function KwanjulaBudgetPage() {
         <section className="bg-white rounded-3xl p-6 sm:p-8 border border-neutral-200/80 shadow-md mb-16">
           <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
             <div>
-              <h2 className="font-serif-royal text-2xl font-bold text-brand-950 flex items-center gap-2">
+              <h2 className="text-2xl font-bold text-brand-950 flex items-center gap-2">
                 <FaHeart className="text-accent-500" aria-hidden="true" /> Contributor Roll of Honor & Blessings
               </h2>
               <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">
@@ -941,7 +941,7 @@ export default function KwanjulaBudgetPage() {
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-accent-400/20 text-accent-300 border border-accent-400/30 uppercase tracking-wider mb-2">
               <FaShieldHalved aria-hidden="true" /> Verified Payment Channels
             </span>
-            <h2 className="font-serif-royal text-2xl sm:text-3xl font-bold mb-2">How to Fulfill Your Pledge</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">How to Fulfill Your Pledge</h2>
             <p className="text-brand-200 text-xs sm:text-sm">
               Please send your contribution directly via Mobile Money to the Groom or Committee Members below. Use your <strong>Name</strong> and <strong>Pledged Item</strong> as reference.
             </p>
@@ -1072,7 +1072,7 @@ export default function KwanjulaBudgetPage() {
       <footer className="mt-auto bg-brand-950 text-brand-300 py-8 px-4 border-t border-brand-900">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
           <div>
-            <div className="font-serif-royal font-bold text-white text-base">Mr. Edwin Laston & Jamirah Nakayemba</div>
+            <div className="font-bold text-white text-base">Mr. Edwin Laston & Jamirah Nakayemba</div>
             <div>Introduction Ceremony (Kwanjula) — Friday, 27th November 2026</div>
           </div>
           <div className="flex flex-wrap items-center gap-4">
@@ -1093,7 +1093,7 @@ export default function KwanjulaBudgetPage() {
             {/* Header */}
             <div className="bg-gradient-to-r from-brand-900 to-brand-900 text-white p-5 flex justify-between items-center">
               <div>
-                <h3 className="font-serif-royal text-lg font-bold flex items-center gap-2">
+                <h3 className="text-lg font-bold flex items-center gap-2">
                   <FaHandHoldingHeart className="text-accent-400" aria-hidden="true" /> Make a Pledge
                 </h3>
                 <p className="text-xs text-brand-200">Enter your name and contribution details</p>
@@ -1336,7 +1336,7 @@ export default function KwanjulaBudgetPage() {
               <FaCircleCheck aria-hidden="true" />
             </div>
 
-            <h3 className="font-serif-royal text-xl font-bold text-brand-950 mb-1">
+            <h3 className="text-xl font-bold text-brand-950 mb-1">
               Thank You for Your Blessing!
             </h3>
             <p className="text-xs text-neutral-500 mb-5">

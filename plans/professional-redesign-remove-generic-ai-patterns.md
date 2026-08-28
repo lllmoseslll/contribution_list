@@ -465,3 +465,26 @@ unaffected (this step touches no handler, only `className` strings).
 ## Session log
 
 *(Appended per step, in the same commit as the work.)*
+
+### Step 1 — `Redesign_feat/foundations: type scale, radius/shadow convention, primary-action colour`
+
+**The primary-action colour reconciliation (D2) is scoped to Steps 2 and 4, not this one.** Step 1's own
+body text — unlike its title — only ever described the font removal and the radius/shadow convention;
+the actual button recolouring happens where the buttons themselves are touched (the hero CTAs in Step 2,
+the item-card pledge button in Step 4). This step establishes the *documented* convention only, the same
+way the `brand`/`accent`/`neutral` role comment documents colour without a lint rule enforcing it.
+
+**All ten `font-serif-royal` occurrences (8 in `app/page.js`, 2 in `app/admin/page.js`) were removed by a
+script matching the class both mid-string and at the end of a `className`**, rather than by hand, since a
+manual sweep across two large files risks missing one and leaving an orphaned reference that would keep
+the deleted Google Fonts weights loading for nothing. `.font-serif-royal`'s definition and the Playfair
+Display / Cinzel weights in `app/layout.js`'s font `<link>` are deleted in the same commit — only
+`Outfit` remains.
+
+**The radius/shadow convention is written as a comment in `app/globals.css`, next to the colour-role
+comment it deliberately matches in tone and placement**, so a future pass has one place to find both
+documented conventions rather than needing to reconstruct the reasoning from this plan file.
+
+**Verified:** `grep -rn "font-serif-royal|Playfair|Cinzel" app/` returns nothing; `next build` is clean;
+the hero H1 computed `font-family` is `Outfit, …` in the browser, confirmed live rather than assumed from
+the diff.

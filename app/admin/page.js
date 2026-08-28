@@ -398,7 +398,7 @@ export default function AdminPage() {
         {/* Header */}
         <div className="bg-gradient-to-r from-brand-950 to-brand-950 text-white p-5 flex justify-between items-center">
           <div>
-            <h3 className="font-serif-royal text-lg font-bold flex items-center gap-2">
+            <h3 className="text-lg font-bold flex items-center gap-2">
               <FaLock className="text-accent-400" aria-hidden="true" /> Committee Admin Portal
             </h3>
             <p className="text-xs text-brand-300">Manage pledges, verify Mobile Money receipts, email alerts & settings</p>
@@ -908,7 +908,7 @@ export default function AdminPage() {
           <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
             <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
               <div>
-                <h3 className="font-serif-royal text-lg font-bold">Add Offline / Phone Pledge</h3>
+                <h3 className="text-lg font-bold">Add Offline / Phone Pledge</h3>
                 <p className="text-xs text-brand-200">Record pledges received via phone calls or cash in hand</p>
               </div>
               <button
