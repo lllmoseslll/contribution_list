@@ -467,11 +467,9 @@ export default function KwanjulaBudgetPage() {
       {/* Financial Metrics Dashboard */}
       <section className="max-w-6xl mx-auto w-full px-4 -mt-8 relative z-20 mb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-neutral-200/80 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-accent-50 text-accent-700 flex items-center justify-center text-xl shrink-0">
-              <FaCoins aria-hidden="true" />
-            </div>
+
+          <div className="bg-white p-4 rounded-lg border border-neutral-200 flex items-center gap-3">
+            <FaCoins className="text-accent-600 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Total Budget</div>
               <div className="text-xl sm:text-2xl font-black text-neutral-900">{formatUGX(stats.totalBudget)}</div>
@@ -479,10 +477,8 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-brand-200 bg-gradient-to-br from-white to-brand-50/50 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center text-xl shrink-0">
-              <FaCircleCheck aria-hidden="true" />
-            </div>
+          <div className="bg-brand-50 p-4 rounded-lg border border-brand-200 flex items-center gap-3">
+            <FaCircleCheck className="text-brand-700 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-xs font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
               <div className="text-xl sm:text-2xl font-black text-brand-700">{formatUGX(stats.totalCoveredAndPledged)}</div>
@@ -490,10 +486,8 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-accent-200 bg-gradient-to-br from-white to-accent-50/50 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-accent-100 text-accent-700 flex items-center justify-center text-xl shrink-0">
-              <FaScaleBalanced aria-hidden="true" />
-            </div>
+          <div className="bg-accent-50 p-4 rounded-lg border border-accent-200 flex items-center gap-3">
+            <FaScaleBalanced className="text-accent-700 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Remaining Balance</div>
               <div className="text-xl sm:text-2xl font-black text-accent-700">{formatUGX(stats.totalRemaining)}</div>
@@ -503,10 +497,8 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl shadow-lg border border-neutral-200/80 flex items-center gap-4 transition hover:-translate-y-1">
-            <div className="w-13 h-13 rounded-xl bg-neutral-200 text-neutral-700 flex items-center justify-center text-xl shrink-0">
-              <FaUsers aria-hidden="true" />
-            </div>
+          <div className="bg-white p-4 rounded-lg border border-neutral-200 flex items-center gap-3">
+            <FaUsers className="text-neutral-600 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Supporters</div>
               <div className="text-xl sm:text-2xl font-black text-neutral-900">{stats.pledgersCount} Contributors</div>
@@ -517,14 +509,14 @@ export default function KwanjulaBudgetPage() {
         </div>
 
         {/* Overall Progress Meter */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-md border border-neutral-200/80">
+        <div className="bg-white p-4 sm:p-5 rounded-lg border border-neutral-200">
           <div className="flex justify-between items-center text-xs sm:text-sm font-semibold text-neutral-700 mb-2">
             <span>Ceremony Funding Milestone</span>
             <span className="text-brand-700 font-bold">{stats.totalPercentage}% of {formatUGX(stats.totalBudget)} ({formatUGX(stats.totalRemaining)} remaining)</span>
           </div>
-          <div className="w-full h-3 bg-neutral-200 rounded-full overflow-hidden">
+          <div className="w-full h-2.5 bg-neutral-200 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-accent-500 via-brand-600 to-brand-500 rounded-full transition-all duration-700"
+              className="h-full bg-brand-600 rounded-full transition-all duration-700"
               style={{ width: `${Math.min(100, Math.max(3, stats.totalPercentage))}%` }}
             ></div>
           </div>

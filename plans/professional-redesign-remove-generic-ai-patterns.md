@@ -524,3 +524,31 @@ The eyebrow (`accent-400` on `brand-950`), subtitle (`brand-200`), and both outl
 still opens and closes from the hero's primary CTA; a fresh grep of the hero's JSX for
 `bg-gradient|radial-gradient|hover:-translate|shadow-xl|shadow-lg|shadow-2xl` returns nothing; 390px
 viewport shows zero horizontal overflow.
+
+### Step 3 — `Redesign_feat/stats-progress: flat fills, no icon-square lift`
+
+**All four stat tiles drop the icon-in-rounded-square treatment Context 3 named as a checklist match.**
+Each tile's `w-13 h-13 rounded-xl bg-{colour}-{50/100/200} … flex items-center justify-center` icon
+container is gone; the icon is now a plain, unboxed glyph sitting beside the label text, sized
+`text-lg`. `hover:-translate-y-1` is removed from all four (D6, D9); `rounded-2xl shadow-lg` on every
+tile becomes `rounded-lg border border-neutral-200` (or a coloured equivalent, see next). The two tiles
+that previously carried a two-stop `bg-gradient-to-br from-white to-{colour}-50/50` wash (D3) are now a
+single flat `bg-brand-50` / `bg-accent-50`.
+
+**Contrast on the two new flat-tinted tiles was computed before shipping, matching the practice this
+plan's Step 2 established.** `brand-700`/`brand-800` text on `brand-50` measures 5.21/7.29:1; `accent-700`
+text on `accent-50` measures 4.84:1 — all comfortably clear AA for text. The two icons that sit on a plain
+white tile (`accent-600` coins, `neutral-600` supporters) were checked against the lower 3:1 bar that
+applies to decorative graphics rather than text, since both are `aria-hidden`: 3.19:1 and 7.58:1,
+both passing.
+
+**The funding-progress bar's three-stop `from-accent-500 via-brand-600 to-brand-500` gradient fill is now
+a single flat `bg-brand-600`** (D3); its container drops from `rounded-2xl shadow-md` to
+`rounded-lg border` matching the tile convention. The width calculation and the percentage/remaining-amount
+text next to it are untouched — only the fill's own styling changed.
+
+**Verified:** built and loaded in the browser — all four figures (Total Budget, Total Raised, Remaining,
+Supporters) still read the live `stats` object correctly; the progress bar's inline `width` style
+confirmed at the real computed `4%`, not a hardcoded placeholder. A scoped grep of this section's JSX for
+`shadow-lg|shadow-xl|shadow-md|hover:-translate|bg-gradient|rounded-2xl` (plus the old
+icon-in-square container shape) returns nothing. 390px viewport: zero horizontal overflow.
