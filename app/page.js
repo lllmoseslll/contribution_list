@@ -443,12 +443,18 @@ export default function KwanjulaBudgetPage() {
               <FaListCheck aria-hidden="true" /> View Budget Items
             </a>
             <a
+              href="#honorWall"
+              className="px-5 py-3 rounded-lg font-semibold text-sm sm:text-base bg-brand-900/80 hover:bg-brand-800 text-brand-100 border border-brand-700 transition flex items-center gap-2"
+            >
+              <FaUsers className="text-accent-400" aria-hidden="true" /> Roll of Honor ({stats.totalPledgesCount})
+            </a>
+            <a
               href="/api/budget/pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-3 rounded-lg font-semibold text-sm sm:text-base border border-brand-700 hover:bg-brand-900 text-accent-300 transition flex items-center gap-2"
             >
-              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Download Pledge Report
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Pledge Report
             </a>
             <a
               href="#paymentSection"
@@ -790,29 +796,18 @@ export default function KwanjulaBudgetPage() {
 
                       {/* Supporters */}
                       {recentPledges.length > 0 ? (
-                        <details className="group mt-4 pt-3 border-t border-dashed border-neutral-200">
-                          <summary className="flex items-center gap-1.5 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden [&::marker]:hidden">
-                            <FaUsers className="text-neutral-500 shrink-0" aria-hidden="true" />
-                            <span className="text-[11px] font-bold uppercase text-neutral-500">
-                              Supporters ({recentPledges.length})
+                        <div className="mt-4 pt-3 border-t border-dashed border-neutral-200">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <FaUsers className="text-brand-700 text-xs shrink-0" aria-hidden="true" />
+                            <span className="text-[11px] font-bold uppercase text-brand-900">
+                              Supporters ({recentPledges.length}):
                             </span>
-                            <FaChevronDown
-                              className="text-neutral-400 text-[10px] transition-transform duration-200 group-open:rotate-180"
-                              aria-hidden="true"
-                            />
-                          </summary>
-                          {/*
-                            Tailwind's utility layer outranks the browser's UA stylesheet in the
-                            cascade, so a bare `flex` here would override the native rule that hides
-                            a closed <details>'s children — the chips would stay visible (and in the
-                            accessible tree) even while collapsed. `hidden group-open:flex` rebuilds
-                            that behavior explicitly instead of relying on the native default.
-                          */}
-                          <div className="hidden group-open:flex flex-wrap items-center gap-1.5 mt-2.5">
+                          </div>
+                          <div className="flex flex-wrap items-center gap-1.5">
                             {recentPledges.map((p, i) => (
                               <span
                                 key={p.id || i}
-                                className="text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 transition"
+                                className="text-xs bg-brand-50 hover:bg-brand-100 text-brand-950 border border-brand-200 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 transition"
                                 title={p.message ? `"${p.message}"` : 'Pledged for this item'}
                               >
                                 <FaCheck className="text-brand-700 text-[10px]" aria-hidden="true" />
@@ -821,7 +816,7 @@ export default function KwanjulaBudgetPage() {
                               </span>
                             ))}
                           </div>
-                        </details>
+                        </div>
                       ) : (
                         <div className="mt-4 pt-3 border-t border-dashed border-neutral-200">
                           <div className="flex flex-wrap items-center gap-1.5">
@@ -850,7 +845,7 @@ export default function KwanjulaBudgetPage() {
         ))}
 
         {/* Contributor Roll of Honor & Blessings Wall */}
-        <section className="bg-white rounded-lg p-6 sm:p-8 border border-neutral-200 mb-16">
+        <section className="bg-white rounded-lg p-6 sm:p-8 border border-neutral-200 mb-16" id="honorWall">
           <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
             <div>
               <h2 className="text-2xl font-bold text-brand-950 flex items-center gap-2">
