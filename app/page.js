@@ -391,13 +391,13 @@ export default function KwanjulaBudgetPage() {
 
           <div className="flex items-center gap-2">
             <a
-              href="/introduction-budget-edwin-laston.pdf"
+              href="/api/budget/pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-brand-200 bg-brand-900/60 hover:bg-brand-800 border border-brand-700/60 transition"
-              title="View original official PDF"
+              title="Download a live pledge report as PDF"
             >
-              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Official PDF
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Pledge Report
             </a>
             <Link
               href="/admin"
@@ -442,12 +442,12 @@ export default function KwanjulaBudgetPage() {
               <FaListCheck aria-hidden="true" /> View Budget Items
             </a>
             <a
-              href="/introduction-budget-edwin-laston.pdf"
+              href="/api/budget/pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-3 rounded-lg font-semibold text-sm sm:text-base border border-brand-700 hover:bg-brand-900 text-accent-300 transition flex items-center gap-2"
             >
-              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Download Official PDF
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Download Pledge Report
             </a>
             <a
               href="#paymentSection"
@@ -550,11 +550,11 @@ export default function KwanjulaBudgetPage() {
             </div>
 
             <a
-              href="/introduction-budget-edwin-laston.pdf"
+              href="/api/budget/pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-brand-900 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-full transition whitespace-nowrap"
-              title="Inspect official signed budget"
+              title="Download a live pledge report as PDF"
             >
               <FaFilePdf className="text-accent-500" aria-hidden="true" /> PDF
             </a>
@@ -1048,8 +1048,8 @@ export default function KwanjulaBudgetPage() {
             <div>Introduction Ceremony (Kwanjula) — Friday, 27th November 2026</div>
           </div>
           <div className="flex flex-wrap items-center gap-4">
-            <a href="/introduction-budget-edwin-laston.pdf" target="_blank" rel="noopener noreferrer" className="underline hover:text-white flex items-center gap-1">
-              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Official PDF
+            <a href="/api/budget/pdf" target="_blank" rel="noopener noreferrer" className="underline hover:text-white flex items-center gap-1">
+              <FaFilePdf className="text-accent-400" aria-hidden="true" /> Pledge Report
             </a>
             <button onClick={() => openPledgeModal(null)} className="underline hover:text-white">Make a Pledge</button>
             <Link href="/admin" className="underline hover:text-white">Committee Admin Portal</Link>
