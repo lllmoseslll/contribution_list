@@ -1,6 +1,7 @@
 {
   "ownerName": "Mr. Edwin Laston",
   "ownerEmail": "",
+  "notifyEmail": "",
   "ownerPhone": "0703464261 / 0774324968",
   "emailNotificationsEnabled": true,
   "smtp": {

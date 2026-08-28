@@ -11,7 +11,7 @@ export async function POST(req) {
 
   const settings = getSettings();
   const { recipientEmail } = await req.json().catch(() => ({}));
-  const targetEmail = recipientEmail || settings.ownerEmail;
+  const targetEmail = recipientEmail || settings.notifyEmail || settings.ownerEmail;
 
   if (!targetEmail) {
     return NextResponse.json({

@@ -671,3 +671,42 @@ through the admin API restored the file.
 **The public page carries no admin markup at all** — `adminPin`, `adminAuthenticated`, `adminSettings`,
 `adminPledges`, `adminNotifs`, `x-admin-pin` and `/api/admin/` all return zero matches in `app/page.js`.
 Both former entry points are now `<Link href="/admin">`.
+
+### Step 5 — `Admin_feat/notifications: a named recipient, a deep merge, and no leaked secrets`
+
+**D4 said sanitise the public branch of `GET /api/admin/settings`; the right answer was to delete it.**
+Grepping for callers found exactly two, both in `app/admin/page.js`. The public page reads `paymentInfo`
+from `/api/budget` (`app/api/budget/route.js:12`) and never touches this route; the only other consumer
+was the legacy static console deleted in Step 1. So the unauthenticated branch was an anonymous
+data-disclosure endpoint serving nobody. It now requires a session, which is stronger than stripping two
+fields out of it and leaving the shape behind.
+
+**`notifyEmail` is a new field with `ownerEmail` as its fallback**, so an existing install keeps sending
+alerts to the same place until someone chooses otherwise. What changed is that the two purposes are now
+separable: `ownerEmail` is the committee's public contact and `notifyEmail` is the private alert inbox.
+`lib/mailer.js` also lost its hardcoded `'edwinlaston@gmail.com'` last resort — with no recipient at all
+the entry is recorded as `no_recipient` rather than mailed to an address baked into the source.
+
+**The deep merge is what makes a narrow client safe.** The probe is the proof: a POST carrying only
+`{"notifyEmail": "..."}` left `smtp`, `ownerEmail` and all five `paymentInfo` keys intact. Under the old
+shallow spread that same request would have been the whole settings object.
+
+**The SMTP password no longer leaves the server.** `withoutSecrets()` replaces `smtp.pass` with a boolean
+`hasPassword` on every response, and `POST` deletes an absent-or-empty `pass` from the patch so blank
+means "keep what is stored". Probed in sequence: save a password → on disk; save again with the field
+blank → still on disk; save an unrelated field only → still on disk. `hasPassword` is stripped before
+writing, so the read-only projection never round-trips into `data/settings.json`. The form's placeholder
+now reads "Saved. Leave blank to keep it." when one exists.
+
+**The settings tab is three cards named for what they do**, not two named for who owns them: *Pledge
+Alert Notifications* (recipient, the `emailNotificationsEnabled` toggle that the old form never exposed
+at all, and the Send Test Email button moved out of the SMTP block), *Public Committee Contacts*, and
+*Live SMTP Email Dispatch*. The recipient field warns inline when it is empty and alerts are falling back
+to the public address.
+
+**Verified end to end.** Unauthenticated `GET /api/admin/settings` → 401 with no address in the body.
+Authenticated → `smtp.pass` absent, `hasPassword` present. Set the recipient to
+`alerts-step5@example.com` through the UI, posted a pledge, and the outbox entry recorded
+`recipient: alerts-step5@example.com` — the alert followed `notifyEmail`, not `ownerEmail`. All probe
+rows were then removed and `data/settings.json`, `data/pledges.json` and `data/notifications.json` are
+back to their pre-step contents, plus the new `notifyEmail` key.

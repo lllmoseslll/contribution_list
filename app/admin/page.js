@@ -58,8 +58,9 @@ export default function AdminPage() {
 
   const [adminSettings, setAdminSettings] = useState({
     ownerName: 'Mr. Edwin Laston',
-    ownerEmail: 'edwinlaston@gmail.com',
-    ownerPhone: '0703464261 / 0774324968',
+    ownerEmail: '',
+    notifyEmail: '',
+    ownerPhone: '',
     emailNotificationsEnabled: true,
     smtp: {
       enabled: false,
@@ -67,7 +68,7 @@ export default function AdminPage() {
       host: 'smtp.gmail.com',
       port: 587,
       user: '',
-      pass: '',
+      hasPassword: false,
       from: 'Edwin & Jamirah Kwanjula <noreply@edwinlaston.org>'
     },
     paymentInfo: {
@@ -279,7 +280,7 @@ export default function AdminPage() {
       const res = await fetch('/api/admin/test-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipientEmail: adminSettings.ownerEmail })
+        body: JSON.stringify({ recipientEmail: adminSettings.notifyEmail || adminSettings.ownerEmail })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to send test email');
@@ -672,28 +673,81 @@ export default function AdminPage() {
               {adminTab === 'settings' && (
                 <form onSubmit={handleSaveSettings} className="space-y-4 text-xs">
 
-                  {/* Committee Owner & Recipient Email */}
+                  {/* Pledge alert notifications */}
+                  <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200">
+                    <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
+                      <h5 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                        <i className="fa-solid fa-bell text-emerald-600"></i> Pledge Alert Notifications
+                      </h5>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={adminSettings.emailNotificationsEnabled !== false}
+                          onChange={(e) => setAdminSettings(prev => ({ ...prev, emailNotificationsEnabled: e.target.checked }))}
+                          className="rounded text-emerald-700"
+                        />
+                        <span className="font-bold text-emerald-800">Send alerts</span>
+                      </label>
+                    </div>
+                    <p className="text-slate-500 mb-3">
+                      Every new pledge sends an alert to this address. It is private: it is never shown on the public page
+                      and never returned to an unauthenticated caller.
+                    </p>
+
+                    <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Send alerts to</label>
+                    <input
+                      type="email"
+                      placeholder="committee@example.com"
+                      value={adminSettings.notifyEmail || ''}
+                      onChange={(e) => setAdminSettings(prev => ({ ...prev, notifyEmail: e.target.value }))}
+                      className="w-full sm:w-80 p-2 border border-slate-300 rounded-lg text-xs"
+                    />
+                    {!adminSettings.notifyEmail && adminSettings.ownerEmail && (
+                      <p className="text-[11px] text-amber-700 mt-1.5">
+                        <i className="fa-solid fa-circle-info"></i> Empty, so alerts fall back to the public contact address
+                        ({adminSettings.ownerEmail}).
+                      </p>
+                    )}
+
+                    <div className="pt-3 flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={handleSendTestEmail}
+                        disabled={testEmailStatus?.loading}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 flex items-center gap-1.5"
+                      >
+                        <i className={`fa-solid ${testEmailStatus?.loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'}`}></i>
+                        Send Test Email
+                      </button>
+                      {testEmailStatus?.msg && (
+                        <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-emerald-700' : 'text-rose-600'}`}>
+                          {testEmailStatus.msg}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Public committee contacts */}
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
                     <h5 className="font-bold text-slate-900 mb-1 text-sm flex items-center gap-2">
-                      <i className="fa-solid fa-user-shield text-emerald-600"></i> Groom / Committee Contacts
+                      <i className="fa-solid fa-user-shield text-emerald-600"></i> Public Committee Contacts
                     </h5>
-                    <p className="text-slate-500 mb-3">Notification alerts are dispatched to this email when a new pledge is made.</p>
+                    <p className="text-slate-500 mb-3">Shown to contributors on the public page. Not used for alerts.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Primary Organizer Name</label>
                         <input
                           type="text"
-                          value={adminSettings.ownerName || 'Mr. Edwin Laston'}
+                          value={adminSettings.ownerName || ''}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, ownerName: e.target.value }))}
                           className="w-full p-2 border border-slate-300 rounded-lg text-xs"
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Recipient Alert Email</label>
+                        <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Public Contact Email</label>
                         <input
                           type="email"
-                          required
-                          value={adminSettings.ownerEmail || 'edwinlaston@gmail.com'}
+                          value={adminSettings.ownerEmail || ''}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, ownerEmail: e.target.value }))}
                           className="w-full p-2 border border-slate-300 rounded-lg text-xs"
                         />
@@ -759,7 +813,7 @@ export default function AdminPage() {
                             <label className="block text-slate-500 text-[10px] uppercase font-bold mb-1">Google App Password (16 letters)</label>
                             <input
                               type="password"
-                              placeholder="16-letter App Password"
+                              placeholder={adminSettings.smtp?.hasPassword ? 'Saved. Leave blank to keep it.' : '16-letter App Password'}
                               value={adminSettings.smtp?.pass || ''}
                               onChange={(e) => setAdminSettings(prev => ({
                                 ...prev,
@@ -782,23 +836,6 @@ export default function AdminPage() {
                           </div>
                         </div>
 
-                        {/* Test Email Button & Status */}
-                        <div className="pt-2 flex flex-wrap items-center gap-3">
-                          <button
-                            type="button"
-                            onClick={handleSendTestEmail}
-                            disabled={testEmailStatus?.loading}
-                            className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 flex items-center gap-1.5"
-                          >
-                            <i className={`fa-solid ${testEmailStatus?.loading ? 'fa-spinner fa-spin' : 'fa-paper-plane'}`}></i>
-                            Send Test Email to Verify
-                          </button>
-                          {testEmailStatus?.msg && (
-                            <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-emerald-700' : 'text-rose-600'}`}>
-                              {testEmailStatus.msg}
-                            </span>
-                          )}
-                        </div>
                       </div>
                     )}
                   </div>
