@@ -836,3 +836,84 @@ but on inspection it is a different pattern — paginating a grid of N cards dow
 revealing a single hidden panel — and it already defaults to collapsed. Forcing it into a `<details>`
 would mean wrapping the whole grid, changing what the control does rather than how it looks. Left alone
 rather than changed for its own sake.
+
+### Step 9 — `CardUX_feat/filters: result counts, honest empty states, visible focus`
+
+**A one-instance leftover from Step 6 surfaced while scanning for the icon-only-buttons issue, and got fixed
+here rather than left.** `app/page.js`'s loading spinner used `border-t-emerald-700` — a Tailwind
+*directional* border utility (`border-t-`, not `border-`). Step 6's actual verification (a `grep -rnoE`
+run through the Bash tool, safe from the escaping bug below) checked prefixes as a fixed alternation list —
+`bg|text|border|from|to|...` — which matches `border-` followed directly by a colour family, but not
+`border-t-` followed by one; the check had a real, narrow blind spot for directional variants
+(`border-t/-r/-b/-l/-x/-y`) that Step 6 never exercised because nothing else in the sweep used one. Fixed
+to `border-t-brand-700`. A broadened grep (`[a-zA-Z]+-(family)-[0-9]+`, no prefix allowlist) now confirms
+zero legacy-colour utilities remain anywhere in `app/`, including directional ones.
+
+**That investigation also reproduced a distinct, session-local bug worth recording so it isn't mistaken for
+a real defect later: `new RegExp(templateOrStringWithDoubleBackslash)` inside an ad-hoc verification script
+silently collapsed `\b` to a single backslash before reaching `RegExp()`, turning the intended word-boundary
+token into a literal backspace-character match that can never succeed against source code — producing a
+false "0 matches, all clean" result.** This did not affect any *committed* code in this plan — Step 6's own
+sweep script (`palette.mjs`) used regex *literals* (`/\b.../`), not `new RegExp(string)`, and Step 6's
+`grep`-based Verify commands pass `\b` through a single-quoted shell argument untouched. It only affected a
+throwaway diagnostic in this step, and is noted here because it is exactly the kind of quiet false-negative
+that would otherwise go unmentioned.
+
+**The category tabs and filter chips moved from inline array literals to module-level `CATEGORY_TABS` /
+`FILTER_CHIPS` constants.** This was necessary, not cosmetic: the empty state needs to print a filter's
+*label* ("Fully Covered", "A: Important Gifts"), and the only other place that label existed was inside the
+JSX that renders the buttons. Defining it once and having both the controls and the empty-state message
+read from it is what keeps the two from drifting apart, not a refactor for its own sake.
+
+**The result count and the empty state are driven by the same three pieces of state that already existed**
+(`activeCategory`, `activeFilter`, `searchQuery`) — no new state, no new fetch. `totalItemsCount` sums every
+item in `budget.sections` regardless of filtering; `visibleItemsCount` sums what `filteredSections` (already
+memoized) actually kept. `isFiltered` is true when any of the three differ from their defaults, and gates
+both the "Clear filters" button next to the count and which of the two empty-state messages renders — a
+budget with zero items published is a different situation from zero items matching a search, and the second
+one is what the plan asked to fix, not the first.
+
+**The empty state now names every active constraint, not just the search term.** `activeFilterDescriptions`
+builds a list like `matching "cow"`, `in A: Important Gifts`, `filtered to "Fully Covered"` from whichever of
+the three are active and joins them into the heading; the body states how many items exist in total, so
+"none of them match what's selected" is a fact instead of a guess.
+
+**The global focus ring took two attempts, and both failures were the same root cause Step 8 already found:
+Tailwind's own utility layer outranks any plain `@layer base` rule, regardless of selector specificity.**
+First pass placed `:focus-visible { box-shadow: ...; outline: ...; }` inside `@layer base`; it was silently
+beaten on every button that already carried a `shadow-md`/`shadow-lg`/`shadow-xl` utility, because those
+utilities live in Tailwind's `utilities` layer, which always wins over `base` regardless of how specific
+the selector is. The rule moved to unlayered CSS — per the Cascade Layers spec, unlayered author styles
+outrank every layer — and gained `!important` on `box-shadow` as a second guarantee, with `:not(:where(input,
+textarea, select))` so the elements that already have their own intentional `focus:ring-2 focus:ring-brand-700`
+(inputs) or `focus:ring-brand-600` (checkboxes) keep exactly what they had.
+
+**A single ring colour cannot clear WCAG's 3:1 non-text contrast minimum against every surface in this app
+without checking each one, and checking found real conflicts.** `accent-600` alone scored between 2.91:1 and
+4.76:1 depending on which of seven different card/section backgrounds sat behind it — under 3:1 on the
+lightest card tint. Rather than pick a colour and hope, the ring is two-tier: a white spacer ring drawn
+first, then `accent-600` outside it — so the accent ring's contrast is always measured against the white
+ring the rule itself just drew (a fixed 3.19:1), never against whichever of the app's several background
+colours happens to be underneath.
+
+**Verifying this in the browser hit the same flaky-read pattern Step 8 found with the chevron rotation, and
+the fix was identical: don't trust a `getComputedStyle()` read taken immediately after triggering a
+pseudo-class change.** The first read after `element.focus()` sometimes returned a mid-transition or stale
+box-shadow; waiting ~350ms (or two animation frames) before reading gave the correct, stable value every
+time thereafter. This is a property of the automated test harness reading state too early, not of the CSS.
+
+**Verified end to end.** Result count updates live with search ("cow" → 1 of 40), category, and filter-chip
+changes, and matches the rendered card count in every case tried. The empty state names one, two, or three
+active constraints correctly and joins them; "Clear Filters" restores all 40 items and clears the search
+box. A genuinely empty budget (`totalItemsCount === 0`) would show the separate "No budget items yet"
+message with no reset button, since there is nothing to reset. Every interactive element without its own
+ring now shows the white+accent ring on real keyboard focus (verified via the CDP `press_key` — a true input
+event, not a synthetic DOM dispatch), confirmed on both a light-surface button and a dark-hero link; inputs
+and checkboxes keep their existing brand-coloured ring, confirmed unchanged. Walking the DOM in document
+order (no element anywhere sets a non-default `tabindex`) shows 64 focusable elements on the public page in
+exactly visual order: PDF link, `/admin` link at index 1, the four hero CTAs, search, the quick PDF link,
+five category tabs, four filter chips, the general-pledge button, then the first item card's "Pledge for
+this Item" button at index 18, immediately followed by its supporters disclosure — a real two-press Tab
+trace from a blank focus confirmed the first two of those land exactly where this predicts. The `/admin`
+page's "Back to site" link and "Sign out" button both show the same ring. `next build` is clean throughout;
+390px viewport shows zero horizontal overflow with the result line and empty state both rendering correctly.

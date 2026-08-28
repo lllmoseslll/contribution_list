@@ -66,6 +66,23 @@ function formatDate(dateStr) {
   });
 }
 
+// Shared by the tab/chip controls and the empty-state message, so a filter's
+// name is defined once rather than typed twice and risking drift between them.
+const CATEGORY_TABS = [
+  { id: 'all', label: 'All Sections', icon: 'fa-border-all' },
+  { id: 'sec-A', label: 'A: Important Gifts', icon: 'fa-award' },
+  { id: 'sec-B', label: 'B: Clothes & Suitcases', icon: 'fa-shirt' },
+  { id: 'sec-C', label: 'C: Gifts & Groceries', icon: 'fa-basket-shopping' },
+  { id: 'sec-E', label: 'E: Others & Operations', icon: 'fa-clapperboard' }
+];
+
+const FILTER_CHIPS = [
+  { id: 'all', label: 'All Items' },
+  { id: 'needs-pledges', label: 'Needs Support' },
+  { id: 'partially-pledged', label: 'Partially Supported' },
+  { id: 'fully-covered', label: 'Fully Covered' }
+];
+
 export default function KwanjulaBudgetPage() {
   const [budget, setBudget] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -284,6 +301,45 @@ export default function KwanjulaBudgetPage() {
       })
       .filter(sec => sec.items.length > 0);
   }, [budget, activeCategory, activeFilter, searchQuery]);
+
+  // Every item in the budget, regardless of category/filter/search — the
+  // denominator for "Showing X of Y items" and for telling an empty result
+  // apart from a budget that genuinely has nothing in it yet.
+  const totalItemsCount = useMemo(() => {
+    if (!budget?.sections) return 0;
+    return budget.sections.reduce((sum, sec) => sum + (sec.items?.length || 0), 0);
+  }, [budget]);
+
+  const visibleItemsCount = useMemo(
+    () => filteredSections.reduce((sum, sec) => sum + sec.items.length, 0),
+    [filteredSections]
+  );
+
+  const isFiltered = activeCategory !== 'all' || activeFilter !== 'all' || searchQuery.trim() !== '';
+
+  const resetFilters = () => {
+    setSearchQuery('');
+    setActiveCategory('all');
+    setActiveFilter('all');
+  };
+
+  // Names the specific constraints narrowing the result, so the empty state
+  // can say what's responsible instead of a generic "no matches" — a search
+  // term, a section, and a status filter can each independently be the reason.
+  const activeFilterDescriptions = useMemo(() => {
+    const parts = [];
+    const q = searchQuery.trim();
+    if (q) parts.push(`matching "${q}"`);
+    if (activeCategory !== 'all') {
+      const label = CATEGORY_TABS.find(t => t.id === activeCategory)?.label;
+      if (label) parts.push(`in ${label}`);
+    }
+    if (activeFilter !== 'all') {
+      const label = FILTER_CHIPS.find(c => c.id === activeFilter)?.label;
+      if (label) parts.push(`filtered to "${label}"`);
+    }
+    return parts;
+  }, [searchQuery, activeCategory, activeFilter]);
 
   // All Pledges for Roll of Honor Wall (Both Items & General Pledges)
   const rollOfHonorPledges = useMemo(() => {
@@ -523,13 +579,7 @@ export default function KwanjulaBudgetPage() {
 
         {/* Category Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none">
-          {[
-            { id: 'all', label: 'All Sections', icon: 'fa-border-all' },
-            { id: 'sec-A', label: 'A: Important Gifts', icon: 'fa-award' },
-            { id: 'sec-B', label: 'B: Clothes & Suitcases', icon: 'fa-shirt' },
-            { id: 'sec-C', label: 'C: Gifts & Groceries', icon: 'fa-basket-shopping' },
-            { id: 'sec-E', label: 'E: Others & Operations', icon: 'fa-clapperboard' }
-          ].map(tab => (
+          {CATEGORY_TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveCategory(tab.id)}
@@ -555,12 +605,7 @@ export default function KwanjulaBudgetPage() {
           <span className="text-xs font-semibold text-neutral-500 mr-1 flex items-center gap-1">
             <FaFilter aria-hidden="true" /> Filter:
           </span>
-          {[
-            { id: 'all', label: 'All Items' },
-            { id: 'needs-pledges', label: 'Needs Support' },
-            { id: 'partially-pledged', label: 'Partially Supported' },
-            { id: 'fully-covered', label: 'Fully Covered' }
-          ].map(chip => (
+          {FILTER_CHIPS.map(chip => (
             <button
               key={chip.id}
               onClick={() => setActiveFilter(chip.id)}
@@ -574,6 +619,24 @@ export default function KwanjulaBudgetPage() {
             </button>
           ))}
         </div>
+
+        {/* Result Count */}
+        {!isLoading && totalItemsCount > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-neutral-500 mb-6 -mt-3">
+            <span>
+              Showing <strong className="text-neutral-700 font-bold">{visibleItemsCount}</strong> of{' '}
+              <strong className="text-neutral-700 font-bold">{totalItemsCount}</strong> items
+            </span>
+            {isFiltered && (
+              <button
+                onClick={resetFilters}
+                className="font-semibold text-brand-700 hover:text-brand-800 underline underline-offset-2"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+        )}
 
         {/* General Pledge Callout */}
         <div className="bg-gradient-to-r from-accent-50 to-accent-100/60 border border-accent-200 rounded-2xl p-5 sm:p-6 mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
@@ -599,7 +662,7 @@ export default function KwanjulaBudgetPage() {
         {/* Loading State */}
         {isLoading && (
           <div className="text-center py-16 text-neutral-500">
-            <div className="w-10 h-10 border-4 border-neutral-200 border-t-emerald-700 rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="w-10 h-10 border-4 border-neutral-200 border-t-brand-700 rounded-full animate-spin mx-auto mb-4"></div>
             <p className="text-sm font-medium">Loading real-time budget data...</p>
           </div>
         )}
@@ -608,14 +671,26 @@ export default function KwanjulaBudgetPage() {
         {!isLoading && filteredSections.length === 0 && (
           <div className="text-center py-16 bg-white rounded-2xl border border-neutral-200">
             <FaMagnifyingGlass className="text-neutral-300 text-4xl mb-3" aria-hidden="true" />
-            <h3 className="text-base font-bold text-neutral-700">No matching items found</h3>
-            <p className="text-xs text-neutral-500 mt-1">Try resetting your search query or selecting "All Items".</p>
-            <button
-              onClick={() => { setSearchQuery(''); setActiveCategory('all'); setActiveFilter('all'); }}
-              className="mt-4 px-4 py-1.5 text-xs font-semibold text-brand-800 bg-brand-50 hover:bg-brand-100 rounded-lg border border-brand-200 transition"
-            >
-              Reset All Filters
-            </button>
+            {isFiltered ? (
+              <>
+                <h3 className="text-base font-bold text-neutral-700">No items {activeFilterDescriptions.join(', ')}</h3>
+                <p className="text-xs text-neutral-500 mt-1">
+                  {totalItemsCount} item{totalItemsCount === 1 ? '' : 's'} exist in the budget — none of them match what's
+                  currently selected above.
+                </p>
+                <button
+                  onClick={resetFilters}
+                  className="mt-4 px-4 py-1.5 text-xs font-semibold text-brand-800 bg-brand-50 hover:bg-brand-100 rounded-lg border border-brand-200 transition"
+                >
+                  Clear Filters
+                </button>
+              </>
+            ) : (
+              <>
+                <h3 className="text-base font-bold text-neutral-700">No budget items yet</h3>
+                <p className="text-xs text-neutral-500 mt-1">The committee hasn't published any budget items to sponsor.</p>
+              </>
+            )}
           </div>
         )}
 

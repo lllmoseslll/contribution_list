@@ -71,6 +71,34 @@
   }
 }
 
+/*
+ * A default keyboard-focus ring for every interactive element except the text
+ * inputs and checkboxes that already opted into their own `focus:ring-2
+ * focus:ring-brand-700` / `focus:ring-brand-600` via Tailwind utilities.
+ * Those utilities set `box-shadow` too, in Tailwind's utilities layer — and a
+ * plain `@layer base` rule can never win a property fight against ANY
+ * utilities-layer rule, including a plain `.shadow-lg` with no pseudo-class,
+ * because CSS Cascade Layers rank by layer first and specificity only as a
+ * tiebreaker within the same layer. Buttons and links carrying `shadow-md`/
+ * `shadow-lg` outnumber the ones that don't, so this rule is deliberately
+ * left unlayered: per spec, unlayered author styles outrank every layer,
+ * which is the only way for a *:focus-visible box-shadow to reliably beat a
+ * button's own resting shadow.
+ *
+ * A single ring colour cannot clear WCAG's 3:1 non-text contrast minimum
+ * against every surface in this app — light cards, the dark hero/footer, and
+ * the gradient in between — without checking each one by hand. The two-tier
+ * ring below sidesteps that: a white spacer ring is drawn first, then the
+ * accent ring outside it, so the accent ring's contrast is always measured
+ * against the white ring this rule itself just drew (3.19:1), never against
+ * whatever the page background happens to be underneath.
+ */
+:focus-visible:not(:where(input, textarea, select)) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-accent-600) !important;
+}
+
 .font-serif-royal {
   font-family: 'Playfair Display', 'Cinzel', Georgia, serif;
 }
