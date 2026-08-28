@@ -599,3 +599,35 @@ pledge modal with the correct item pre-selected. The contributor `<details>` dis
 Step 8) still opens/closes correctly after the wrapper restructuring. A scoped grep of the item-card JSX
 for the rail, the pill-badge shape, any remaining gradient, and `hover:shadow-md` returns nothing. 390px
 viewport: zero horizontal overflow.
+
+### Step 5 — `Redesign_feat/tabs-and-chips: one shared toggle-group treatment`
+
+**Scoped to the public page only — the admin pledge-status filter stays for Step 9, as that step's own
+description already fully owns it.** Step 5's body text named the admin filter as something "this same
+step also restyles," which duplicates Step 9's dedicated scope; rather than do the same change twice (or
+half of it here and half there), this commit touches only `app/page.js`'s `CATEGORY_TABS` and
+`FILTER_CHIPS`, leaving the admin pledge-status filter and pledge-status chip exactly where Step 9 already
+describes them.
+
+**`CATEGORY_TABS` renders as plain-text underline tabs, matching Context 14's reading of the reference's
+own section nav** ("Contributions / Orders / Favorite Projects / Inbox" — plain text, a colored underline
+on the active item, no pill background). The five per-icon lookups
+(`FaBorderAll`/`FaAward`/`FaShirt`/`FaBasketShopping`/`FaClapperboard`) are dropped along with their now-dead
+imports and the now-unused `icon` field on each `CATEGORY_TABS` entry — the reference's own nav has no
+icons at all, and keeping unused icon data around after removing its only reader would be exactly the kind
+of orphaned reference this plan's Step 1 was careful to avoid for `.font-serif-royal`.
+
+**`FILTER_CHIPS`'s active state changes from a filled, accent-tinted pill (`bg-accent-100 border-accent-400
+text-accent-900`) to a plain-white chip with a `brand-700` border and text (D7).** Brand rather than accent
+for the active indicator, matching D2's reservation of accent for money/progress/emphasis rather than
+UI-state signaling.
+
+**Verified:** built and loaded in the browser. Selecting "A: Important Gifts" + "Fully Covered" together
+correctly narrows the result count to "Showing 0 of 40 items," and "Clear filters" restores "Showing 40 of
+40" — the filtering logic (`activeCategory`/`activeFilter` state, `filteredSections` memo) was never
+touched, only the controls' `className`s. The active tab's computed `border-bottom-color` and the active
+chip's computed `border-color` both resolve to `rgb(4, 120, 87)` (`brand-700`). The keyboard focus ring
+(prior plan's `CardUX_feat/filters`) still shows on both control shapes — confirmed via `getComputedStyle`
+after a real `.focus()` call, `rgb(255, 255, 255) 0px 0px 0px 2px, rgb(217, 119, 6) 0px 0px 0px 4px`,
+matching the white-plus-accent-600 ring established there. 390px viewport: zero horizontal overflow on the
+scrollable tab row.

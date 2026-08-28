@@ -5,17 +5,13 @@ import Link from 'next/link';
 import confetti from 'canvas-confetti';
 import {
   FaArrowDown,
-  FaAward,
-  FaBasketShopping,
   FaBell,
-  FaBorderAll,
   FaCalendarDays,
   FaCheck,
   FaCheckDouble,
   FaChevronDown,
   FaCircleCheck,
   FaCircleInfo,
-  FaClapperboard,
   FaCoins,
   FaEnvelope,
   FaFilePdf,
@@ -37,7 +33,6 @@ import {
   FaRegUser,
   FaScaleBalanced,
   FaShieldHalved,
-  FaShirt,
   FaSpinner,
   FaStar,
   FaUsers,
@@ -68,11 +63,11 @@ function formatDate(dateStr) {
 // Shared by the tab/chip controls and the empty-state message, so a filter's
 // name is defined once rather than typed twice and risking drift between them.
 const CATEGORY_TABS = [
-  { id: 'all', label: 'All Sections', icon: 'fa-border-all' },
-  { id: 'sec-A', label: 'A: Important Gifts', icon: 'fa-award' },
-  { id: 'sec-B', label: 'B: Clothes & Suitcases', icon: 'fa-shirt' },
-  { id: 'sec-C', label: 'C: Gifts & Groceries', icon: 'fa-basket-shopping' },
-  { id: 'sec-E', label: 'E: Others & Operations', icon: 'fa-clapperboard' }
+  { id: 'all', label: 'All Sections' },
+  { id: 'sec-A', label: 'A: Important Gifts' },
+  { id: 'sec-B', label: 'B: Clothes & Suitcases' },
+  { id: 'sec-C', label: 'C: Gifts & Groceries' },
+  { id: 'sec-E', label: 'E: Others & Operations' }
 ];
 
 const FILTER_CHIPS = [
@@ -567,24 +562,18 @@ export default function KwanjulaBudgetPage() {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none">
+        <div className="flex items-center gap-5 overflow-x-auto border-b border-neutral-200 mb-4 scrollbar-none">
           {CATEGORY_TABS.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveCategory(tab.id)}
-              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap flex items-center gap-2 border transition ${
+              className={`pb-3 -mb-px text-sm font-semibold whitespace-nowrap border-b-2 transition ${
                 activeCategory === tab.id
-                  ? 'bg-brand-900 border-brand-900 text-white shadow-md'
-                  : 'bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-100'
+                  ? 'border-brand-700 text-brand-900'
+                  : 'border-transparent text-neutral-500 hover:text-neutral-700'
               }`}
             >
-              {{
-                'fa-border-all': <FaBorderAll aria-hidden="true" />,
-                'fa-award': <FaAward aria-hidden="true" />,
-                'fa-shirt': <FaShirt aria-hidden="true" />,
-                'fa-basket-shopping': <FaBasketShopping aria-hidden="true" />,
-                'fa-clapperboard': <FaClapperboard aria-hidden="true" />,
-              }[tab.icon]} {tab.label}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -598,10 +587,10 @@ export default function KwanjulaBudgetPage() {
             <button
               key={chip.id}
               onClick={() => setActiveFilter(chip.id)}
-              className={`px-3 py-1 rounded-md text-xs font-medium border transition ${
+              className={`px-3 py-1 rounded-md text-xs font-medium border bg-white transition ${
                 activeFilter === chip.id
-                  ? 'bg-accent-100 border-accent-400 text-accent-900 font-bold'
-                  : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300'
+                  ? 'border-brand-700 text-brand-800 font-semibold'
+                  : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
               }`}
             >
               {chip.label}
