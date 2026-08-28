@@ -5,6 +5,7 @@ import Link from 'next/link';
 import confetti from 'canvas-confetti';
 import {
   FaArrowDown,
+  FaArrowRight,
   FaBell,
   FaCalendarDays,
   FaCheck,
@@ -1403,6 +1404,14 @@ export default function KwanjulaBudgetPage() {
                     className="w-full pl-13 pr-3 py-2 text-sm font-bold bg-white border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   />
                 </div>
+
+                {/* Live Rounding Preview */}
+                {formData.amount && Number(formData.amount) !== roundToNearestThousand(formData.amount) && (
+                  <span className="text-[11px] text-neutral-500 mt-1 flex items-center gap-1">
+                    <FaArrowRight className="text-[9px] text-neutral-400" aria-hidden="true" />
+                    Rounds to <strong className="font-bold text-neutral-700">{formatUGX(roundToNearestThousand(formData.amount))}</strong> — nearest 1,000 UGX, the smallest Mobile Money increment
+                  </span>
+                )}
 
                 {/* Live Spillover Notice */}
                 {selectedItem && Number(formData.amount) > selectedItem.remainingAmount && selectedItem.remainingAmount > 0 && (
