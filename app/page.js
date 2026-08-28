@@ -1393,7 +1393,7 @@ export default function KwanjulaBudgetPage() {
                     type="number"
                     required
                     min="5000"
-                    step="1000"
+                    step="any"
                     placeholder="e.g. 50,000"
                     value={formData.amount}
                     onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
