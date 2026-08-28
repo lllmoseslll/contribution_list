@@ -488,3 +488,39 @@ documented conventions rather than needing to reconstruct the reasoning from thi
 **Verified:** `grep -rn "font-serif-royal|Playfair|Cinzel" app/` returns nothing; `next build` is clean;
 the hero H1 computed `font-family` is `Outfit, …` in the browser, confirmed live rather than assumed from
 the diff.
+
+### Step 2 — `Redesign_feat/hero: flat colour, no dotted overlay, no badge-over-h1`
+
+**Every tell named in Context 1 is gone from the hero specifically.** The gradient (`bg-gradient-to-br
+from-brand-950 via-brand-900 to-brand-900`) is a flat `bg-brand-950`; the decorative dotted radial-gradient
+overlay div is deleted outright; the pill badge sitting above the H1 ("THE KWANJULA BUDGET" in a bordered,
+tinted, icon-bearing pill) is now plain uppercase small-caps text with no background, border, or icon — the
+`<FaGem>` import that only served that badge is removed along with it. The H1 drops from
+`text-3xl sm:text-5xl font-extrabold` with a `drop-shadow-md` to a plainer `text-2xl sm:text-4xl font-bold`
+with no drop-shadow; the "&" loses its `italic font-serif` styling (a second, smaller serif-touch this
+plan's Step 1 pass on `.font-serif-royal` didn't reach, since it was a bare Tailwind `font-serif` utility,
+not the custom class). The subtitle scales down from `text-lg sm:text-2xl` to `text-base sm:text-lg` to
+match.
+
+**All four hero buttons lose their gradients, heavy shadows, and hover-lift transforms (D3, D6, D9).** The
+primary CTA drops its three-stop `from-accent-500 to-accent-600` gradient, `shadow-lg shadow-accent-600/30`,
+and `hover:-translate-y-0.5` for a flat fill and a plain background-color hover state — and is recoloured
+from accent (gold) to brand (emerald) per D2, which this step is the first to actually execute (Step 1
+only documented the convention). The two outlined buttons (PDF, Mobile Money) move from translucent
+`bg-brand-950/80` / `bg-brand-800/60` fills with soft borders to a single flat treatment: transparent
+background, a plain `border-brand-700`, `hover:bg-brand-900`.
+
+**Contrast was computed, not assumed, and it caught a real failure before it shipped.** White text on the
+first choice of primary-button fill, `brand-600` (#059669), measured 3.77:1 — below the 4.5:1 AA minimum
+for normal-weight text at this size (the button text is bold but only 14-16px, under the 18.66px bold
+threshold WCAG's "large text" exception requires). Moved to `brand-700` (#047857): 5.48:1. Hover state
+moved to `brand-800` rather than a lighter shade, so it gets *more* readable on interaction, never less.
+The eyebrow (`accent-400` on `brand-950`), subtitle (`brand-200`), and both outlined-button label colors
+(`accent-300`, `brand-100`) were all separately computed against the flat `brand-950` background and clear
+9:1 or better.
+
+**Verified:** built and loaded in the browser — the primary button's computed background is
+`rgb(4, 120, 87)` (`#047857`, confirmed brand-700, not the color initially written); the pledge modal
+still opens and closes from the hero's primary CTA; a fresh grep of the hero's JSX for
+`bg-gradient|radial-gradient|hover:-translate|shadow-xl|shadow-lg|shadow-2xl` returns nothing; 390px
+viewport shows zero horizontal overflow.

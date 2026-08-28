@@ -20,7 +20,6 @@ import {
   FaEnvelope,
   FaFilePdf,
   FaFilter,
-  FaGem,
   FaGift,
   FaHandHoldingDollar,
   FaHandHoldingHeart,
@@ -416,36 +415,34 @@ export default function KwanjulaBudgetPage() {
       </div>
 
       {/* Hero Banner */}
-      <header className="relative bg-gradient-to-br from-brand-950 via-brand-900 to-brand-900 text-white py-14 sm:py-18 px-4 text-center overflow-hidden border-b-4 border-accent-500 shadow-xl">
-        <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#f59e0b_1px,transparent_1px)] [background-size:24px_24px]"></div>
-        
-        <div className="relative max-w-4xl mx-auto z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/15 border border-accent-400/40 text-accent-300 text-xs font-bold tracking-widest uppercase mb-4 shadow-sm">
-            <FaGem className="text-accent-400" aria-hidden="true" /> The Kwanjula Budget
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-3 drop-shadow-md">
-            Mr. Edwin Laston <span className="text-accent-400 italic font-serif">&</span> Jamirah Nakayemba
-          </h1>
-
-          <p className="text-lg sm:text-2xl text-brand-200 font-medium mb-3">
-            Official Introduction Ceremony Contribution & Pledges Board
+      <header className="relative bg-brand-950 text-white py-12 sm:py-16 px-4 text-center border-b border-brand-800">
+        <div className="relative max-w-4xl mx-auto">
+          <p className="text-accent-400 text-xs font-bold tracking-widest uppercase mb-3">
+            The Kwanjula Budget
           </p>
 
-          <p className="max-w-2xl mx-auto text-neutral-200 text-sm sm:text-base leading-relaxed mb-8">
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-3">
+            Mr. Edwin Laston <span className="text-accent-400">&amp;</span> Jamirah Nakayemba
+          </h1>
+
+          <p className="text-base sm:text-lg text-brand-200 font-medium mb-3">
+            Official Introduction Ceremony Contribution &amp; Pledges Board
+          </p>
+
+          <p className="max-w-2xl mx-auto text-neutral-200 text-sm leading-relaxed mb-8">
             Welcome family, relatives, and dear friends! Stand with Edwin & Jamirah as they take this blessed step. Choose any item from our official budget below to make a pledge and write your name. All contributions deduct from the remaining total in real-time.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => openPledgeModal(null)}
-              className="px-6 py-3 rounded-xl font-bold text-sm sm:text-base bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white shadow-lg shadow-accent-600/30 transition transform hover:-translate-y-0.5 flex items-center gap-2"
+              className="px-6 py-3 rounded-lg font-bold text-sm sm:text-base bg-brand-700 hover:bg-brand-800 text-white transition flex items-center gap-2"
             >
               <FaHeartCircleCheck aria-hidden="true" /> Make a Pledge Now
             </button>
             <a
               href="#budgetSection"
-              className="px-6 py-3 rounded-xl font-semibold text-sm sm:text-base bg-white text-brand-950 hover:bg-neutral-100 shadow-md transition transform hover:-translate-y-0.5 flex items-center gap-2"
+              className="px-6 py-3 rounded-lg font-semibold text-sm sm:text-base bg-white text-brand-950 hover:bg-neutral-100 transition flex items-center gap-2"
             >
               <FaListCheck aria-hidden="true" /> View Budget Items
             </a>
@@ -453,13 +450,13 @@ export default function KwanjulaBudgetPage() {
               href="/introduction-budget-edwin-laston.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-brand-950/80 hover:bg-brand-900 border border-accent-400/40 text-accent-300 transition flex items-center gap-2 shadow-md"
+              className="px-5 py-3 rounded-lg font-semibold text-sm sm:text-base border border-brand-700 hover:bg-brand-900 text-accent-300 transition flex items-center gap-2"
             >
               <FaFilePdf className="text-accent-400" aria-hidden="true" /> Download Official PDF
             </a>
             <a
               href="#paymentSection"
-              className="px-5 py-3 rounded-xl font-semibold text-sm sm:text-base bg-brand-800/60 hover:bg-brand-800 border border-brand-600/40 text-brand-100 transition flex items-center gap-2"
+              className="px-5 py-3 rounded-lg font-semibold text-sm sm:text-base border border-brand-700 hover:bg-brand-900 text-brand-100 transition flex items-center gap-2"
             >
               <FaMobileScreenButton aria-hidden="true" /> Mobile Money
             </a>
