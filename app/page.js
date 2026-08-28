@@ -13,7 +13,6 @@ import {
   FaChevronDown,
   FaCircleCheck,
   FaCircleInfo,
-  FaCoins,
   FaEnvelope,
   FaFilePdf,
   FaFilter,
@@ -512,49 +511,52 @@ export default function KwanjulaBudgetPage() {
           </div>
         </div>
 
-        {/* 4 Financial Metric Cards — kept inside the hero; Remaining Balance is the one
-            deliberately saturated card, so it's the single thing the eye lands on last. */}
-        <div className="max-w-5xl mx-auto mt-10 sm:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-left">
+        {/* Financial Metrics — kept inside the hero. Total Target, Raised & Pledged, and
+            Remaining are one combined progress card rather than three separate tiles;
+            Remaining stays the one accent-coloured figure that draws the eye. */}
+        <div className="max-w-5xl mx-auto mt-10 sm:mt-12 grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 text-left">
 
-          {/* Card 1: Total Budget Target */}
-          <div className="bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800 flex items-center gap-3">
-            <FaCoins className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
-            <div>
-              <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Total Target Budget</div>
-              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{formatUGX(stats.totalBudget)}</div>
-              <div className="text-[11px] text-brand-300 font-medium">Official Ceremony Budget</div>
-            </div>
-          </div>
-
-          {/* Card 2: Total Raised & Pledged */}
-          <div className="bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800 flex items-center gap-3">
-            <FaCircleCheck className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
-            <div>
-              <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Total Raised & Pledged</div>
-              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{formatUGX(stats.totalCoveredAndPledged)}</div>
-              <div className="text-[11px] font-bold text-brand-300 flex items-center gap-1.5">
+          {/* Budget Progress: Total Target + Raised & Pledged + Remaining, with a progress bar */}
+          <div className="lg:col-span-2 bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-3">
+              <div>
+                <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Ceremony Budget Progress</div>
+                <div className="text-lg sm:text-2xl font-black text-white tracking-tight">
+                  {formatUGX(stats.totalBudget)} <span className="text-brand-300 text-xs sm:text-sm font-bold">Total Target</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-brand-300">
                 <span className="w-2 h-2 rounded-full bg-brand-400 pulse-dot inline-block"></span>
-                <span>{stats.totalPercentage}% Funded so far</span>
+                <span>{stats.totalPercentage}% Funded</span>
+              </div>
+            </div>
+
+            <div
+              className="h-2.5 rounded-full bg-brand-950 overflow-hidden mb-3"
+              role="progressbar"
+              aria-valuenow={stats.totalPercentage}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Ceremony budget funded percentage"
+            >
+              <div className="h-full bg-brand-400" style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}></div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <FaCircleCheck className="text-brand-400 text-sm shrink-0" aria-hidden="true" />
+                <span className="text-sm font-bold text-white">{formatUGX(stats.totalCoveredAndPledged)}</span>
+                <span className="text-[11px] text-brand-300 font-medium">Raised &amp; Pledged</span>
+              </div>
+              <div className="inline-flex items-center gap-2 bg-accent-700 border border-accent-600 rounded-md px-2.5 py-1.5">
+                <FaScaleBalanced className="text-white text-sm shrink-0" aria-hidden="true" />
+                <span className="text-sm font-black text-white">{formatUGX(stats.totalRemaining)}</span>
+                <span className="text-[11px] font-bold text-accent-100">Remaining</span>
               </div>
             </div>
           </div>
 
-          {/* Card 3: Remaining Balance — the one card that breaks the palette's restraint on
-              purpose: a solid accent fill against three quiet brand-900 cards on the same dark
-              hero, so it's the figure visitors' eyes are drawn to first. */}
-          <div className="bg-accent-700 p-4 sm:p-5 rounded-lg border border-accent-600 flex items-center gap-3">
-            <FaScaleBalanced className="text-white text-lg shrink-0" aria-hidden="true" />
-            <div>
-              <div className="text-[11px] font-bold text-accent-100 uppercase tracking-wider">Remaining Balance</div>
-              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{formatUGX(stats.totalRemaining)}</div>
-              <div className="text-[11px] font-extrabold text-white flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-white pulse-dot-accent inline-block"></span>
-                <span>Live subtracting balance</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 4: Supporters & Pledges */}
+          {/* Supporters & Pledges */}
           <div className="bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800 flex items-center gap-3">
             <FaUsers className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
             <div>
