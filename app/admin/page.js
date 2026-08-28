@@ -10,6 +10,7 @@ import {
   FaCheckDouble,
   FaCircleInfo,
   FaClock,
+  FaEnvelope,
   FaEnvelopeOpenText,
   FaFileCsv,
   FaFilePdf,
@@ -43,10 +44,9 @@ function formatUGX(num) {
   }).format(num || 0);
 }
 
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-GB', {
+function formatDate(iso) {
+  if (!iso) return 'N/A';
+  return new Date(iso).toLocaleDateString('en-UG', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -73,6 +73,7 @@ export default function AdminPage() {
   const [showPin, setShowPin] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [testEmailStatus, setTestEmailStatus] = useState(null);
+  const [newEmailInput, setNewEmailInput] = useState('');
 
   // Admin Offline Pledge Modal
   const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
@@ -92,6 +93,7 @@ export default function AdminPage() {
     ownerName: 'Mr. Edwin Laston',
     ownerEmail: '',
     notifyEmail: '',
+    notifyEmails: ['edwinlaston@gmail.com'],
     ownerPhone: '',
     emailNotificationsEnabled: true,
     smtp: {
@@ -186,11 +188,61 @@ export default function AdminPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setAdminSettings(data);
+        let emails = [];
+        if (Array.isArray(data.notifyEmails) && data.notifyEmails.length > 0) {
+          emails = data.notifyEmails;
+        } else if (data.notifyEmail) {
+          emails = data.notifyEmail.split(',').map(s => s.trim()).filter(Boolean);
+        } else if (data.ownerEmail) {
+          emails = [data.ownerEmail.trim()];
+        } else {
+          emails = ['edwinlaston@gmail.com'];
+        }
+        setAdminSettings({
+          ...data,
+          notifyEmails: emails,
+          notifyEmail: emails.join(', ')
+        });
       }
     } catch (err) {
       console.error('Failed to load admin settings:', err);
     }
+  };
+
+  const handleAddEmail = (emailToAdd) => {
+    const target = (emailToAdd || newEmailInput).trim().toLowerCase();
+    if (!target) {
+      showToast('Please enter an email address', 'error');
+      return;
+    }
+    if (!target.includes('@') || !target.includes('.')) {
+      showToast('Please enter a valid email address (e.g. name@example.com)', 'error');
+      return;
+    }
+    const current = adminSettings.notifyEmails || [];
+    if (current.includes(target)) {
+      showToast('This email is already in the recipient list', 'info');
+      return;
+    }
+    const updated = [...current, target];
+    setAdminSettings(prev => ({
+      ...prev,
+      notifyEmails: updated,
+      notifyEmail: updated.join(', ')
+    }));
+    setNewEmailInput('');
+    showToast(`Added ${target} to notification recipients`, 'success');
+  };
+
+  const handleRemoveEmail = (emailToRemove) => {
+    const current = adminSettings.notifyEmails || [];
+    const updated = current.filter(e => e !== emailToRemove);
+    setAdminSettings(prev => ({
+      ...prev,
+      notifyEmails: updated,
+      notifyEmail: updated.join(', ')
+    }));
+    showToast(`Removed ${emailToRemove}`, 'info');
   };
 
   // Load everything the console needs once a session exists.
@@ -316,17 +368,21 @@ export default function AdminPage() {
 
   // Send Test Email via SMTP
   const handleSendTestEmail = async () => {
-    setTestEmailStatus({ loading: true, msg: 'Dispatching test email...' });
+    const recipients = (adminSettings.notifyEmails && adminSettings.notifyEmails.length > 0)
+      ? adminSettings.notifyEmails.join(', ')
+      : (adminSettings.notifyEmail || adminSettings.ownerEmail || 'edwinlaston@gmail.com');
+
+    setTestEmailStatus({ loading: true, msg: `Dispatching test email to ${recipients}...` });
     try {
       const res = await fetch('/api/admin/test-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipientEmail: adminSettings.notifyEmail || adminSettings.ownerEmail })
+        body: JSON.stringify({ recipientEmail: recipients })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to send test email');
 
-      setTestEmailStatus({ success: true, msg: data.message || 'Test email dispatched successfully! Check inbox.' });
+      setTestEmailStatus({ success: true, msg: `Test email dispatched to ${recipients}! Check inboxes.` });
       showToast('Test email sent successfully!', 'success');
     } catch (err) {
       setTestEmailStatus({ success: false, msg: err.message });
@@ -748,70 +804,159 @@ export default function AdminPage() {
                 </div>
               )}
 
-              {/* TAB 3: SETTINGS & SMTP */}
+              {/* TAB 3: SETTINGS - NOTIFICATION RECIPIENT EMAILS */}
               {adminTab === 'settings' && (
-                <form onSubmit={handleSaveSettings} className="space-y-4 text-xs">
+                <form onSubmit={handleSaveSettings} className="space-y-5 text-xs">
 
-                  {/* Pledge alert notifications */}
-                  <div className="p-4 rounded-xl bg-brand-50/60 border border-brand-200">
-                    <div className="flex flex-wrap justify-between items-center gap-2 mb-1">
-                      <h5 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
-                        <FaBell className="text-brand-700" aria-hidden="true" /> Pledge Alert Notifications
-                      </h5>
-                      <label className="flex items-center gap-2 cursor-pointer">
+                  {/* Pledge Alert Notification Emails */}
+                  <div className="p-5 sm:p-6 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                    <div className="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-neutral-100">
+                      <div>
+                        <h5 className="font-bold text-neutral-900 text-base flex items-center gap-2">
+                          <FaBell className="text-brand-700" aria-hidden="true" /> Pledge Alert Notification Inboxes
+                        </h5>
+                        <p className="text-neutral-500 text-xs mt-0.5">
+                          Every time a contributor submits a pledge, an instant email alert will be delivered to all addresses listed below.
+                        </p>
+                      </div>
+                      <label className="flex items-center gap-2 cursor-pointer bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-xl border border-brand-200 transition">
                         <input
                           type="checkbox"
                           checked={adminSettings.emailNotificationsEnabled !== false}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, emailNotificationsEnabled: e.target.checked }))}
-                          className="rounded text-brand-700"
+                          className="rounded text-brand-700 focus:ring-brand-700 w-4 h-4"
                         />
-                        <span className="font-bold text-brand-800">Send alerts</span>
+                        <span className="font-bold text-brand-900 text-xs">Email Alerts Active</span>
                       </label>
                     </div>
-                    <p className="text-neutral-500 mb-3">
-                      Every new pledge sends an alert to this address. It is private: it is never shown on the public page
-                      and never returned to an unauthenticated caller.
-                    </p>
 
-                    <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Send alerts to</label>
-                    <input
-                      type="email"
-                      placeholder="committee@example.com"
-                      value={adminSettings.notifyEmail || ''}
-                      onChange={(e) => setAdminSettings(prev => ({ ...prev, notifyEmail: e.target.value }))}
-                      className="w-full sm:w-80 p-2 border border-neutral-300 rounded-lg text-xs"
-                    />
-                    {!adminSettings.notifyEmail && adminSettings.ownerEmail && (
-                      <p className="text-[11px] text-accent-700 mt-1.5">
-                        <FaCircleInfo aria-hidden="true" /> Empty, so alerts fall back to the public contact address
-                        ({adminSettings.ownerEmail}).
-                      </p>
-                    )}
+                    {/* Add Email Form Row */}
+                    <div className="mt-4">
+                      <label className="block text-neutral-700 text-xs font-bold mb-1.5">
+                        Add New Notification Recipient Email
+                      </label>
+                      <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                        <div className="relative w-full sm:w-96">
+                          <FaEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden="true" />
+                          <input
+                            type="email"
+                            placeholder="e.g. edwinlaston@gmail.com"
+                            value={newEmailInput}
+                            onChange={(e) => setNewEmailInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                e.preventDefault();
+                                handleAddEmail();
+                              }
+                            }}
+                            className="w-full pl-9 pr-3 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl text-xs text-neutral-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-700 transition"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleAddEmail()}
+                          className="px-4 py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl text-xs transition shadow-sm flex items-center gap-1.5 shrink-0"
+                        >
+                          <FaPlus aria-hidden="true" /> Add Recipient
+                        </button>
+                      </div>
+                    </div>
 
-                    <div className="pt-3 flex flex-wrap items-center gap-3">
-                      <button
-                        type="button"
-                        onClick={handleSendTestEmail}
-                        disabled={testEmailStatus?.loading}
-                        className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-accent-50 text-accent-800 border border-accent-300 hover:bg-accent-100 flex items-center gap-1.5"
-                      >
-                        {testEmailStatus?.loading ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaPaperPlane aria-hidden="true" />}
-                        Send Test Email
-                      </button>
-                      {testEmailStatus?.msg && (
-                        <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-brand-700' : 'text-accent-700'}`}>
-                          {testEmailStatus.msg}
-                        </span>
+                    {/* Current Recipient List */}
+                    <div className="mt-5">
+                      <div className="text-[11px] uppercase tracking-wider font-extrabold text-neutral-500 mb-2.5 flex items-center justify-between">
+                        <span>Active Alert Inboxes ({(adminSettings.notifyEmails || []).length})</span>
+                        {(adminSettings.notifyEmails || []).length === 0 && (
+                          <span className="text-orange-600 font-bold">⚠️ No notification emails configured</span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        {(adminSettings.notifyEmails || []).map((email, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between p-3 bg-neutral-50 hover:bg-white rounded-xl border border-neutral-200 transition group shadow-2xs"
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div className="w-7 h-7 rounded-full bg-brand-100 text-brand-800 font-bold flex items-center justify-center text-xs shrink-0">
+                                @
+                              </div>
+                              <span className="font-semibold text-neutral-800 text-xs truncate" title={email}>
+                                {email}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveEmail(email)}
+                              className="w-6 h-6 rounded-lg text-neutral-400 hover:text-orange-600 hover:bg-orange-50 flex items-center justify-center transition"
+                              title="Remove email"
+                            >
+                              <FaXmark aria-hidden="true" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Quick Suggestion if empty */}
+                      {(!adminSettings.notifyEmails || adminSettings.notifyEmails.length === 0) && (
+                        <div className="p-4 bg-orange-50/70 border border-orange-200 rounded-xl mt-2 flex items-center justify-between">
+                          <div className="text-xs text-orange-900">
+                            <strong>Quick suggestion:</strong> Add the groom's email (<code>edwinlaston@gmail.com</code>) to receive pledge notifications.
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleAddEmail('edwinlaston@gmail.com')}
+                            className="text-xs font-bold text-orange-800 bg-white px-3 py-1 rounded-lg border border-orange-300 hover:bg-orange-100 transition shrink-0 ml-2"
+                          >
+                            + Add Edwin
+                          </button>
+                        </div>
                       )}
+                    </div>
+
+                    {/* Test Email Button Row */}
+                    <div className="mt-6 pt-4 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={handleSendTestEmail}
+                          disabled={testEmailStatus?.loading}
+                          className="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-300 transition flex items-center gap-2 shadow-2xs"
+                        >
+                          {testEmailStatus?.loading ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaPaperPlane className="text-brand-700" aria-hidden="true" />}
+                          Send Test Alert Email
+                        </button>
+                        {testEmailStatus?.msg && (
+                          <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-brand-700' : 'text-orange-600'}`}>
+                            {testEmailStatus.msg}
+                          </span>
+                        )}
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSavingSettings}
+                        className="px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl transition shadow flex items-center gap-2 text-xs"
+                      >
+                        {isSavingSettings ? (
+                          <>
+                            <FaSpinner className="animate-spin" aria-hidden="true" /> Saving...
+                          </>
+                        ) : (
+                          <>
+                            <FaFloppyDisk aria-hidden="true" /> Save Notification Inboxes
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
 
-                  {/* Public committee contacts */}
-                  <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200">
+                  {/* Public Committee Contacts Card */}
+                  <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm">
                     <h5 className="font-bold text-neutral-900 mb-1 text-sm flex items-center gap-2">
-                      <FaUserShield className="text-brand-700" aria-hidden="true" /> Public Committee Contacts
+                      <FaUserShield className="text-brand-700" aria-hidden="true" /> Public Committee Contact Details
                     </h5>
-                    <p className="text-neutral-500 mb-3">Shown to contributors on the public page. Not used for alerts.</p>
+                    <p className="text-neutral-500 mb-3 text-xs">Shown to contributors on the public page for reference & phone inquiries.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Primary Organizer Name</label>
@@ -819,7 +964,7 @@ export default function AdminPage() {
                           type="text"
                           value={adminSettings.ownerName || ''}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, ownerName: e.target.value }))}
-                          className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
+                          className="w-full p-2.5 border border-neutral-300 rounded-xl text-xs"
                         />
                       </div>
                       <div>
@@ -828,114 +973,12 @@ export default function AdminPage() {
                           type="email"
                           value={adminSettings.ownerEmail || ''}
                           onChange={(e) => setAdminSettings(prev => ({ ...prev, ownerEmail: e.target.value }))}
-                          className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
+                          className="w-full p-2.5 border border-neutral-300 rounded-xl text-xs"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* Live SMTP Dispatch */}
-                  <div className="p-4 rounded-xl bg-neutral-50 border border-neutral-200">
-                    <div className="flex justify-between items-center mb-1">
-                      <h5 className="font-bold text-neutral-900 text-sm flex items-center gap-2">
-                        <FaServer className="text-brand-700" aria-hidden="true" /> Live SMTP Email Dispatch
-                      </h5>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={adminSettings.smtp?.enabled || false}
-                          onChange={(e) => setAdminSettings(prev => ({
-                            ...prev,
-                            smtp: { ...prev.smtp, enabled: e.target.checked }
-                          }))}
-                          className="rounded text-brand-700"
-                        />
-                        <span className="font-bold text-brand-800">Enable Live SMTP</span>
-                      </label>
-                    </div>
-                    <p className="text-neutral-500 mb-3">Deliver alerts directly to Edwin's Gmail inbox and send instant receipts to contributors.</p>
-
-                    {adminSettings.smtp?.enabled && (
-                      <div className="space-y-3 pt-2 border-t border-neutral-200">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">SMTP Service</label>
-                            <select
-                              value={adminSettings.smtp?.service || 'gmail'}
-                              onChange={(e) => setAdminSettings(prev => ({
-                                ...prev,
-                                smtp: { ...prev.smtp, service: e.target.value }
-                              }))}
-                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
-                            >
-                              <option value="gmail">Google Gmail</option>
-                              <option value="custom">Custom SMTP Server</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Email / User</label>
-                            <input
-                              type="text"
-                              placeholder="e.g. edwinlaston@gmail.com"
-                              value={adminSettings.smtp?.user || ''}
-                              onChange={(e) => setAdminSettings(prev => ({
-                                ...prev,
-                                smtp: { ...prev.smtp, user: e.target.value }
-                              }))}
-                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Google App Password (16 letters)</label>
-                            <input
-                              type="password"
-                              placeholder={adminSettings.smtp?.hasPassword ? 'Saved. Leave blank to keep it.' : '16-letter App Password'}
-                              value={adminSettings.smtp?.pass || ''}
-                              onChange={(e) => setAdminSettings(prev => ({
-                                ...prev,
-                                smtp: { ...prev.smtp, pass: e.target.value }
-                              }))}
-                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs font-mono"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">From Header</label>
-                            <input
-                              type="text"
-                              value={adminSettings.smtp?.from || 'Edwin & Jamirah Kwanjula <noreply@edwinlaston.org>'}
-                              onChange={(e) => setAdminSettings(prev => ({
-                                ...prev,
-                                smtp: { ...prev.smtp, from: e.target.value }
-                              }))}
-                              className="w-full p-2 border border-neutral-300 rounded-lg text-xs"
-                            />
-                          </div>
-                        </div>
-
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex justify-end gap-2 pt-3">
-                    <button
-                      type="submit"
-                      disabled={isSavingSettings}
-                      className="px-5 py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl transition shadow flex items-center gap-2"
-                    >
-                      {isSavingSettings ? (
-                        <>
-                          <FaSpinner className="animate-spin" aria-hidden="true" /> Saving...
-                        </>
-                      ) : (
-                        <>
-                          <FaFloppyDisk aria-hidden="true" /> Save Settings
-                        </>
-                      )}
-                    </button>
-                  </div>
                 </form>
               )}
 

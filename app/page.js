@@ -16,6 +16,7 @@ import {
   FaEnvelope,
   FaFilePdf,
   FaFilter,
+  FaFlagCheckered,
   FaGift,
   FaHandHoldingDollar,
   FaHandHoldingHeart,
@@ -35,6 +36,7 @@ import {
   FaShieldHalved,
   FaSpinner,
   FaStar,
+  FaTrophy,
   FaUsers,
   FaWhatsapp,
   FaXmark
@@ -475,61 +477,183 @@ export default function KwanjulaBudgetPage() {
         </div>
       </header>
 
-      {/* Financial Metrics Dashboard */}
-      <section className="max-w-6xl mx-auto w-full px-4 -mt-8 relative z-20 mb-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      {/* Financial Metrics & Ceremony Funding Milestone Showcase */}
+      <section className="max-w-6xl mx-auto w-full px-4 -mt-8 relative z-20 mb-12">
+        {/* 4 Financial Metric Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
 
-          <div className="bg-white p-4 rounded-lg border border-neutral-200 flex items-center gap-3">
-            <FaCoins className="text-accent-600 text-lg shrink-0" aria-hidden="true" />
+          {/* Card 1: Total Budget Target */}
+          <div className="bg-white p-5 rounded-xl border border-neutral-200/90 shadow-xs flex items-center gap-3.5 transition-all duration-200 hover:border-neutral-300">
+            <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center shrink-0 text-neutral-700 text-xl">
+              <FaCoins className="text-accent-600" aria-hidden="true" />
+            </div>
             <div>
-              <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Total Budget</div>
-              <div className="text-xl sm:text-2xl font-black text-neutral-900">{formatUGX(stats.totalBudget)}</div>
-              <div className="text-xs text-neutral-500">Official Ceremony Budget</div>
+              <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Total Target Budget</div>
+              <div className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight">{formatUGX(stats.totalBudget)}</div>
+              <div className="text-[11px] text-neutral-500 font-medium">Official Ceremony Budget</div>
             </div>
           </div>
 
-          <div className="bg-brand-50 p-4 rounded-lg border border-brand-200 flex items-center gap-3">
-            <FaCircleCheck className="text-brand-700 text-lg shrink-0" aria-hidden="true" />
-            <div>
-              <div className="text-xs font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
-              <div className="text-xl sm:text-2xl font-black text-brand-700">{formatUGX(stats.totalCoveredAndPledged)}</div>
-              <div className="text-xs font-bold text-brand-700">{stats.totalPercentage}% Funded</div>
+          {/* Card 2: Total Raised & Pledged */}
+          <div className="bg-gradient-to-br from-brand-50 to-emerald-100/50 p-5 rounded-xl border border-brand-200/90 shadow-xs flex items-center gap-3.5 transition-all duration-200 hover:border-brand-300">
+            <div className="w-12 h-12 rounded-xl bg-brand-200/60 flex items-center justify-center shrink-0 text-brand-800 text-xl">
+              <FaCircleCheck className="text-brand-700" aria-hidden="true" />
             </div>
-          </div>
-
-          <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 flex items-center gap-3">
-            <FaScaleBalanced className="text-orange-600 text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-xs font-bold text-orange-800 uppercase tracking-wider">Remaining Balance</div>
-              <div className="text-xl sm:text-2xl font-black text-orange-600">{formatUGX(stats.totalRemaining)}</div>
-              <div className="text-xs font-semibold text-orange-600 flex items-center gap-1">
-                <FaArrowDown aria-hidden="true" /> Live subtracting
+              <div className="text-[11px] font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
+              <div className="text-xl sm:text-2xl font-black text-brand-700 tracking-tight">{formatUGX(stats.totalCoveredAndPledged)}</div>
+              <div className="text-[11px] font-bold text-brand-700 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-brand-600 pulse-dot inline-block"></span>
+                <span>{stats.totalPercentage}% Funded so far</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-lg border border-neutral-200 flex items-center gap-3">
-            <FaUsers className="text-neutral-600 text-lg shrink-0" aria-hidden="true" />
+          {/* Card 3: Orange Remaining Balance */}
+          <div className="bg-gradient-to-br from-orange-50 via-amber-50/70 to-orange-100/90 p-5 rounded-xl border border-orange-300 shadow-sm ring-1 ring-orange-400/25 flex items-center gap-3.5 transition-all duration-200 hover:border-orange-400">
+            <div className="w-12 h-12 rounded-xl bg-orange-200/70 flex items-center justify-center shrink-0 text-orange-700 text-xl">
+              <FaScaleBalanced className="text-orange-600" aria-hidden="true" />
+            </div>
             <div>
-              <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Supporters</div>
-              <div className="text-xl sm:text-2xl font-black text-neutral-900">{stats.pledgersCount} Contributors</div>
-              <div className="text-xs text-neutral-500">{stats.totalPledgesCount} pledges recorded</div>
+              <div className="text-[11px] font-bold text-orange-900 uppercase tracking-wider">Remaining Balance</div>
+              <div className="text-xl sm:text-2xl font-black text-orange-600 tracking-tight">{formatUGX(stats.totalRemaining)}</div>
+              <div className="text-[11px] font-extrabold text-orange-700 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-orange-500 pulse-dot-orange inline-block"></span>
+                <span>Live subtracting balance</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 4: Supporters & Pledges */}
+          <div className="bg-white p-5 rounded-xl border border-neutral-200/90 shadow-xs flex items-center gap-3.5 transition-all duration-200 hover:border-neutral-300">
+            <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center shrink-0 text-neutral-700 text-xl">
+              <FaUsers className="text-neutral-700" aria-hidden="true" />
+            </div>
+            <div>
+              <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Community Backers</div>
+              <div className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight">{stats.pledgersCount} Contributors</div>
+              <div className="text-[11px] text-neutral-500 font-medium">{stats.totalPledgesCount} pledges recorded</div>
             </div>
           </div>
 
         </div>
 
-        {/* Overall Progress Meter */}
-        <div className="bg-white p-4 sm:p-5 rounded-lg border border-neutral-200">
-          <div className="flex justify-between items-center text-xs sm:text-sm font-semibold text-neutral-700 mb-2">
-            <span>Ceremony Funding Milestone</span>
-            <span className="text-brand-700 font-bold">{stats.totalPercentage}% of {formatUGX(stats.totalBudget)} (<span className="text-orange-600 font-bold">{formatUGX(stats.totalRemaining)} remaining</span>)</span>
+        {/* ================= CEREMONY FUNDING MILESTONE SHOWCASE ================= */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-neutral-200/90 shadow-sm relative overflow-hidden">
+          {/* Subtle Background Shimmer Accent */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-50/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+          {/* Milestone Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-5 border-b border-neutral-100">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider uppercase bg-brand-100 text-brand-900 border border-brand-200">
+                  Live Ceremony Progress
+                </span>
+                <span className="text-xs text-neutral-500 font-medium">Edwin & Jamirah Kwanjula • 27 Nov 2026</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-brand-950 flex items-center gap-2">
+                <FaTrophy className="text-accent-500" aria-hidden="true" /> Ceremony Funding Milestone Journey
+              </h3>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="bg-brand-50 border border-brand-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-brand-900 flex items-center gap-2">
+                <FaCircleCheck className="text-brand-700" aria-hidden="true" />
+                <span><strong>{stats.totalPercentage}%</strong> of Goal Achieved</span>
+              </div>
+              <div className="bg-orange-50 border border-orange-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-orange-800 flex items-center gap-1.5">
+                <span>🟧 <strong>{formatUGX(stats.totalRemaining)}</strong> Remaining</span>
+              </div>
+            </div>
           </div>
-          <div className="w-full h-2.5 bg-neutral-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-brand-600 rounded-full transition-all duration-700"
-              style={{ width: `${Math.min(100, Math.max(3, stats.totalPercentage))}%` }}
-            ></div>
+
+          {/* Interactive Milestone Checkpoints Track */}
+          <div className="mb-4">
+            {/* Checkpoint Indicators Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              
+              {/* Checkpoint 1: 25% */}
+              <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 25 ? 'bg-brand-50/80 border-brand-300 shadow-xs' : 'bg-neutral-50/60 border-neutral-200'}`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 25 ? 'bg-brand-700 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
+                    {stats.totalPercentage >= 25 ? '✓ 25% Achieved' : 'Stage 1 • 25%'}
+                  </span>
+                  <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget * 0.25)}</span>
+                </div>
+                <div>
+                  <div className="font-bold text-xs text-neutral-900">Foundation & Cultural Gifts</div>
+                  <div className="text-[10px] text-neutral-500">Essential introduction items & mutwalo</div>
+                </div>
+              </div>
+
+              {/* Checkpoint 2: 50% */}
+              <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 50 ? 'bg-brand-50/80 border-brand-300 shadow-xs' : stats.totalPercentage >= 25 ? 'bg-white border-brand-300 ring-1 ring-brand-400/30' : 'bg-neutral-50/60 border-neutral-200'}`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 50 ? 'bg-brand-700 text-white' : stats.totalPercentage >= 25 ? 'bg-accent-600 text-white animate-pulse' : 'bg-neutral-200 text-neutral-600'}`}>
+                    {stats.totalPercentage >= 50 ? '✓ 50% Achieved' : 'Stage 2 • 50%'}
+                  </span>
+                  <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget * 0.50)}</span>
+                </div>
+                <div>
+                  <div className="font-bold text-xs text-neutral-900">Halfway Celebration 🎉</div>
+                  <div className="text-[10px] text-neutral-500">Major family gifts & food requirements</div>
+                </div>
+              </div>
+
+              {/* Checkpoint 3: 75% */}
+              <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 75 ? 'bg-brand-50/80 border-brand-300 shadow-xs' : 'bg-neutral-50/60 border-neutral-200'}`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 75 ? 'bg-brand-700 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
+                    {stats.totalPercentage >= 75 ? '✓ 75% Achieved' : 'Stage 3 • 75%'}
+                  </span>
+                  <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget * 0.75)}</span>
+                </div>
+                <div>
+                  <div className="font-bold text-xs text-neutral-900">Attire & Family Wardrobe</div>
+                  <div className="text-[10px] text-neutral-500">Groom, bride & parents traditional wear</div>
+                </div>
+              </div>
+
+              {/* Checkpoint 4: 100% */}
+              <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 100 ? 'bg-brand-50 border-brand-400 shadow-sm' : 'bg-neutral-50/60 border-neutral-200'}`}>
+                <div className="flex justify-between items-center mb-2">
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 100 ? 'bg-brand-800 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
+                    {stats.totalPercentage >= 100 ? '🏆 100% Victory!' : 'Stage 4 • 100%'}
+                  </span>
+                  <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget)}</span>
+                </div>
+                <div>
+                  <div className="font-bold text-xs text-neutral-900">100% Ceremony Success 💍</div>
+                  <div className="text-[10px] text-neutral-500">Complete introduction fully funded</div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* High-Definition Layered Progress Bar */}
+            <div className="relative w-full h-4 bg-neutral-200/80 rounded-full overflow-hidden p-0.5">
+              <div
+                className="h-full bg-gradient-to-r from-brand-700 via-brand-600 to-accent-500 rounded-full transition-all duration-700 relative shimmer-bar"
+                style={{ width: `${Math.min(100, Math.max(3, stats.totalPercentage))}%` }}
+              >
+                {/* Glowing Lead Pin */}
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Motivational Bottom Callout */}
+          <div className="mt-5 pt-4 border-t border-neutral-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+            <p className="text-neutral-600 text-center sm:text-left">
+              🙏 <strong>Together We Build:</strong> Every pledge directly reduces the remaining ceremony balance and brings Edwin & Jamirah closer to 27th Nov 2026!
+            </p>
+            <button
+              onClick={() => openPledgeModal(null)}
+              className="px-4 py-2 rounded-xl font-bold bg-brand-800 hover:bg-brand-900 text-white transition flex items-center gap-1.5 shrink-0 shadow-sm text-xs"
+            >
+              <FaHandHoldingHeart aria-hidden="true" /> Contribute to Milestone
+            </button>
           </div>
         </div>
       </section>

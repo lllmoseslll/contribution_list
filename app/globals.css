@@ -155,6 +155,30 @@
   100% { transform: scale(0.9); box-shadow: 0 0 0 0 transparent; }
 }
 
+.pulse-dot-orange {
+  animation: pulseOrange 1.8s infinite;
+}
+
+@keyframes pulseOrange {
+  0%   { transform: scale(0.9); box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-orange-500) 70%, transparent); }
+  70%  { transform: scale(1.15); box-shadow: 0 0 0 7px transparent; }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 transparent; }
+}
+
+.shimmer-bar {
+  background-size: 200% 100%;
+  animation: shimmerMove 2.5s infinite linear;
+}
+
+@keyframes shimmerMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.milestone-glow {
+  box-shadow: 0 0 15px color-mix(in srgb, var(--color-brand-500) 30%, transparent);
+}
+
 .modal-backdrop {
   background: color-mix(in srgb, var(--color-neutral-900) 75%, transparent);
   backdrop-filter: blur(4px);
