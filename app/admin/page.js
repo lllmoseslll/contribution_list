@@ -74,6 +74,7 @@ export default function AdminPage() {
   const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [testEmailStatus, setTestEmailStatus] = useState(null);
   const [newEmailInput, setNewEmailInput] = useState('');
+  const [customTestEmail, setCustomTestEmail] = useState('');
 
   // Admin Offline Pledge Modal
   const [isOfflineModalOpen, setIsOfflineModalOpen] = useState(false);
@@ -367,23 +368,26 @@ export default function AdminPage() {
   };
 
   // Send Test Email via SMTP
-  const handleSendTestEmail = async () => {
-    const recipients = (adminSettings.notifyEmails && adminSettings.notifyEmails.length > 0)
+  const handleSendTestEmail = async (overrideEmail) => {
+    const specified = typeof overrideEmail === 'string' ? overrideEmail.trim() : customTestEmail.trim();
+    const fallbackRecipients = (adminSettings.notifyEmails && adminSettings.notifyEmails.length > 0)
       ? adminSettings.notifyEmails.join(', ')
       : (adminSettings.notifyEmail || adminSettings.ownerEmail || 'edwinlaston@gmail.com');
+    const recipient = specified || fallbackRecipients;
 
-    setTestEmailStatus({ loading: true, msg: `Dispatching test email to ${recipients}...` });
+    setTestEmailStatus({ loading: true, msg: `Dispatching test email to ${recipient}...` });
     try {
       const res = await fetch('/api/admin/test-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipientEmail: recipients })
+        body: JSON.stringify({ recipientEmail: recipient })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to send test email');
 
-      setTestEmailStatus({ success: true, msg: `Test email dispatched to ${recipients}! Check inboxes.` });
-      showToast('Test email sent successfully!', 'success');
+      setTestEmailStatus({ success: true, msg: `Test email successfully dispatched to ${recipient}! Check inbox.` });
+      showToast(`Test email sent to ${recipient}!`, 'success');
+      loadAdminNotifications();
     } catch (err) {
       setTestEmailStatus({ success: false, msg: err.message });
       showToast(err.message, 'error');
@@ -914,40 +918,78 @@ export default function AdminPage() {
                       )}
                     </div>
 
-                    {/* Test Email Button Row */}
-                    <div className="mt-6 pt-4 border-t border-neutral-100 flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={handleSendTestEmail}
-                          disabled={testEmailStatus?.loading}
-                          className="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-300 transition flex items-center gap-2 shadow-2xs"
-                        >
-                          {testEmailStatus?.loading ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaPaperPlane className="text-brand-700" aria-hidden="true" />}
-                          Send Test Alert Email
-                        </button>
+                    {/* Test Email Section with Custom Recipient Input */}
+                    <div className="mt-6 pt-5 border-t border-neutral-200">
+                      <div className="bg-neutral-50/80 p-4 rounded-xl border border-neutral-200">
+                        <label className="block text-neutral-800 text-xs font-bold mb-1">
+                          ⚡ Test Live Email Alert Delivery
+                        </label>
+                        <p className="text-neutral-500 text-[11px] mb-2.5">
+                          Set the exact email address you want to send the test alert to:
+                        </p>
+                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
+                          <div className="relative w-full sm:w-80">
+                            <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-xs" aria-hidden="true" />
+                            <input
+                              type="email"
+                              placeholder={adminSettings.notifyEmails?.[0] || 'e.g. edwinlaston@gmail.com'}
+                              value={customTestEmail}
+                              onChange={(e) => setCustomTestEmail(e.target.value)}
+                              className="w-full pl-8 pr-3 py-2 bg-white border border-neutral-300 rounded-xl text-xs text-neutral-900 focus:outline-none focus:ring-2 focus:ring-brand-700 transition"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleSendTestEmail()}
+                            disabled={testEmailStatus?.loading}
+                            className="px-4 py-2 rounded-xl text-xs font-bold bg-neutral-900 hover:bg-neutral-800 text-white transition flex items-center gap-2 shadow-2xs shrink-0 disabled:opacity-50"
+                          >
+                            {testEmailStatus?.loading ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaPaperPlane className="text-brand-400" aria-hidden="true" />}
+                            Send Test Email
+                          </button>
+                        </div>
+
+                        {/* Quick pick chips */}
+                        {(adminSettings.notifyEmails || []).length > 0 && (
+                          <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
+                            <span className="text-[10px] text-neutral-500 font-bold uppercase mr-1">Quick pick:</span>
+                            {(adminSettings.notifyEmails || []).map((em, i) => (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => setCustomTestEmail(em)}
+                                className={`px-2 py-0.5 rounded-lg text-[11px] font-semibold border transition ${customTestEmail === em ? 'bg-brand-700 text-white border-brand-700' : 'bg-white text-neutral-700 border-neutral-300 hover:bg-neutral-100'}`}
+                              >
+                                {em}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
                         {testEmailStatus?.msg && (
-                          <span className={`text-xs font-semibold ${testEmailStatus.success ? 'text-brand-700' : 'text-orange-600'}`}>
+                          <div className={`mt-3 p-2.5 rounded-lg text-xs font-semibold ${testEmailStatus.success ? 'bg-brand-50 text-brand-800 border border-brand-200' : 'bg-orange-50 text-orange-800 border border-orange-200'}`}>
                             {testEmailStatus.msg}
-                          </span>
+                          </div>
                         )}
                       </div>
 
-                      <button
-                        type="submit"
-                        disabled={isSavingSettings}
-                        className="px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl transition shadow flex items-center gap-2 text-xs"
-                      >
-                        {isSavingSettings ? (
-                          <>
-                            <FaSpinner className="animate-spin" aria-hidden="true" /> Saving...
-                          </>
-                        ) : (
-                          <>
-                            <FaFloppyDisk aria-hidden="true" /> Save Notification Inboxes
-                          </>
-                        )}
-                      </button>
+                      <div className="flex justify-end pt-4">
+                        <button
+                          type="submit"
+                          disabled={isSavingSettings}
+                          className="px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white font-bold rounded-xl transition shadow flex items-center gap-2 text-xs"
+                        >
+                          {isSavingSettings ? (
+                            <>
+                              <FaSpinner className="animate-spin" aria-hidden="true" /> Saving...
+                            </>
+                          ) : (
+                            <>
+                              <FaFloppyDisk aria-hidden="true" /> Save Notification Inboxes
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
