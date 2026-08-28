@@ -12,6 +12,7 @@ import {
   FaClock,
   FaEnvelopeOpenText,
   FaFileCsv,
+  FaFilePdf,
   FaFloppyDisk,
   FaGear,
   FaListCheck,
@@ -346,6 +347,30 @@ export default function AdminPage() {
     }
   };
 
+  // Unlike the public Pledge Report link, this reads the committee's own PDF
+  // route — same report, but its contributor page carries every pledge's
+  // real name, phone and amount with no anonymisation applied.
+  const handleExportPdf = async () => {
+    try {
+      const res = await fetch('/api/admin/pdf');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'PDF generation failed');
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `kwanjula-committee-pledge-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     setIsSavingSettings(true);
@@ -533,6 +558,14 @@ export default function AdminPage() {
                         title="Export all records as CSV spreadsheet"
                       >
                         <FaFileCsv aria-hidden="true" /> Export CSV
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleExportPdf}
+                        className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-50 text-brand-800 border border-brand-200 flex items-center gap-1.5 hover:bg-brand-100 shrink-0"
+                        title="Download the pledge report PDF with real contributor names, phone numbers and amounts"
+                      >
+                        <FaFilePdf aria-hidden="true" /> Download PDF
                       </button>
                       <button
                         onClick={() => setIsOfflineModalOpen(true)}
