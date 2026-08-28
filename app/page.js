@@ -476,12 +476,12 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
-          <div className="bg-accent-50 p-4 rounded-lg border border-accent-200 flex items-center gap-3">
-            <FaScaleBalanced className="text-accent-700 text-lg shrink-0" aria-hidden="true" />
+          <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 flex items-center gap-3">
+            <FaScaleBalanced className="text-orange-600 text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Remaining Balance</div>
-              <div className="text-xl sm:text-2xl font-black text-accent-700">{formatUGX(stats.totalRemaining)}</div>
-              <div className="text-xs font-semibold text-accent-700 flex items-center gap-1">
+              <div className="text-xs font-bold text-orange-800 uppercase tracking-wider">Remaining Balance</div>
+              <div className="text-xl sm:text-2xl font-black text-orange-600">{formatUGX(stats.totalRemaining)}</div>
+              <div className="text-xs font-semibold text-orange-600 flex items-center gap-1">
                 <FaArrowDown aria-hidden="true" /> Live subtracting
               </div>
             </div>
@@ -502,7 +502,7 @@ export default function KwanjulaBudgetPage() {
         <div className="bg-white p-4 sm:p-5 rounded-lg border border-neutral-200">
           <div className="flex justify-between items-center text-xs sm:text-sm font-semibold text-neutral-700 mb-2">
             <span>Ceremony Funding Milestone</span>
-            <span className="text-brand-700 font-bold">{stats.totalPercentage}% of {formatUGX(stats.totalBudget)} ({formatUGX(stats.totalRemaining)} remaining)</span>
+            <span className="text-brand-700 font-bold">{stats.totalPercentage}% of {formatUGX(stats.totalBudget)} (<span className="text-orange-600 font-bold">{formatUGX(stats.totalRemaining)} remaining</span>)</span>
           </div>
           <div className="w-full h-2.5 bg-neutral-200 rounded-full overflow-hidden">
             <div
@@ -686,7 +686,7 @@ export default function KwanjulaBudgetPage() {
 
               <div className="flex items-center gap-4 text-xs sm:text-sm text-neutral-600">
                 <span>Target: <strong>{formatUGX(sec.totalCost)}</strong></span>
-                <span>Remaining: <strong className="text-accent-700 font-bold">{formatUGX(sec.remainingAmount)}</strong></span>
+                <span>Remaining: <strong className="text-orange-600 font-bold">{formatUGX(sec.remainingAmount)}</strong></span>
                 <span className="px-2.5 py-0.5 rounded-full bg-neutral-100 font-bold text-neutral-700 text-xs">
                   {sec.percentage}% Funded
                 </span>
@@ -719,10 +719,10 @@ export default function KwanjulaBudgetPage() {
                               <span
                                 aria-hidden="true"
                                 className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-700' : 'bg-neutral-400'
+                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-orange-500' : 'bg-neutral-400'
                                 }`}
                               ></span>
-                              <span className={isCovered ? 'text-brand-700' : isPartial ? 'text-accent-700' : 'text-neutral-600'}>
+                              <span className={isCovered ? 'text-brand-700' : isPartial ? 'text-orange-700' : 'text-neutral-600'}>
                                 {isCovered ? (item.remarks === 'Covered' ? 'Covered' : '100% Funded') : (isPartial ? `${item.percentage}% Supported` : 'Needs Support')}
                               </span>
                             </span>
@@ -741,7 +741,7 @@ export default function KwanjulaBudgetPage() {
                             <span className="text-neutral-300" aria-hidden="true">&bull;</span>
                             <span>
                               Remaining{' '}
-                              <strong className={isCovered ? 'text-brand-700' : 'text-accent-700'}>
+                              <strong className={isCovered ? 'text-brand-700' : 'text-orange-600 font-bold'}>
                                 {formatUGX(item.remainingAmount)}
                               </strong>
                             </span>
@@ -1085,7 +1085,7 @@ export default function KwanjulaBudgetPage() {
                     <h4 className="font-bold text-neutral-900 text-sm sm:text-base">{selectedItem.name} {selectedItem.qty ? `(${selectedItem.qty})` : ''}</h4>
                     <div className="text-xs text-neutral-500 flex gap-3 mt-0.5">
                       <span>Total: <strong>{formatUGX(selectedItem.totalCost)}</strong></span>
-                      <span>Remaining: <strong className="text-accent-700">{formatUGX(selectedItem.remainingAmount)}</strong></span>
+                      <span>Remaining: <strong className="text-orange-600 font-bold">{formatUGX(selectedItem.remainingAmount)}</strong></span>
                     </div>
                   </div>
                   <button
@@ -1200,7 +1200,7 @@ export default function KwanjulaBudgetPage() {
                     <button
                       type="button"
                       onClick={() => applyQuickAmount(selectedItem.remainingAmount)}
-                      className="px-2.5 py-1 rounded-full text-xs font-bold bg-brand-100 hover:bg-brand-200 text-brand-800 border border-brand-300 transition"
+                      className="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 hover:bg-orange-200 text-orange-800 border border-orange-300 transition"
                     >
                       Cover Remaining ({formatUGX(selectedItem.remainingAmount)})
                     </button>
