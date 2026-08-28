@@ -792,3 +792,47 @@ or class string (`fa-solid`, `fa-regular`, `fa-brands`) return nothing outside t
 plain string *keys*, which are internal identifiers, not CSS classes reaching a stylesheet. Zero requests
 to `cdnjs.cloudflare.com` in a captured network trace. `lucide-react` is gone from `package.json` and
 `node_modules` — it was a dependency with zero imports anywhere in the repo before this step.
+
+### Step 8 — `CardUX_feat/supporters: contributors behind a details disclosure`
+
+**Only the cards with something to disclose got a disclosure.** D8's three zero-supporter states — a
+real "no pledges yet" item, an item pre-covered by family with no individual pledges, and the
+(theoretical) case of `item.covered` true with `remarks` not literally `'Covered'` — all render as static
+text with no `<summary>`, exactly as before. The `<details>` wrapper, the chevron, and the count only
+appear when `recentPledges.length > 0`; there is nothing to progressively disclose on a card that has
+nothing behind the fold, and giving it a dead control would be the NN/g information-scent failure in
+reverse — a summary promising content that opening reveals as empty.
+
+**A Tailwind-and-native-`<details>` interaction bit twice, and both times the fix was the same shape:
+stop relying on the browser default and say what should happen instead.** First, the always-been-hidden
+children of a closed `<details>` render every browser implements via a UA-stylesheet rule
+(`details:not([open]) > *:not(summary) { display: none; }`) — but CSS Cascade Layers place the UA
+stylesheet below *every* author layer, so Tailwind's own `.flex { display: flex }` utility, sitting in
+its `@layer utilities`, outranks that browser default and the chip row stayed visible (and in the
+accessible tree) even while collapsed. `hidden group-open:flex` on the chip wrapper rebuilds the same
+behavior explicitly rather than depending on a rule Tailwind's cascade silently overrides. Second, reading
+the chevron's rotation immediately after toggling `details.open` in a test script intermittently read a
+stale `0deg` — not a real defect, confirmed by forcing a reflow and re-reading: `getComputedStyle().rotate`
+correctly reports `180deg` once the browser has processed the mutation. Tailwind v4 sets rotation via the
+standalone CSS `rotate` property rather than the combined `transform`, which is why
+`getComputedStyle().transform` alone stays `"none"` even while the icon visibly rotates.
+
+**Keyboard interaction was verified by trusting the platform rather than reimplementing it.** `<summary>`
+is natively focusable and toggles on click, Enter and Space with no JavaScript — this is exactly the D8
+rejection of a JS-controlled panel paying off: there is no keyboard handler in this codebase to get wrong.
+
+**Verified end to end.** With one real pledge on the page: the Bride price card renders one `<details>`,
+closed on load, its contributor's name absent from the accessible tree until opened (`display: none` on
+the chip row, confirmed via `getComputedStyle`, not just visually hidden). Added a second pledge on a
+different item to check isolation: toggling the Bride price card left the Chicken card's `<details>`
+untouched. Posted a further live pledge over SSE to the closed Chicken card — its summary went
+"Supporters (1)" → "Supporters (2)" with the card still closed, meeting the requirement that a live update
+must not force one open. At a 390px viewport, opening a card produces zero horizontal overflow and both
+chips render. All test pledges were removed afterward; `data/pledges.json` and `data/notifications.json`
+are back to their one real entry.
+
+**The Roll of Honor's "View All" button was left as it is.** D8 raised unifying it with the card gesture,
+but on inspection it is a different pattern — paginating a grid of N cards down to a first page of 9, not
+revealing a single hidden panel — and it already defaults to collapsed. Forcing it into a `<details>`
+would mean wrapping the whole grid, changing what the control does rather than how it looks. Left alone
+rather than changed for its own sake.
