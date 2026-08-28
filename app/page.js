@@ -135,10 +135,10 @@ export default function KwanjulaBudgetPage() {
               const p = data.pledge;
               const amt = p.amount ? formatUGX(p.amount) : 'a generous contribution';
               showToast(`🎉 ${p.name} just pledged ${amt} for ${p.itemName}!`, 'success');
-              if (adminAuthenticated) loadAdminPledges(adminPin);
+              if (adminAuthenticated) loadAdminPledges();
             } else if (data.type === 'BUDGET_UPDATED') {
               setBudget(data.state);
-              if (adminAuthenticated) loadAdminPledges(adminPin);
+              if (adminAuthenticated) loadAdminPledges();
             }
           } catch (e) {
             console.error('Failed to parse SSE event:', e);
@@ -181,13 +181,29 @@ export default function KwanjulaBudgetPage() {
     };
   }, [adminAuthenticated, adminPin]);
 
+  // A session cookie outlives the page, so ask whether one is already valid.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/admin/verify');
+        if (!res.ok) return;
+        const { authenticated } = await res.json();
+        if (!cancelled && authenticated) {
+          setAdminAuthenticated(true);
+          loadAdminData();
+        }
+      } catch {
+        // No session, or the server is unreachable — stay logged out.
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   // Load Admin Pledges directly from dedicated API
-  const loadAdminPledges = async (pin = adminPin) => {
-    if (!pin) return;
+  const loadAdminPledges = async () => {
     try {
-      const res = await fetch('/api/admin/pledges', {
-        headers: { 'x-admin-pin': pin }
-      });
+      const res = await fetch('/api/admin/pledges');
       if (res.ok) {
         const data = await res.json();
         setAdminPledges(data);
@@ -198,12 +214,9 @@ export default function KwanjulaBudgetPage() {
   };
 
   // Load Admin Notifications
-  const loadAdminNotifications = async (pin = adminPin) => {
-    if (!pin) return;
+  const loadAdminNotifications = async () => {
     try {
-      const res = await fetch('/api/admin/notifications', {
-        headers: { 'x-admin-pin': pin }
-      });
+      const res = await fetch('/api/admin/notifications');
       if (res.ok) {
         const data = await res.json();
         setAdminNotifs(data);
@@ -214,12 +227,9 @@ export default function KwanjulaBudgetPage() {
   };
 
   // Load Admin Settings
-  const loadAdminSettings = async (pin = adminPin) => {
-    if (!pin) return;
+  const loadAdminSettings = async () => {
     try {
-      const res = await fetch('/api/admin/settings', {
-        headers: { 'x-admin-pin': pin }
-      });
+      const res = await fetch('/api/admin/settings');
       if (res.ok) {
         const data = await res.json();
         setAdminSettings(data);
@@ -229,7 +239,28 @@ export default function KwanjulaBudgetPage() {
     }
   };
 
-  // Admin PIN verification
+  // Load everything the console needs once a session exists.
+  const loadAdminData = () => {
+    loadAdminPledges();
+    loadAdminNotifications();
+    loadAdminSettings();
+  };
+
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+    setAdminAuthenticated(false);
+    setAdminPledges([]);
+    setAdminNotifs([]);
+    setIsAdminModalOpen(false);
+    showToast('Signed out of the Committee Portal', 'success');
+  };
+
+  // Exchange the passcode for a session cookie. The passcode is sent once and
+  // then dropped from state — every later request rides the cookie instead.
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     try {
@@ -241,10 +272,9 @@ export default function KwanjulaBudgetPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Invalid PIN');
 
+      setAdminPin('');
       setAdminAuthenticated(true);
-      loadAdminPledges(adminPin);
-      loadAdminNotifications(adminPin);
-      loadAdminSettings(adminPin);
+      loadAdminData();
       showToast('Committee Admin Portal unlocked', 'success');
     } catch (err) {
       showToast(err.message, 'error');
@@ -256,17 +286,14 @@ export default function KwanjulaBudgetPage() {
     try {
       const res = await fetch(`/api/admin/pledges/${pledgeId}/status`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-pin': adminPin
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to update pledge status');
 
       showToast(`Pledge marked as "${newStatus === 'paid' ? 'Paid / Received' : 'Pledged / Pending'}"`, 'success');
-      loadAdminPledges(adminPin);
+      loadAdminPledges();
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -280,15 +307,12 @@ export default function KwanjulaBudgetPage() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`/api/admin/pledges/${pledgeId}`, {
-        method: 'DELETE',
-        headers: { 'x-admin-pin': adminPin }
-      });
+      const res = await fetch(`/api/admin/pledges/${pledgeId}`, { method: 'DELETE' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to delete pledge');
 
       showToast(`Pledge by "${pledgerName}" voided. Budget balance restored!`, 'info');
-      loadAdminPledges(adminPin);
+      loadAdminPledges();
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -311,10 +335,7 @@ export default function KwanjulaBudgetPage() {
     try {
       const res = await fetch('/api/admin/pledges', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-pin': adminPin
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(offlineForm)
       });
       const data = await res.json();
@@ -332,7 +353,7 @@ export default function KwanjulaBudgetPage() {
         status: 'paid',
         message: ''
       });
-      loadAdminPledges(adminPin);
+      loadAdminPledges();
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
@@ -346,10 +367,7 @@ export default function KwanjulaBudgetPage() {
     try {
       const res = await fetch('/api/admin/test-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-pin': adminPin
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recipientEmail: adminSettings.ownerEmail })
       });
       const data = await res.json();
@@ -366,9 +384,7 @@ export default function KwanjulaBudgetPage() {
   // Save Admin Settings
   const handleExportCsv = async () => {
     try {
-      const res = await fetch('/api/admin/export', {
-        headers: { 'x-admin-pin': adminPin }
-      });
+      const res = await fetch('/api/admin/export');
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Export failed');
@@ -393,10 +409,7 @@ export default function KwanjulaBudgetPage() {
     try {
       const res = await fetch('/api/admin/settings', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-admin-pin': adminPin
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(adminSettings)
       });
       const data = await res.json();
@@ -1557,12 +1570,23 @@ export default function KwanjulaBudgetPage() {
                 </h3>
                 <p className="text-xs text-emerald-300">Manage pledges, verify Mobile Money receipts, email alerts & settings</p>
               </div>
-              <button
-                onClick={() => setIsAdminModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
-              >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
+              <div className="flex items-center gap-2">
+                {adminAuthenticated && (
+                  <button
+                    onClick={handleAdminLogout}
+                    className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
+                    title="End this admin session"
+                  >
+                    <i className="fa-solid fa-right-from-bracket"></i> Sign out
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsAdminModalOpen(false)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
+                >
+                  <i className="fa-solid fa-xmark"></i>
+                </button>
+              </div>
             </div>
 
             {/* Content */}
@@ -1614,9 +1638,9 @@ export default function KwanjulaBudgetPage() {
                         key={t.id}
                         onClick={() => {
                           setAdminTab(t.id);
-                          if (t.id === 'notifications') loadAdminNotifications(adminPin);
-                          if (t.id === 'pledges') loadAdminPledges(adminPin);
-                          if (t.id === 'settings') loadAdminSettings(adminPin);
+                          if (t.id === 'notifications') loadAdminNotifications();
+                          if (t.id === 'pledges') loadAdminPledges();
+                          if (t.id === 'settings') loadAdminSettings();
                         }}
                         className={`pb-3 px-4 text-xs font-bold border-b-2 flex items-center gap-2 transition ${
                           adminTab === t.id
@@ -1801,7 +1825,7 @@ export default function KwanjulaBudgetPage() {
                           Automated email alerts generated for Edwin Laston on new contributions:
                         </p>
                         <button
-                          onClick={() => loadAdminNotifications(adminPin)}
+                          onClick={() => loadAdminNotifications()}
                           className="text-xs text-emerald-800 font-bold hover:underline flex items-center gap-1"
                         >
                           <i className="fa-solid fa-arrows-rotate"></i> Refresh

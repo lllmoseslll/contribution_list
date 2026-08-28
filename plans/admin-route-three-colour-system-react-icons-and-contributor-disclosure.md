@@ -589,3 +589,42 @@ effect. Step 4 fixes it.
 
 **`edwin2026` is still the working passcode** and still needs rotating; this step only makes `.env` the
 place to do it.
+
+### Step 3 — `Admin_feat/session: exchange the passcode for a signed httponly cookie`
+
+**Step 2's seam held: not one route handler changed.** All nine still call `requireAdmin(req)`; only
+`lib/admin-auth.js` learned to read a cookie instead of a header. The only route files touched were
+`verify/route.js` (which now issues the cookie and gained a `GET` returning `{ authenticated }`) and the
+new `logout/route.js`. That is the whole argument for having built the helper first.
+
+**No session store, deliberately.** The token is `base64url(JSON).base64url(HMAC-SHA256)` with the expiry
+*inside* the signed payload, so it cannot be extended by editing the cookie, and rotating
+`ADMIN_SESSION_SECRET` invalidates every issued session at once. One shared committee credential does not
+justify a store, and a file-backed one would inherit `data/`'s non-atomic `writeFileSync` (Risk 8).
+
+**`configurationError()` runs before any credential is examined**, so a deployment missing either
+variable fails by name — "ADMIN_SESSION_SECRET is not set on this server" — rather than silently rejecting
+a correct passcode, which is the failure mode Risk 9 describes.
+
+**A failed login now actively clears any cookie it finds**, so a wrong passcode cannot leave a stale
+session behind.
+
+**The passcode is dropped from React state the moment it is accepted** (`setAdminPin('')`). It is
+submitted exactly once, to one endpoint, and is never in memory, in a header or in a URL again.
+
+**Probed against `next start`.** Login returns exactly one `Set-Cookie`:
+`kwanjula_admin=…; Path=/; Max-Age=28800; Secure; HttpOnly; SameSite=lax`. With it, `/pledges`,
+`/notifications`, `/settings` and `/export` all return 200; without it, 401 — **including with
+`x-admin-pin: edwin2026`**, so the old replay path is genuinely closed. Four tampering attempts all
+return 401: payload swapped for a far-future expiry with the original signature, signature prefix
+mutated, unsigned junk, and a *correctly signed but expired* token minted with the real secret. Logout
+clears the cookie and the next call is 401.
+
+**Verified in the browser.** After login `document.cookie` is empty — the session is invisible to
+JavaScript. A full page reload comes back already signed in (the new mount-time `GET /api/admin/verify`),
+which is the first time this app has survived a refresh; Context 8 is closed. "Sign out" returns the
+portal to the passcode prompt and the next `/api/admin/pledges` is 401.
+
+**The SSE dependency array is deliberately still `[adminAuthenticated, adminPin]`.** Nothing in that
+effect needs the passcode any more, so the dependency is now purely vestigial — but Step 4 owns that fix,
+and moving it here would blur which commit to blame if the live feed regresses.
