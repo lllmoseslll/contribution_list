@@ -30,6 +30,7 @@ import {
   FaServer,
   FaShieldHalved,
   FaSpinner,
+  FaTriangleExclamation,
   FaUserShield,
   FaXmark
 } from 'react-icons/fa6';
@@ -87,6 +88,11 @@ export default function AdminPage() {
     message: ''
   });
   const [isSubmittingOffline, setIsSubmittingOffline] = useState(false);
+
+  // Admin Clear Database Modal
+  const [isClearDbModalOpen, setIsClearDbModalOpen] = useState(false);
+  const [clearDbPassword, setClearDbPassword] = useState('');
+  const [isClearingDb, setIsClearingDb] = useState(false);
 
   const [adminSettings, setAdminSettings] = useState({
     ownerName: 'Mr. Edwin Laston',
@@ -362,6 +368,37 @@ export default function AdminPage() {
       showToast(err.message, 'error');
     } finally {
       setIsSubmittingOffline(false);
+    }
+  };
+
+  // Clear Database — wipes every pledge and notification. Re-checks the
+  // admin passcode server-side even though the session is already valid.
+  const handleClearDatabase = async (e) => {
+    e.preventDefault();
+    if (!clearDbPassword) {
+      showToast('Enter the admin passcode to confirm.', 'error');
+      return;
+    }
+
+    setIsClearingDb(true);
+    try {
+      const res = await fetch('/api/admin/clear-database', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: clearDbPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to clear the database');
+
+      showToast(data.message, 'success');
+      setIsClearDbModalOpen(false);
+      setClearDbPassword('');
+      loadAdminPledges();
+      loadAdminNotifications();
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setIsClearingDb(false);
     }
   };
 
@@ -806,6 +843,7 @@ export default function AdminPage() {
 
               {/* TAB 3: SETTINGS - NOTIFICATION RECIPIENT EMAILS */}
               {adminTab === 'settings' && (
+                <>
                 <form onSubmit={handleSaveSettings} className="space-y-5 text-xs">
 
                   {/* Pledge Alert Notification Emails */}
@@ -1018,6 +1056,30 @@ export default function AdminPage() {
                   </div>
 
                 </form>
+
+                {/* Danger Zone — Clear Database. Deliberately outside the settings-save form:
+                    this isn't a setting to save, it's an irreversible one-off action with its
+                    own confirmation modal and second password check. */}
+                <div className="p-5 rounded-xl bg-accent-50 border border-accent-300 mt-5">
+                  <h5 className="font-bold text-accent-900 mb-1 text-sm flex items-center gap-2">
+                    <FaTriangleExclamation className="text-accent-700" aria-hidden="true" /> Danger Zone
+                  </h5>
+                  <p className="text-accent-800 mb-4 text-xs leading-relaxed">
+                    Permanently deletes every pledge and notification from the database. Budget
+                    totals, the Roll of Honor, and all contributor records reset to zero.
+                    <strong> This cannot be undone</strong> — export a CSV or PDF report first if
+                    you need a record of what's here now. Committee settings (SMTP, notification
+                    inboxes, contact details) are not affected.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setIsClearDbModalOpen(true)}
+                    className="px-5 py-2.5 bg-accent-700 hover:bg-accent-800 text-white font-bold rounded-xl transition text-xs flex items-center gap-2"
+                  >
+                    <FaRegTrashCan aria-hidden="true" /> Clear Database
+                  </button>
+                </div>
+                </>
               )}
 
             </div>
@@ -1155,6 +1217,71 @@ export default function AdminPage() {
                 >
                   {isSubmittingOffline ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaCheck aria-hidden="true" />}
                   Save Offline Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: CLEAR DATABASE (ADMIN) ================= */}
+      {isClearDbModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+          <div className="bg-white rounded-lg shadow-lg max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
+            <div className="bg-accent-700 text-white p-5 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold flex items-center gap-2">
+                  <FaTriangleExclamation aria-hidden="true" /> Clear Database
+                </h3>
+                <p className="text-xs text-accent-100">This permanently deletes every pledge and notification</p>
+              </div>
+              <button
+                onClick={() => { setIsClearDbModalOpen(false); setClearDbPassword(''); }}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm shrink-0"
+                aria-label="Close"
+              >
+                <FaXmark aria-hidden="true" />
+              </button>
+            </div>
+
+            <form onSubmit={handleClearDatabase} className="p-5 space-y-4 text-xs">
+              <div className="p-3 rounded-xl bg-accent-50 border border-accent-300 text-accent-900 leading-relaxed">
+                You are about to erase <strong>all {adminPledges.length} pledge{adminPledges.length === 1 ? '' : 's'}</strong> and
+                every notification record. Budget totals, the Roll of Honor and every contributor entry reset to zero.
+                <strong> There is no undo.</strong> Cancel now and export a CSV or PDF report first if you need one.
+              </div>
+
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Confirm Admin Passcode *</label>
+                <div className="relative">
+                  <FaLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-[11px]" aria-hidden="true" />
+                  <input
+                    type="password"
+                    required
+                    autoFocus
+                    placeholder="Re-enter the committee passcode"
+                    value={clearDbPassword}
+                    onChange={(e) => setClearDbPassword(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-accent-600 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setIsClearDbModalOpen(false); setClearDbPassword(''); }}
+                  className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-xl font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isClearingDb || !clearDbPassword}
+                  className="px-4 py-2 bg-accent-700 hover:bg-accent-800 disabled:opacity-60 text-white rounded-xl font-bold flex items-center gap-1.5"
+                >
+                  {isClearingDb ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaRegTrashCan aria-hidden="true" />}
+                  Permanently Clear Database
                 </button>
               </div>
             </form>
