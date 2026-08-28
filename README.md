@@ -54,7 +54,7 @@ The app comes with a built-in **Notification Outbox Center**. Every pledge immed
 ### Live SMTP Email Sending (Optional for Production)
 To deliver real emails directly into Edwin's Gmail inbox and send receipts to contributors:
 1. Open the website and click **"Committee Portal"** at the top right.
-2. Enter the Admin PIN: `edwin2026` (can be customized).
+2. Enter the Admin PIN (the value of `ADMIN_PIN` in your `.env` file).
 3. Click the **"Notification & SMTP Settings"** tab.
 4. Turn on **"Enable Live SMTP Dispatch"** and fill in:
    - **Service:** Google Gmail (or Custom SMTP)
@@ -68,7 +68,7 @@ To deliver real emails directly into Edwin's Gmail inbox and send receipts to co
 ---
 
 ## 🛡️ Committee Admin Portal Features
-- **Admin Passcode:** `edwin2026` (changeable in settings)
+- **Admin Passcode:** set via `ADMIN_PIN` in `.env` — see `.env.example`.
 - **Pledge Verification:** Mark pledges as *"Paid / Received"* once Mobile Money has been confirmed.
 - **Offline / Phone Pledges:** Record pledges made over direct phone calls.
 - **Delete / Void:** Remove invalid or duplicate pledges to automatically restore the budget balance.

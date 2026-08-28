@@ -505,3 +505,43 @@ reaches the pledge CTA on every card and the `/admin` link, in visual order.
 ## Session log
 
 *(Appended per step, in the same commit as the work.)*
+
+### Step 1 — `Sec_fix/legacy-console: delete the second admin console and gitignore the secrets`
+
+**The plan named the wrong file as the PII risk, and reading the data is what showed that.** D5 and Step 1
+said `data/pledges.json` stays tracked because it is "the ceremony's content". It is not. It holds one
+pledge carrying a real contributor's full name, phone number and email address — on a record whose own
+`isAnonymous: true` and `hideAmount: true` flags say that person asked not to be identified publicly
+(`lib/budget-service.js:102-103` honours those flags when rendering, and committing the raw file defeats
+both). `data/notifications.json` holds the same fields again, plus the rendered alert email. Both are now
+gitignored alongside `settings.json`; neither needs an example file, because `readJSON()`
+(`lib/budget-service.js:15-28`) creates them empty on first run. `data/budget.json` stays tracked — it is
+the itemised budget this application exists to publish, and contains nothing about anyone.
+
+**Two commits, not one.** Risk 1 was real: `public/` was untracked, so the pre-Next static build existed
+in exactly one place on disk. `2c7bcbd chore: track the application as it stands` imports the tree with
+the three data files already ignored, which is what makes the deletion in this commit recoverable. Doing
+it the other way round — deleting first — would have destroyed the only copy.
+
+**The passcode was published in two more places than Context 5 found.** `README.md:57` printed
+"Enter the Admin PIN: `edwin2026`" and `:71` repeated it under Portal Features; `README.md` is tracked and
+this repo has a GitHub remote configured (`git@github-personal:lllmoseslll/contribution_list.git`), so
+those two lines were a publication in the same sense `public/index.html:522` was. Both now point at
+`ADMIN_PIN` in `.env` instead. `.env.example:6`'s value was blanked in the baseline commit rather than
+carried into history.
+
+**`server.cjs` still has seven copies of the fallback and is deliberately untouched** (`:534`, `:573`,
+`:586`, `:598`, `:632`, `:672`, `:699`, `:724`). D5 scoped this step to what Next publishes to the web,
+and Next does not serve `server.cjs` — it is the pre-Next Express server, reachable only by running
+`npm run server-legacy`. It is named here so it is not mistaken for an oversight; deleting it is a
+separate call for the repo's owner.
+
+**`edwin2026` must be rotated regardless of any of this.** It was rendered as visible placeholder text on
+a page anyone could load, and it now exists in this branch's history inside the preserved
+`public/index.html`. Removing it from the working tree is not the control that matters; changing
+`ADMIN_PIN` in `.env` is, and Step 2 is what makes that variable authoritative.
+
+**Verified:** `GET /index.html`, `/css/styles.css` and `/js/app.js` all return 404 and
+`/introduction-budget-edwin-laston.pdf` still returns 200 against the running server; `git check-ignore`
+confirms all three data files ignored and `budget.json` tracked; `git grep edwin2026` outside `plans/`
+returns only `app/` (Step 2) and `server.cjs` (out of scope); `npx next build` clean, 13 routes.
