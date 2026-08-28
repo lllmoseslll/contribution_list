@@ -511,61 +511,64 @@ export default function KwanjulaBudgetPage() {
             </a>
           </div>
         </div>
-      </header>
 
-      {/* Financial Metrics & Ceremony Funding Milestone Showcase */}
-      <section className="max-w-6xl mx-auto w-full px-4 -mt-8 relative z-20 mb-12">
-        {/* 4 Financial Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        {/* 4 Financial Metric Cards — kept inside the hero; Remaining Balance is the one
+            deliberately saturated card, so it's the single thing the eye lands on last. */}
+        <div className="max-w-5xl mx-auto mt-10 sm:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-left">
 
           {/* Card 1: Total Budget Target */}
-          <div className="bg-white p-5 rounded-xl border border-neutral-200 flex items-center gap-3 transition-colors duration-200 hover:border-neutral-300">
-            <FaCoins className="text-accent-600 text-lg shrink-0" aria-hidden="true" />
+          <div className="bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800 flex items-center gap-3">
+            <FaCoins className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Total Target Budget</div>
-              <div className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight">{formatUGX(stats.totalBudget)}</div>
-              <div className="text-[11px] text-neutral-500 font-medium">Official Ceremony Budget</div>
+              <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Total Target Budget</div>
+              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{formatUGX(stats.totalBudget)}</div>
+              <div className="text-[11px] text-brand-300 font-medium">Official Ceremony Budget</div>
             </div>
           </div>
 
           {/* Card 2: Total Raised & Pledged */}
-          <div className="bg-brand-50 p-5 rounded-xl border border-brand-200 flex items-center gap-3 transition-colors duration-200 hover:border-brand-300">
-            <FaCircleCheck className="text-brand-700 text-lg shrink-0" aria-hidden="true" />
+          <div className="bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800 flex items-center gap-3">
+            <FaCircleCheck className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-[11px] font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
-              <div className="text-xl sm:text-2xl font-black text-brand-700 tracking-tight">{formatUGX(stats.totalCoveredAndPledged)}</div>
-              <div className="text-[11px] font-bold text-brand-700 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-brand-600 pulse-dot inline-block"></span>
+              <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Total Raised & Pledged</div>
+              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{formatUGX(stats.totalCoveredAndPledged)}</div>
+              <div className="text-[11px] font-bold text-brand-300 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-brand-400 pulse-dot inline-block"></span>
                 <span>{stats.totalPercentage}% Funded so far</span>
               </div>
             </div>
           </div>
 
-          {/* Card 3: Remaining Balance */}
-          <div className="bg-accent-50 p-5 rounded-xl border border-accent-200 flex items-center gap-3 transition-colors duration-200 hover:border-accent-300">
-            <FaScaleBalanced className="text-accent-700 text-lg shrink-0" aria-hidden="true" />
+          {/* Card 3: Remaining Balance — the one card that breaks the palette's restraint on
+              purpose: a solid accent fill against three quiet brand-900 cards on the same dark
+              hero, so it's the figure visitors' eyes are drawn to first. */}
+          <div className="bg-accent-700 p-4 sm:p-5 rounded-lg border border-accent-600 flex items-center gap-3">
+            <FaScaleBalanced className="text-white text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-[11px] font-bold text-accent-900 uppercase tracking-wider">Remaining Balance</div>
-              <div className="text-xl sm:text-2xl font-black text-accent-700 tracking-tight">{formatUGX(stats.totalRemaining)}</div>
-              <div className="text-[11px] font-extrabold text-accent-800 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-accent-600 pulse-dot-accent inline-block"></span>
+              <div className="text-[11px] font-bold text-accent-100 uppercase tracking-wider">Remaining Balance</div>
+              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{formatUGX(stats.totalRemaining)}</div>
+              <div className="text-[11px] font-extrabold text-white flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-white pulse-dot-accent inline-block"></span>
                 <span>Live subtracting balance</span>
               </div>
             </div>
           </div>
 
           {/* Card 4: Supporters & Pledges */}
-          <div className="bg-white p-5 rounded-xl border border-neutral-200 flex items-center gap-3 transition-colors duration-200 hover:border-neutral-300">
-            <FaUsers className="text-neutral-600 text-lg shrink-0" aria-hidden="true" />
+          <div className="bg-brand-900 p-4 sm:p-5 rounded-lg border border-brand-800 flex items-center gap-3">
+            <FaUsers className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Community Backers</div>
-              <div className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight">{stats.pledgersCount} Contributors</div>
-              <div className="text-[11px] text-neutral-500 font-medium">{stats.totalPledgesCount} pledges recorded</div>
+              <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Community Backers</div>
+              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">{stats.pledgersCount} Contributors</div>
+              <div className="text-[11px] text-brand-300 font-medium">{stats.totalPledgesCount} pledges recorded</div>
             </div>
           </div>
 
         </div>
+      </header>
 
+      {/* Ceremony Funding Milestone Showcase — stays on the page's white/neutral background */}
+      <section className="max-w-6xl mx-auto w-full px-4 mt-8 mb-12">
         {/* ================= CEREMONY FUNDING MILESTONE SHOWCASE ================= */}
         <div className="bg-white rounded-xl p-6 sm:p-8 border border-neutral-200">
           {/* Milestone Header */}
