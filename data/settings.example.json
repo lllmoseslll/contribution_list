@@ -1,0 +1,24 @@
+{
+  "ownerName": "Mr. Edwin Laston",
+  "ownerEmail": "",
+  "ownerPhone": "0703464261 / 0774324968",
+  "adminPin": "",
+  "emailNotificationsEnabled": true,
+  "smtp": {
+    "enabled": false,
+    "service": "gmail",
+    "host": "smtp.gmail.com",
+    "port": 587,
+    "secure": false,
+    "user": "",
+    "pass": "",
+    "from": "Edwin & Jamirah Kwanjula <noreply@edwinlaston.org>"
+  },
+  "paymentInfo": {
+    "airtelMoney": "0703464261 (Edwin Laston)",
+    "mtnMoney": "0774324968 (Edwin Laston)",
+    "kmpEmitu": "0783987907 (KMP Emitu Ezielkel)",
+    "tinkasimire": "0706171109 (Mr Tinkasimire Emmanuel)",
+    "note": "Please use your Name & Pledged Item as reference when sending Mobile Money."
+  }
+}

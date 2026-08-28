@@ -1,0 +1,458 @@
+{
+  "title": "THE INTRODUCTION BUDGET FOR MR EDWIN LASTON & JAMIRAH NAKAYEMBA",
+  "subtitle": "Kwanjula Ceremony - 27th November 2026",
+  "eventDate": "2026-11-27",
+  "currency": "UGX",
+  "currencySymbol": "UGX",
+  "contacts": [
+    {
+      "name": "Mr. Edwin Laston (Groom)",
+      "phone": "0703464261 / 0774324968",
+      "network": "Airtel / MTN"
+    },
+    {
+      "name": "Mr. KMP Emitu Ezielkel",
+      "phone": "0783987907",
+      "network": "MTN"
+    },
+    {
+      "name": "Mr Tinkasimire Emmanuel",
+      "phone": "0706171109",
+      "network": "Airtel"
+    }
+  ],
+  "sections": [
+    {
+      "id": "sec-A",
+      "code": "A",
+      "title": "IMPORTANT GIFTS",
+      "description": "Traditional gifts, bride price, livestock, and ceremonial appreciation",
+      "items": [
+        {
+          "id": "a1",
+          "code": "1",
+          "name": "Bride price",
+          "qty": "1",
+          "unitCost": 1500000,
+          "totalCost": 1500000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "a2",
+          "code": "2",
+          "name": "Parents appreciation",
+          "qty": "1",
+          "unitCost": 5000000,
+          "totalCost": 5000000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "a3",
+          "code": "3",
+          "name": "Chicken",
+          "qty": "15",
+          "unitCost": 20000,
+          "totalCost": 300000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "a4",
+          "code": "4",
+          "name": "Cows",
+          "qty": "5",
+          "unitCost": 2000000,
+          "totalCost": 10000000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "a5",
+          "code": "5",
+          "name": "Certificates",
+          "qty": "3",
+          "unitCost": 100000,
+          "totalCost": 300000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "a6",
+          "code": "6",
+          "name": "Welcoming greetings",
+          "qty": "100",
+          "unitCost": 2000,
+          "totalCost": 200000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "a7",
+          "code": "7",
+          "name": "Goats",
+          "qty": "5",
+          "unitCost": 200000,
+          "totalCost": 1000000,
+          "covered": false,
+          "remarks": ""
+        }
+      ]
+    },
+    {
+      "id": "sec-B",
+      "code": "B",
+      "title": "GIFTS (CLOTHES)",
+      "description": "Suitcases, attires, and bespoke clothes for family members",
+      "items": [
+        {
+          "id": "b1",
+          "code": "1",
+          "name": "Paternal aunt with bag/suitcase",
+          "qty": "1",
+          "unitCost": 150000,
+          "totalCost": 150000,
+          "covered": true,
+          "remarks": "Covered"
+        },
+        {
+          "id": "b2",
+          "code": "2",
+          "name": "Other mothers",
+          "qty": "3",
+          "unitCost": 100000,
+          "totalCost": 300000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "b3",
+          "code": "3",
+          "name": "Dad with bag/suitcase",
+          "qty": "1",
+          "unitCost": 150000,
+          "totalCost": 150000,
+          "covered": true,
+          "remarks": "Covered"
+        },
+        {
+          "id": "b4",
+          "code": "4",
+          "name": "Other dads",
+          "qty": "5",
+          "unitCost": 100000,
+          "totalCost": 500000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "b5",
+          "code": "5",
+          "name": "Brother in law bag/suitcase",
+          "qty": "10",
+          "unitCost": 50000,
+          "totalCost": 500000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "b6",
+          "code": "6",
+          "name": "Uncles",
+          "qty": "10",
+          "unitCost": 30000,
+          "totalCost": 300000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "b7",
+          "code": "7",
+          "name": "Bride’s suitcase",
+          "qty": "1",
+          "unitCost": 250000,
+          "totalCost": 250000,
+          "covered": true,
+          "remarks": "Covered"
+        }
+      ]
+    },
+    {
+      "id": "sec-C",
+      "code": "C",
+      "title": "GIFTS",
+      "description": "Traditional food baskets, dry goods, drinks, and groceries",
+      "items": [
+        {
+          "id": "c1",
+          "code": "1",
+          "name": "Bread",
+          "qty": "50",
+          "unitCost": 6500,
+          "totalCost": 325000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c2",
+          "code": "2",
+          "name": "Blue bands",
+          "qty": "50",
+          "unitCost": 3000,
+          "totalCost": 150000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c3",
+          "code": "3",
+          "name": "Tea leaves",
+          "qty": "50",
+          "unitCost": 2000,
+          "totalCost": 100000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c4",
+          "code": "4",
+          "name": "Royco",
+          "qty": "50",
+          "unitCost": 1000,
+          "totalCost": 50000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c5",
+          "code": "5",
+          "name": "Tomatoes",
+          "qty": "1",
+          "unitCost": 100000,
+          "totalCost": 100000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c6",
+          "code": "6",
+          "name": "Onions",
+          "qty": "1",
+          "unitCost": 100000,
+          "totalCost": 100000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c7",
+          "code": "7",
+          "name": "Cooking oil",
+          "qty": "20",
+          "unitCost": 10000,
+          "totalCost": 200000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c8",
+          "code": "8",
+          "name": "Pineapples",
+          "qty": "20",
+          "unitCost": 5000,
+          "totalCost": 100000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c9",
+          "code": "9",
+          "name": "Sugar",
+          "qty": "100kg",
+          "unitCost": 200000,
+          "totalCost": 400000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c10",
+          "code": "10",
+          "name": "Rice",
+          "qty": "100kg",
+          "unitCost": 180000,
+          "totalCost": 360000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c11",
+          "code": "11",
+          "name": "Soap",
+          "qty": "3 boxes",
+          "unitCost": 70000,
+          "totalCost": 210000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c12",
+          "code": "12",
+          "name": "Salt",
+          "qty": "3 boxes",
+          "unitCost": 35000,
+          "totalCost": 105000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c13",
+          "code": "13",
+          "name": "Matooke",
+          "qty": "3 bunches",
+          "unitCost": 50000,
+          "totalCost": 150000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c14",
+          "code": "14",
+          "name": "Soda",
+          "qty": "20 crates",
+          "unitCost": 21000,
+          "totalCost": 420000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c15",
+          "code": "15",
+          "name": "Mineral water",
+          "qty": "15 cartons",
+          "unitCost": 12000,
+          "totalCost": 180000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "c16",
+          "code": "16",
+          "name": "Envelopes",
+          "qty": "20",
+          "unitCost": 5000,
+          "totalCost": 100000,
+          "covered": false,
+          "remarks": ""
+        }
+      ]
+    },
+    {
+      "id": "sec-E",
+      "code": "E",
+      "title": "OTHERS",
+      "description": "Ceremony operations, transport, media, and essentials",
+      "items": [
+        {
+          "id": "e1",
+          "code": "1",
+          "name": "Bride’s bouquet",
+          "qty": "1",
+          "unitCost": 100000,
+          "totalCost": 100000,
+          "covered": true,
+          "remarks": "Covered"
+        },
+        {
+          "id": "e2",
+          "code": "2",
+          "name": "Basket for chicken",
+          "qty": "1",
+          "unitCost": 20000,
+          "totalCost": 20000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e3",
+          "code": "3",
+          "name": "Gift bags",
+          "qty": "100 pcs",
+          "unitCost": 5000,
+          "totalCost": 500000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e4",
+          "code": "4",
+          "name": "Envelopes (parents & aunt)",
+          "qty": "3",
+          "unitCost": 50000,
+          "totalCost": 150000,
+          "covered": true,
+          "remarks": "Covered"
+        },
+        {
+          "id": "e5",
+          "code": "5",
+          "name": "Mc hire",
+          "qty": "1",
+          "unitCost": 1000000,
+          "totalCost": 1000000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e6",
+          "code": "6",
+          "name": "Fruit trees",
+          "qty": "2",
+          "unitCost": 10000,
+          "totalCost": 20000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e7",
+          "code": "7",
+          "name": "Transport 4 gifts",
+          "qty": "2",
+          "unitCost": 500000,
+          "totalCost": 1000000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e8",
+          "code": "8",
+          "name": "Wrappers & ribbons",
+          "qty": "2",
+          "unitCost": 100000,
+          "totalCost": 200000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e9",
+          "code": "9",
+          "name": "Photo & videography",
+          "qty": "5",
+          "unitCost": 700000,
+          "totalCost": 3500000,
+          "covered": false,
+          "remarks": ""
+        },
+        {
+          "id": "e10",
+          "code": "10",
+          "name": "Miscellaneous",
+          "qty": "1",
+          "unitCost": 1000000,
+          "totalCost": 1000000,
+          "covered": false,
+          "remarks": ""
+        }
+      ]
+    }
+  ]
+}
