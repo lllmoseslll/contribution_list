@@ -7,9 +7,7 @@ import {
   FaArrowsRotate,
   FaBell,
   FaCheck,
-  FaCheckDouble,
   FaCircleInfo,
-  FaClock,
   FaEnvelope,
   FaEnvelopeOpenText,
   FaFileCsv,
@@ -488,9 +486,9 @@ export default function AdminPage() {
         </div>
       )}
 
-      <div className="mx-auto max-w-5xl bg-white rounded-3xl shadow-lg border border-neutral-200 overflow-hidden">
+      <div className="mx-auto max-w-5xl bg-white rounded-xl border border-neutral-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-950 to-brand-950 text-white p-5 flex justify-between items-center">
+        <div className="bg-brand-950 text-white p-5 flex justify-between items-center">
           <div>
             <h3 className="text-lg font-bold flex items-center gap-2">
               <FaLock className="text-accent-400" aria-hidden="true" /> Committee Admin Portal
@@ -601,10 +599,10 @@ export default function AdminPage() {
                         <button
                           key={f.id}
                           onClick={() => setAdminFilter(f.id)}
-                          className={`px-3 py-1 rounded-full text-xs font-bold border transition ${
+                          className={`px-3 py-1 rounded-md text-xs font-medium border bg-white transition ${
                             adminFilter === f.id
-                              ? 'bg-brand-800 text-white border-brand-800'
-                              : 'bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200'
+                              ? 'border-brand-700 text-brand-800 font-semibold'
+                              : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                           }`}
                         >
                           {f.label}
@@ -709,13 +707,11 @@ export default function AdminPage() {
                                   )}
                                 </td>
                                 <td className="p-3">
-                                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
-                                    isPaid
-                                      ? 'bg-brand-100 text-brand-800 border border-brand-200'
-                                      : 'bg-accent-100 text-accent-800 border border-accent-200'
-                                  }`}>
-                                    {isPaid ? <FaCheckDouble aria-hidden="true" /> : <FaClock aria-hidden="true" />}
-                                    {isPaid ? 'Paid & Received' : 'Pledged / Pending'}
+                                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap">
+                                    <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full shrink-0 ${isPaid ? 'bg-brand-600' : 'bg-accent-500'}`}></span>
+                                    <span className={isPaid ? 'text-brand-700' : 'text-accent-700'}>
+                                      {isPaid ? 'Paid & Received' : 'Pledged / Pending'}
+                                    </span>
                                   </span>
                                 </td>
                                 <td className="p-3 text-right whitespace-nowrap">
@@ -787,7 +783,7 @@ export default function AdminPage() {
                           <span>{formatDate(n.date)}</span>
                         </div>
                         <div className="font-bold text-neutral-800">
-                          🎉 New Pledge: {n.pledgerName} ({formatUGX(n.amount)}) for {n.item}
+                          New Pledge: {n.pledgerName} ({formatUGX(n.amount)}) for {n.item}
                         </div>
                         <div className="flex justify-between items-center pt-1">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -813,7 +809,7 @@ export default function AdminPage() {
                 <form onSubmit={handleSaveSettings} className="space-y-5 text-xs">
 
                   {/* Pledge Alert Notification Emails */}
-                  <div className="p-5 sm:p-6 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                  <div className="p-5 sm:p-6 rounded-xl bg-white border border-neutral-200">
                     <div className="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-neutral-100">
                       <div>
                         <h5 className="font-bold text-neutral-900 text-base flex items-center gap-2">
@@ -871,7 +867,7 @@ export default function AdminPage() {
                       <div className="text-[11px] uppercase tracking-wider font-extrabold text-neutral-500 mb-2.5 flex items-center justify-between">
                         <span>Active Alert Inboxes ({(adminSettings.notifyEmails || []).length})</span>
                         {(adminSettings.notifyEmails || []).length === 0 && (
-                          <span className="text-orange-600 font-bold">⚠️ No notification emails configured</span>
+                          <span className="text-accent-700 font-bold">No notification emails configured</span>
                         )}
                       </div>
 
@@ -892,7 +888,7 @@ export default function AdminPage() {
                             <button
                               type="button"
                               onClick={() => handleRemoveEmail(email)}
-                              className="w-6 h-6 rounded-lg text-neutral-400 hover:text-orange-600 hover:bg-orange-50 flex items-center justify-center transition"
+                              className="w-6 h-6 rounded-lg text-neutral-400 hover:text-accent-600 hover:bg-accent-50 flex items-center justify-center transition"
                               title="Remove email"
                             >
                               <FaXmark aria-hidden="true" />
@@ -903,14 +899,14 @@ export default function AdminPage() {
 
                       {/* Quick Suggestion if empty */}
                       {(!adminSettings.notifyEmails || adminSettings.notifyEmails.length === 0) && (
-                        <div className="p-4 bg-orange-50/70 border border-orange-200 rounded-xl mt-2 flex items-center justify-between">
-                          <div className="text-xs text-orange-900">
+                        <div className="p-4 bg-accent-50/70 border border-accent-200 rounded-xl mt-2 flex items-center justify-between">
+                          <div className="text-xs text-accent-900">
                             <strong>Quick suggestion:</strong> Add the groom's email (<code>edwinlaston@gmail.com</code>) to receive pledge notifications.
                           </div>
                           <button
                             type="button"
                             onClick={() => handleAddEmail('edwinlaston@gmail.com')}
-                            className="text-xs font-bold text-orange-800 bg-white px-3 py-1 rounded-lg border border-orange-300 hover:bg-orange-100 transition shrink-0 ml-2"
+                            className="text-xs font-bold text-accent-800 bg-white px-3 py-1 rounded-lg border border-accent-300 hover:bg-accent-100 transition shrink-0 ml-2"
                           >
                             + Add Edwin
                           </button>
@@ -922,7 +918,7 @@ export default function AdminPage() {
                     <div className="mt-6 pt-5 border-t border-neutral-200">
                       <div className="bg-neutral-50/80 p-4 rounded-xl border border-neutral-200">
                         <label className="block text-neutral-800 text-xs font-bold mb-1">
-                          ⚡ Test Live Email Alert Delivery
+                          Test Live Email Alert Delivery
                         </label>
                         <p className="text-neutral-500 text-[11px] mb-2.5">
                           Set the exact email address you want to send the test alert to:
@@ -967,7 +963,7 @@ export default function AdminPage() {
                         )}
 
                         {testEmailStatus?.msg && (
-                          <div className={`mt-3 p-2.5 rounded-lg text-xs font-semibold ${testEmailStatus.success ? 'bg-brand-50 text-brand-800 border border-brand-200' : 'bg-orange-50 text-orange-800 border border-orange-200'}`}>
+                          <div className={`mt-3 p-2.5 rounded-lg text-xs font-semibold ${testEmailStatus.success ? 'bg-brand-50 text-brand-800 border border-brand-200' : 'bg-accent-50 text-accent-800 border border-accent-200'}`}>
                             {testEmailStatus.msg}
                           </div>
                         )}
@@ -994,7 +990,7 @@ export default function AdminPage() {
                   </div>
 
                   {/* Public Committee Contacts Card */}
-                  <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                  <div className="p-5 rounded-xl bg-white border border-neutral-200">
                     <h5 className="font-bold text-neutral-900 mb-1 text-sm flex items-center gap-2">
                       <FaUserShield className="text-brand-700" aria-hidden="true" /> Public Committee Contact Details
                     </h5>
@@ -1032,7 +1028,7 @@ export default function AdminPage() {
       {/* ================= MODAL: ADD OFFLINE PLEDGE (ADMIN) ================= */}
       {isOfflineModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
+          <div className="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
             <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
               <div>
                 <h3 className="text-lg font-bold">Add Offline / Phone Pledge</h3>
@@ -1055,7 +1051,7 @@ export default function AdminPage() {
                   onChange={(e) => setOfflineForm(prev => ({ ...prev, itemId: e.target.value }))}
                   className="w-full p-2.5 bg-neutral-50 border border-neutral-300 rounded-xl"
                 >
-                  <option value="general">✨ General Ceremony Contribution</option>
+                  <option value="general">General Ceremony Contribution</option>
                   {budget?.sections?.map(sec => (
                     <optgroup key={sec.id} label={`Section ${sec.code}: ${sec.title}`}>
                       {sec.items.map(itm => (
@@ -1169,7 +1165,7 @@ export default function AdminPage() {
       {/* ================= MODAL: EMAIL HTML PREVIEW (ADMIN) ================= */}
       {previewEmailHtml && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in duration-200">
+          <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in duration-200">
             <div className="p-4 bg-neutral-900 text-white flex justify-between items-center">
               <h4 className="font-bold text-sm flex items-center gap-2">
                 <FaRegEnvelopeOpen className="text-accent-400" aria-hidden="true" /> Formatted Notification Email Preview

@@ -169,7 +169,7 @@ export default function KwanjulaBudgetPage() {
           for (const [id, p] of currentPledges) {
             if (seenPledgeIdsRef.current.has(id)) continue;
             const amt = p.amount ? formatUGX(p.amount) : 'a generous contribution';
-            showToast(`🎉 ${p.name} just pledged ${amt} for ${p.itemName}!`, 'success');
+            showToast(`${p.name} just pledged ${amt} for ${p.itemName}!`, 'success');
           }
         }
         seenPledgeIdsRef.current = new Set(currentPledges.keys());
@@ -404,7 +404,7 @@ export default function KwanjulaBudgetPage() {
       
       {/* Toast Alert */}
       {toast && (
-        <div className={`fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-sm font-medium transition-all ${
+        <div className={`fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium transition-all ${
           toast.type === 'success' ? 'bg-brand-900 text-brand-100 border-l-4 border-brand-400' : 'bg-neutral-900 text-white border-l-4 border-accent-500'
         }`}>
           <span>{toast.msg}</span>
@@ -511,10 +511,8 @@ export default function KwanjulaBudgetPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
 
           {/* Card 1: Total Budget Target */}
-          <div className="bg-white p-5 rounded-xl border border-neutral-200/90 shadow-xs flex items-center gap-3.5 transition-all duration-200 hover:border-neutral-300">
-            <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center shrink-0 text-neutral-700 text-xl">
-              <FaCoins className="text-accent-600" aria-hidden="true" />
-            </div>
+          <div className="bg-white p-5 rounded-xl border border-neutral-200 flex items-center gap-3 transition-colors duration-200 hover:border-neutral-300">
+            <FaCoins className="text-accent-600 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Total Target Budget</div>
               <div className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight">{formatUGX(stats.totalBudget)}</div>
@@ -523,10 +521,8 @@ export default function KwanjulaBudgetPage() {
           </div>
 
           {/* Card 2: Total Raised & Pledged */}
-          <div className="bg-gradient-to-br from-brand-50 to-emerald-100/50 p-5 rounded-xl border border-brand-200/90 shadow-xs flex items-center gap-3.5 transition-all duration-200 hover:border-brand-300">
-            <div className="w-12 h-12 rounded-xl bg-brand-200/60 flex items-center justify-center shrink-0 text-brand-800 text-xl">
-              <FaCircleCheck className="text-brand-700" aria-hidden="true" />
-            </div>
+          <div className="bg-brand-50 p-5 rounded-xl border border-brand-200 flex items-center gap-3 transition-colors duration-200 hover:border-brand-300">
+            <FaCircleCheck className="text-brand-700 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-[11px] font-bold text-brand-800 uppercase tracking-wider">Total Raised & Pledged</div>
               <div className="text-xl sm:text-2xl font-black text-brand-700 tracking-tight">{formatUGX(stats.totalCoveredAndPledged)}</div>
@@ -537,26 +533,22 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
-          {/* Card 3: Orange Remaining Balance */}
-          <div className="bg-gradient-to-br from-orange-50 via-amber-50/70 to-orange-100/90 p-5 rounded-xl border border-orange-300 shadow-sm ring-1 ring-orange-400/25 flex items-center gap-3.5 transition-all duration-200 hover:border-orange-400">
-            <div className="w-12 h-12 rounded-xl bg-orange-200/70 flex items-center justify-center shrink-0 text-orange-700 text-xl">
-              <FaScaleBalanced className="text-orange-600" aria-hidden="true" />
-            </div>
+          {/* Card 3: Remaining Balance */}
+          <div className="bg-accent-50 p-5 rounded-xl border border-accent-200 flex items-center gap-3 transition-colors duration-200 hover:border-accent-300">
+            <FaScaleBalanced className="text-accent-700 text-lg shrink-0" aria-hidden="true" />
             <div>
-              <div className="text-[11px] font-bold text-orange-900 uppercase tracking-wider">Remaining Balance</div>
-              <div className="text-xl sm:text-2xl font-black text-orange-600 tracking-tight">{formatUGX(stats.totalRemaining)}</div>
-              <div className="text-[11px] font-extrabold text-orange-700 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-orange-500 pulse-dot-orange inline-block"></span>
+              <div className="text-[11px] font-bold text-accent-900 uppercase tracking-wider">Remaining Balance</div>
+              <div className="text-xl sm:text-2xl font-black text-accent-700 tracking-tight">{formatUGX(stats.totalRemaining)}</div>
+              <div className="text-[11px] font-extrabold text-accent-800 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-accent-600 pulse-dot-accent inline-block"></span>
                 <span>Live subtracting balance</span>
               </div>
             </div>
           </div>
 
           {/* Card 4: Supporters & Pledges */}
-          <div className="bg-white p-5 rounded-xl border border-neutral-200/90 shadow-xs flex items-center gap-3.5 transition-all duration-200 hover:border-neutral-300">
-            <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center shrink-0 text-neutral-700 text-xl">
-              <FaUsers className="text-neutral-700" aria-hidden="true" />
-            </div>
+          <div className="bg-white p-5 rounded-xl border border-neutral-200 flex items-center gap-3 transition-colors duration-200 hover:border-neutral-300">
+            <FaUsers className="text-neutral-600 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Community Backers</div>
               <div className="text-xl sm:text-2xl font-black text-neutral-900 tracking-tight">{stats.pledgersCount} Contributors</div>
@@ -567,10 +559,7 @@ export default function KwanjulaBudgetPage() {
         </div>
 
         {/* ================= CEREMONY FUNDING MILESTONE SHOWCASE ================= */}
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-neutral-200/90 shadow-sm relative overflow-hidden">
-          {/* Subtle Background Shimmer Accent */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-50/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-neutral-200">
           {/* Milestone Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-5 border-b border-neutral-100">
             <div>
@@ -590,8 +579,8 @@ export default function KwanjulaBudgetPage() {
                 <FaCircleCheck className="text-brand-700" aria-hidden="true" />
                 <span><strong>{stats.totalPercentage}%</strong> of Goal Achieved</span>
               </div>
-              <div className="bg-orange-50 border border-orange-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-orange-800 flex items-center gap-1.5">
-                <span>🟧 <strong>{formatUGX(stats.totalRemaining)}</strong> Remaining</span>
+              <div className="bg-accent-50 border border-accent-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-accent-800 flex items-center gap-1.5">
+                <span><strong>{formatUGX(stats.totalRemaining)}</strong> Remaining</span>
               </div>
             </div>
           </div>
@@ -605,7 +594,7 @@ export default function KwanjulaBudgetPage() {
               <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 25 ? 'bg-brand-50/80 border-brand-300 shadow-xs' : 'bg-neutral-50/60 border-neutral-200'}`}>
                 <div className="flex justify-between items-center mb-2">
                   <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 25 ? 'bg-brand-700 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
-                    {stats.totalPercentage >= 25 ? '✓ 25% Achieved' : 'Stage 1 • 25%'}
+                    {stats.totalPercentage >= 25 ? '25% Achieved' : 'Stage 1 • 25%'}
                   </span>
                   <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget * 0.25)}</span>
                 </div>
@@ -618,13 +607,13 @@ export default function KwanjulaBudgetPage() {
               {/* Checkpoint 2: 50% */}
               <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 50 ? 'bg-brand-50/80 border-brand-300 shadow-xs' : stats.totalPercentage >= 25 ? 'bg-white border-brand-300 ring-1 ring-brand-400/30' : 'bg-neutral-50/60 border-neutral-200'}`}>
                 <div className="flex justify-between items-center mb-2">
-                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 50 ? 'bg-brand-700 text-white' : stats.totalPercentage >= 25 ? 'bg-accent-600 text-white animate-pulse' : 'bg-neutral-200 text-neutral-600'}`}>
-                    {stats.totalPercentage >= 50 ? '✓ 50% Achieved' : 'Stage 2 • 50%'}
+                  <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 50 ? 'bg-brand-700 text-white' : stats.totalPercentage >= 25 ? 'bg-accent-600 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
+                    {stats.totalPercentage >= 50 ? '50% Achieved' : 'Stage 2 • 50%'}
                   </span>
                   <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget * 0.50)}</span>
                 </div>
                 <div>
-                  <div className="font-bold text-xs text-neutral-900">Halfway Celebration 🎉</div>
+                  <div className="font-bold text-xs text-neutral-900">Halfway Celebration</div>
                   <div className="text-[10px] text-neutral-500">Major family gifts & food requirements</div>
                 </div>
               </div>
@@ -633,7 +622,7 @@ export default function KwanjulaBudgetPage() {
               <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 75 ? 'bg-brand-50/80 border-brand-300 shadow-xs' : 'bg-neutral-50/60 border-neutral-200'}`}>
                 <div className="flex justify-between items-center mb-2">
                   <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 75 ? 'bg-brand-700 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
-                    {stats.totalPercentage >= 75 ? '✓ 75% Achieved' : 'Stage 3 • 75%'}
+                    {stats.totalPercentage >= 75 ? '75% Achieved' : 'Stage 3 • 75%'}
                   </span>
                   <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget * 0.75)}</span>
                 </div>
@@ -647,12 +636,12 @@ export default function KwanjulaBudgetPage() {
               <div className={`p-3.5 rounded-xl border transition-all duration-200 flex flex-col justify-between ${stats.totalPercentage >= 100 ? 'bg-brand-50 border-brand-400 shadow-sm' : 'bg-neutral-50/60 border-neutral-200'}`}>
                 <div className="flex justify-between items-center mb-2">
                   <span className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md ${stats.totalPercentage >= 100 ? 'bg-brand-800 text-white' : 'bg-neutral-200 text-neutral-600'}`}>
-                    {stats.totalPercentage >= 100 ? '🏆 100% Victory!' : 'Stage 4 • 100%'}
+                    {stats.totalPercentage >= 100 ? '100% Victory' : 'Stage 4 • 100%'}
                   </span>
                   <span className="text-xs font-bold text-neutral-500">{formatUGX(stats.totalBudget)}</span>
                 </div>
                 <div>
-                  <div className="font-bold text-xs text-neutral-900">100% Ceremony Success 💍</div>
+                  <div className="font-bold text-xs text-neutral-900">100% Ceremony Success</div>
                   <div className="text-[10px] text-neutral-500">Complete introduction fully funded</div>
                 </div>
               </div>
@@ -660,21 +649,18 @@ export default function KwanjulaBudgetPage() {
             </div>
 
             {/* High-Definition Layered Progress Bar */}
-            <div className="relative w-full h-4 bg-neutral-200/80 rounded-full overflow-hidden p-0.5">
+            <div className="relative w-full h-3 bg-neutral-200 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-brand-700 via-brand-600 to-accent-500 rounded-full transition-all duration-700 relative shimmer-bar"
+                className="h-full bg-brand-600 rounded-full transition-all duration-700"
                 style={{ width: `${Math.min(100, Math.max(3, stats.totalPercentage))}%` }}
-              >
-                {/* Glowing Lead Pin */}
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md"></div>
-              </div>
+              ></div>
             </div>
           </div>
 
           {/* Motivational Bottom Callout */}
           <div className="mt-5 pt-4 border-t border-neutral-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <p className="text-neutral-600 text-center sm:text-left">
-              🙏 <strong>Together We Build:</strong> Every pledge directly reduces the remaining ceremony balance and brings Edwin & Jamirah closer to 27th Nov 2026!
+              <strong>Together We Build:</strong> Every pledge directly reduces the remaining ceremony balance and brings Edwin & Jamirah closer to 27th Nov 2026!
             </p>
             <button
               onClick={() => openPledgeModal(null)}
@@ -815,7 +801,7 @@ export default function KwanjulaBudgetPage() {
 
         {/* Empty Search / Filter Result */}
         {!isLoading && filteredSections.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl border border-neutral-200">
+          <div className="text-center py-16 bg-white rounded-xl border border-neutral-200">
             <FaMagnifyingGlass className="text-neutral-300 text-4xl mb-3" aria-hidden="true" />
             {isFiltered ? (
               <>
@@ -859,7 +845,7 @@ export default function KwanjulaBudgetPage() {
 
               <div className="flex items-center gap-4 text-xs sm:text-sm text-neutral-600">
                 <span>Target: <strong>{formatUGX(sec.totalCost)}</strong></span>
-                <span>Remaining: <strong className="text-orange-600 font-bold">{formatUGX(sec.remainingAmount)}</strong></span>
+                <span>Remaining: <strong className="text-accent-600 font-bold">{formatUGX(sec.remainingAmount)}</strong></span>
                 <span className="px-2.5 py-0.5 rounded-full bg-neutral-100 font-bold text-neutral-700 text-xs">
                   {sec.percentage}% Funded
                 </span>
@@ -892,10 +878,10 @@ export default function KwanjulaBudgetPage() {
                               <span
                                 aria-hidden="true"
                                 className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-orange-500' : 'bg-neutral-400'
+                                  isCovered ? 'bg-brand-600' : isPartial ? 'bg-accent-500' : 'bg-neutral-400'
                                 }`}
                               ></span>
-                              <span className={isCovered ? 'text-brand-700' : isPartial ? 'text-orange-700' : 'text-neutral-600'}>
+                              <span className={isCovered ? 'text-brand-700' : isPartial ? 'text-accent-700' : 'text-neutral-600'}>
                                 {isCovered ? (item.remarks === 'Covered' ? 'Covered' : '100% Funded') : (isPartial ? `${item.percentage}% Supported` : 'Needs Support')}
                               </span>
                             </span>
@@ -914,7 +900,7 @@ export default function KwanjulaBudgetPage() {
                             <span className="text-neutral-300" aria-hidden="true">&bull;</span>
                             <span>
                               Remaining{' '}
-                              <strong className={isCovered ? 'text-brand-700' : 'text-orange-600 font-bold'}>
+                              <strong className={isCovered ? 'text-brand-700' : 'text-accent-600 font-bold'}>
                                 {formatUGX(item.remainingAmount)}
                               </strong>
                             </span>
@@ -1196,7 +1182,7 @@ export default function KwanjulaBudgetPage() {
         </section>
 
         {/* ================= TEST EMAIL NOTIFICATION SECTION ================= */}
-        <section className="bg-gradient-to-br from-brand-900 via-brand-950 to-neutral-900 text-white rounded-2xl p-6 sm:p-8 border border-brand-800 shadow-md mb-16" id="testEmailSection">
+        <section className="bg-brand-950 text-white rounded-xl p-6 sm:p-8 border border-brand-800 mb-16" id="testEmailSection">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="max-w-xl">
               <div className="flex items-center gap-2 mb-1.5">
@@ -1276,10 +1262,10 @@ export default function KwanjulaBudgetPage() {
       {/* ================= MODAL: PLEDGE SUBMISSION (PUBLIC) ================= */}
       {isPledgeModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
-            
+          <div className="bg-white rounded-xl shadow-lg max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
+
             {/* Header */}
-            <div className="bg-gradient-to-r from-brand-900 to-brand-900 text-white p-5 flex justify-between items-center">
+            <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
               <div>
                 <h3 className="text-lg font-bold flex items-center gap-2">
                   <FaHandHoldingHeart className="text-accent-400" aria-hidden="true" /> Make a Pledge
@@ -1300,13 +1286,13 @@ export default function KwanjulaBudgetPage() {
               
               {/* Selected Item Banner or Dropdown */}
               {selectedItem ? (
-                <div className="bg-brand-50 border border-brand-200 p-3.5 rounded-2xl flex justify-between items-center">
+                <div className="bg-brand-50 border border-brand-200 p-3.5 rounded-xl flex justify-between items-center">
                   <div>
                     <span className="text-[10px] font-extrabold uppercase text-brand-800">Target Item</span>
                     <h4 className="font-bold text-neutral-900 text-sm sm:text-base">{selectedItem.name} {selectedItem.qty ? `(${selectedItem.qty})` : ''}</h4>
                     <div className="text-xs text-neutral-500 flex gap-3 mt-0.5">
                       <span>Total: <strong>{formatUGX(selectedItem.totalCost)}</strong></span>
-                      <span>Remaining: <strong className="text-orange-600 font-bold">{formatUGX(selectedItem.remainingAmount)}</strong></span>
+                      <span>Remaining: <strong className="text-accent-600 font-bold">{formatUGX(selectedItem.remainingAmount)}</strong></span>
                     </div>
                   </div>
                   <button
@@ -1325,7 +1311,7 @@ export default function KwanjulaBudgetPage() {
                     onChange={(e) => setFormData(prev => ({ ...prev, itemId: e.target.value }))}
                     className="w-full p-2.5 text-sm bg-neutral-50 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-brand-700 focus:outline-none"
                   >
-                    <option value="general">✨ General Ceremony Contribution</option>
+                    <option value="general">General Ceremony Contribution</option>
                     {budget?.sections?.map(sec => (
                       <optgroup key={sec.id} label={`Section ${sec.code}: ${sec.title}`}>
                         {sec.items.map(itm => (
@@ -1410,8 +1396,8 @@ export default function KwanjulaBudgetPage() {
 
                 {/* Live Spillover Notice */}
                 {selectedItem && Number(formData.amount) > selectedItem.remainingAmount && selectedItem.remainingAmount > 0 && (
-                  <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-xs text-amber-900 mt-2 flex items-start gap-2">
-                    <span className="text-base shrink-0">🎉</span>
+                  <div className="p-3 bg-accent-50 border border-accent-300 rounded-xl text-xs text-accent-900 mt-2 flex items-start gap-2">
+                    <FaCircleCheck className="text-accent-600 shrink-0 mt-0.5" aria-hidden="true" />
                     <div>
                       <strong>100% Item Cover + Excess Spillover:</strong> Pledging <strong>{formatUGX(Number(formData.amount))}</strong> will completely fund <strong>{selectedItem.name}</strong> 100% ({formatUGX(selectedItem.remainingAmount)}), and your extra <strong>{formatUGX(Number(formData.amount) - selectedItem.remainingAmount)}</strong> will automatically be added to the <strong>General Ceremony Fund</strong>!
                     </div>
@@ -1434,7 +1420,7 @@ export default function KwanjulaBudgetPage() {
                     <button
                       type="button"
                       onClick={() => applyQuickAmount(selectedItem.remainingAmount)}
-                      className="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 hover:bg-orange-200 text-orange-800 border border-orange-300 transition"
+                      className="px-2.5 py-1 rounded-full text-xs font-bold bg-accent-100 hover:bg-accent-200 text-accent-800 border border-accent-300 transition"
                     >
                       Cover Remaining ({formatUGX(selectedItem.remainingAmount)})
                     </button>
@@ -1532,7 +1518,7 @@ export default function KwanjulaBudgetPage() {
       {/* ================= MODAL: SUCCESS ACKNOWLEDGEMENT ================= */}
       {isSuccessModalOpen && receiptData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center animate-in zoom-in duration-200">
+          <div className="bg-white rounded-xl shadow-lg max-w-sm w-full p-6 text-center animate-in zoom-in duration-200">
             <div className="w-16 h-16 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-3xl mx-auto mb-4">
               <FaCircleCheck aria-hidden="true" />
             </div>
@@ -1546,8 +1532,8 @@ export default function KwanjulaBudgetPage() {
 
             {/* 100% Item Cover Celebration Banner */}
             {receiptData.spilloverInfo?.covered100 && (
-              <div className="bg-amber-50 border border-amber-300 rounded-2xl p-3.5 text-xs text-amber-900 mb-4 text-left">
-                <div className="font-black text-amber-950 flex items-center gap-1.5 mb-1">
+              <div className="bg-accent-50 border border-accent-300 rounded-xl p-3.5 text-xs text-accent-900 mb-4 text-left">
+                <div className="font-black text-accent-950 flex items-center gap-1.5 mb-1">
                   <FaTrophy className="text-accent-600" aria-hidden="true" /> 100% Item Fully Funded!
                 </div>
                 <div>
@@ -1561,7 +1547,7 @@ export default function KwanjulaBudgetPage() {
               </div>
             )}
 
-            <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-4 text-left space-y-2 text-xs mb-5">
+            <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 text-left space-y-2 text-xs mb-5">
               <div className="flex justify-between">
                 <span className="text-neutral-500">Contributor:</span>
                 <strong className="text-neutral-800">{receiptData.name}</strong>
@@ -1582,7 +1568,7 @@ export default function KwanjulaBudgetPage() {
               </div>
             </div>
 
-            <div className="bg-accent-50 border border-accent-200 rounded-2xl p-3.5 text-xs text-accent-900 mb-5">
+            <div className="bg-accent-50 border border-accent-200 rounded-xl p-3.5 text-xs text-accent-900 mb-5">
               <div className="font-bold mb-1">Fulfill via Mobile Money:</div>
               <div className="flex justify-around font-mono font-bold">
                 <span>Airtel: 0703464261</span>
