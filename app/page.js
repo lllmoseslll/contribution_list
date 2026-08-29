@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import confetti from 'canvas-confetti';
 import {
@@ -464,6 +465,17 @@ export default function KwanjulaBudgetPage() {
       {/* Hero Banner */}
       <header className="relative bg-brand-950 text-white py-12 sm:py-16 px-5 text-center border-b border-brand-800">
         <div className="relative max-w-4xl mx-auto">
+          <div className="flex justify-center mb-5">
+            <Image
+              src="/edwin-laston-hero.jpg"
+              alt="Edwin Laston"
+              width={112}
+              height={149}
+              priority
+              className="w-28 h-36 sm:w-32 sm:h-40 rounded-lg object-cover border-4 border-brand-700 shadow-lg"
+            />
+          </div>
+
           <p className="text-accent-400 text-xs font-bold tracking-widest uppercase mb-3">
             The Kwanjula Budget
           </p>
