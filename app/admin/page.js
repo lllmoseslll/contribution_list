@@ -7,9 +7,7 @@ import {
   FaArrowsRotate,
   FaBell,
   FaCheck,
-  FaCheckDouble,
   FaCircleInfo,
-  FaClock,
   FaEnvelope,
   FaEnvelopeOpenText,
   FaFileCsv,
@@ -32,6 +30,7 @@ import {
   FaServer,
   FaShieldHalved,
   FaSpinner,
+  FaTriangleExclamation,
   FaUserShield,
   FaXmark
 } from 'react-icons/fa6';
@@ -89,6 +88,11 @@ export default function AdminPage() {
     message: ''
   });
   const [isSubmittingOffline, setIsSubmittingOffline] = useState(false);
+
+  // Admin Clear Database Modal
+  const [isClearDbModalOpen, setIsClearDbModalOpen] = useState(false);
+  const [clearDbPassword, setClearDbPassword] = useState('');
+  const [isClearingDb, setIsClearingDb] = useState(false);
 
   const [adminSettings, setAdminSettings] = useState({
     ownerName: 'Mr. Edwin Laston',
@@ -367,6 +371,37 @@ export default function AdminPage() {
     }
   };
 
+  // Clear Database — wipes every pledge and notification. Re-checks the
+  // admin passcode server-side even though the session is already valid.
+  const handleClearDatabase = async (e) => {
+    e.preventDefault();
+    if (!clearDbPassword) {
+      showToast('Enter the admin passcode to confirm.', 'error');
+      return;
+    }
+
+    setIsClearingDb(true);
+    try {
+      const res = await fetch('/api/admin/clear-database', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: clearDbPassword })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to clear the database');
+
+      showToast(data.message, 'success');
+      setIsClearDbModalOpen(false);
+      setClearDbPassword('');
+      loadAdminPledges();
+      loadAdminNotifications();
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setIsClearingDb(false);
+    }
+  };
+
   // Send Test Email via SMTP
   const handleSendTestEmail = async (overrideEmail) => {
     const specified = typeof overrideEmail === 'string' ? overrideEmail.trim() : customTestEmail.trim();
@@ -477,7 +512,7 @@ export default function AdminPage() {
   }, [adminPledges, adminFilter, adminSearch]);
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-6 px-3 sm:px-4">
+    <div className="min-h-screen bg-neutral-50 py-6 px-5 sm:px-6">
 
       {/* Toast Alert */}
       {toast && (
@@ -488,9 +523,9 @@ export default function AdminPage() {
         </div>
       )}
 
-      <div className="mx-auto max-w-5xl bg-white rounded-3xl shadow-lg border border-neutral-200 overflow-hidden">
+      <div className="mx-auto max-w-5xl bg-white rounded-xl border border-neutral-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-950 to-brand-950 text-white p-5 flex justify-between items-center">
+        <div className="bg-brand-950 text-white p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
           <div>
             <h3 className="text-lg font-bold flex items-center gap-2">
               <FaLock className="text-accent-400" aria-hidden="true" /> Committee Admin Portal
@@ -501,7 +536,7 @@ export default function AdminPage() {
             {adminAuthenticated && (
               <button
                 onClick={handleAdminLogout}
-                className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5 whitespace-nowrap"
                 title="End this admin session"
               >
                 <FaRightFromBracket aria-hidden="true" /> Sign out
@@ -509,7 +544,7 @@ export default function AdminPage() {
             )}
             <Link
               href="/"
-              className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white flex items-center gap-1.5 whitespace-nowrap"
               title="Back to the public budget page"
             >
               <FaArrowLeft aria-hidden="true" /> Back to site
@@ -601,10 +636,10 @@ export default function AdminPage() {
                         <button
                           key={f.id}
                           onClick={() => setAdminFilter(f.id)}
-                          className={`px-3 py-1 rounded-full text-xs font-bold border transition ${
+                          className={`px-3 py-1 rounded-md text-xs font-medium border bg-white transition ${
                             adminFilter === f.id
-                              ? 'bg-brand-800 text-white border-brand-800'
-                              : 'bg-neutral-100 text-neutral-600 border-neutral-200 hover:bg-neutral-200'
+                              ? 'border-brand-700 text-brand-800 font-semibold'
+                              : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                           }`}
                         >
                           {f.label}
@@ -612,13 +647,13 @@ export default function AdminPage() {
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-2 w-full md:w-auto">
+                    <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
                       <input
                         type="text"
                         placeholder="Search contributor / item..."
                         value={adminSearch}
                         onChange={(e) => setAdminSearch(e.target.value)}
-                        className="text-xs p-2 border border-neutral-300 rounded-lg flex-1 md:w-48 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                        className="text-xs p-2 border border-neutral-300 rounded-lg flex-1 min-w-[140px] md:w-48 focus:outline-none focus:ring-1 focus:ring-brand-700"
                       />
                       <button
                         type="button"
@@ -709,13 +744,11 @@ export default function AdminPage() {
                                   )}
                                 </td>
                                 <td className="p-3">
-                                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
-                                    isPaid
-                                      ? 'bg-brand-100 text-brand-800 border border-brand-200'
-                                      : 'bg-accent-100 text-accent-800 border border-accent-200'
-                                  }`}>
-                                    {isPaid ? <FaCheckDouble aria-hidden="true" /> : <FaClock aria-hidden="true" />}
-                                    {isPaid ? 'Paid & Received' : 'Pledged / Pending'}
+                                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold whitespace-nowrap">
+                                    <span aria-hidden="true" className={`w-1.5 h-1.5 rounded-full shrink-0 ${isPaid ? 'bg-brand-600' : 'bg-accent-500'}`}></span>
+                                    <span className={isPaid ? 'text-brand-700' : 'text-accent-700'}>
+                                      {isPaid ? 'Paid & Received' : 'Pledged / Pending'}
+                                    </span>
                                   </span>
                                 </td>
                                 <td className="p-3 text-right whitespace-nowrap">
@@ -787,7 +820,7 @@ export default function AdminPage() {
                           <span>{formatDate(n.date)}</span>
                         </div>
                         <div className="font-bold text-neutral-800">
-                          🎉 New Pledge: {n.pledgerName} ({formatUGX(n.amount)}) for {n.item}
+                          New Pledge: {n.pledgerName} ({formatUGX(n.amount)}) for {n.item}
                         </div>
                         <div className="flex justify-between items-center pt-1">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -810,10 +843,11 @@ export default function AdminPage() {
 
               {/* TAB 3: SETTINGS - NOTIFICATION RECIPIENT EMAILS */}
               {adminTab === 'settings' && (
+                <>
                 <form onSubmit={handleSaveSettings} className="space-y-5 text-xs">
 
                   {/* Pledge Alert Notification Emails */}
-                  <div className="p-5 sm:p-6 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                  <div className="p-5 sm:p-6 rounded-xl bg-white border border-neutral-200">
                     <div className="flex flex-wrap justify-between items-center gap-3 pb-4 border-b border-neutral-100">
                       <div>
                         <h5 className="font-bold text-neutral-900 text-base flex items-center gap-2">
@@ -871,7 +905,7 @@ export default function AdminPage() {
                       <div className="text-[11px] uppercase tracking-wider font-extrabold text-neutral-500 mb-2.5 flex items-center justify-between">
                         <span>Active Alert Inboxes ({(adminSettings.notifyEmails || []).length})</span>
                         {(adminSettings.notifyEmails || []).length === 0 && (
-                          <span className="text-orange-600 font-bold">⚠️ No notification emails configured</span>
+                          <span className="text-accent-700 font-bold">No notification emails configured</span>
                         )}
                       </div>
 
@@ -892,7 +926,7 @@ export default function AdminPage() {
                             <button
                               type="button"
                               onClick={() => handleRemoveEmail(email)}
-                              className="w-6 h-6 rounded-lg text-neutral-400 hover:text-orange-600 hover:bg-orange-50 flex items-center justify-center transition"
+                              className="w-6 h-6 rounded-lg text-neutral-400 hover:text-accent-600 hover:bg-accent-50 flex items-center justify-center transition"
                               title="Remove email"
                             >
                               <FaXmark aria-hidden="true" />
@@ -903,14 +937,14 @@ export default function AdminPage() {
 
                       {/* Quick Suggestion if empty */}
                       {(!adminSettings.notifyEmails || adminSettings.notifyEmails.length === 0) && (
-                        <div className="p-4 bg-orange-50/70 border border-orange-200 rounded-xl mt-2 flex items-center justify-between">
-                          <div className="text-xs text-orange-900">
+                        <div className="p-4 bg-accent-50/70 border border-accent-200 rounded-xl mt-2 flex items-center justify-between">
+                          <div className="text-xs text-accent-900">
                             <strong>Quick suggestion:</strong> Add the groom's email (<code>edwinlaston@gmail.com</code>) to receive pledge notifications.
                           </div>
                           <button
                             type="button"
                             onClick={() => handleAddEmail('edwinlaston@gmail.com')}
-                            className="text-xs font-bold text-orange-800 bg-white px-3 py-1 rounded-lg border border-orange-300 hover:bg-orange-100 transition shrink-0 ml-2"
+                            className="text-xs font-bold text-accent-800 bg-white px-3 py-1 rounded-lg border border-accent-300 hover:bg-accent-100 transition shrink-0 ml-2"
                           >
                             + Add Edwin
                           </button>
@@ -922,7 +956,7 @@ export default function AdminPage() {
                     <div className="mt-6 pt-5 border-t border-neutral-200">
                       <div className="bg-neutral-50/80 p-4 rounded-xl border border-neutral-200">
                         <label className="block text-neutral-800 text-xs font-bold mb-1">
-                          ⚡ Test Live Email Alert Delivery
+                          Test Live Email Alert Delivery
                         </label>
                         <p className="text-neutral-500 text-[11px] mb-2.5">
                           Set the exact email address you want to send the test alert to:
@@ -967,7 +1001,7 @@ export default function AdminPage() {
                         )}
 
                         {testEmailStatus?.msg && (
-                          <div className={`mt-3 p-2.5 rounded-lg text-xs font-semibold ${testEmailStatus.success ? 'bg-brand-50 text-brand-800 border border-brand-200' : 'bg-orange-50 text-orange-800 border border-orange-200'}`}>
+                          <div className={`mt-3 p-2.5 rounded-lg text-xs font-semibold ${testEmailStatus.success ? 'bg-brand-50 text-brand-800 border border-brand-200' : 'bg-accent-50 text-accent-800 border border-accent-200'}`}>
                             {testEmailStatus.msg}
                           </div>
                         )}
@@ -994,7 +1028,7 @@ export default function AdminPage() {
                   </div>
 
                   {/* Public Committee Contacts Card */}
-                  <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-sm">
+                  <div className="p-5 rounded-xl bg-white border border-neutral-200">
                     <h5 className="font-bold text-neutral-900 mb-1 text-sm flex items-center gap-2">
                       <FaUserShield className="text-brand-700" aria-hidden="true" /> Public Committee Contact Details
                     </h5>
@@ -1022,6 +1056,30 @@ export default function AdminPage() {
                   </div>
 
                 </form>
+
+                {/* Danger Zone — Clear Database. Deliberately outside the settings-save form:
+                    this isn't a setting to save, it's an irreversible one-off action with its
+                    own confirmation modal and second password check. */}
+                <div className="p-5 rounded-xl bg-accent-50 border border-accent-300 mt-5">
+                  <h5 className="font-bold text-accent-900 mb-1 text-sm flex items-center gap-2">
+                    <FaTriangleExclamation className="text-accent-700" aria-hidden="true" /> Danger Zone
+                  </h5>
+                  <p className="text-accent-800 mb-4 text-xs leading-relaxed">
+                    Permanently deletes every pledge and notification from the database. Budget
+                    totals, the Roll of Honor, and all contributor records reset to zero.
+                    <strong> This cannot be undone</strong> — export a CSV or PDF report first if
+                    you need a record of what's here now. Committee settings (SMTP, notification
+                    inboxes, contact details) are not affected.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setIsClearDbModalOpen(true)}
+                    className="px-5 py-2.5 bg-accent-700 hover:bg-accent-800 text-white font-bold rounded-xl transition text-xs flex items-center gap-2"
+                  >
+                    <FaRegTrashCan aria-hidden="true" /> Clear Database
+                  </button>
+                </div>
+                </>
               )}
 
             </div>
@@ -1032,7 +1090,7 @@ export default function AdminPage() {
       {/* ================= MODAL: ADD OFFLINE PLEDGE (ADMIN) ================= */}
       {isOfflineModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
+          <div className="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
             <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
               <div>
                 <h3 className="text-lg font-bold">Add Offline / Phone Pledge</h3>
@@ -1055,7 +1113,7 @@ export default function AdminPage() {
                   onChange={(e) => setOfflineForm(prev => ({ ...prev, itemId: e.target.value }))}
                   className="w-full p-2.5 bg-neutral-50 border border-neutral-300 rounded-xl"
                 >
-                  <option value="general">✨ General Ceremony Contribution</option>
+                  <option value="general">General Ceremony Contribution</option>
                   {budget?.sections?.map(sec => (
                     <optgroup key={sec.id} label={`Section ${sec.code}: ${sec.title}`}>
                       {sec.items.map(itm => (
@@ -1166,10 +1224,75 @@ export default function AdminPage() {
         </div>
       )}
 
+      {/* ================= MODAL: CLEAR DATABASE (ADMIN) ================= */}
+      {isClearDbModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+          <div className="bg-white rounded-lg shadow-lg max-w-md w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
+            <div className="bg-accent-700 text-white p-5 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold flex items-center gap-2">
+                  <FaTriangleExclamation aria-hidden="true" /> Clear Database
+                </h3>
+                <p className="text-xs text-accent-100">This permanently deletes every pledge and notification</p>
+              </div>
+              <button
+                onClick={() => { setIsClearDbModalOpen(false); setClearDbPassword(''); }}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm shrink-0"
+                aria-label="Close"
+              >
+                <FaXmark aria-hidden="true" />
+              </button>
+            </div>
+
+            <form onSubmit={handleClearDatabase} className="p-5 space-y-4 text-xs">
+              <div className="p-3 rounded-xl bg-accent-50 border border-accent-300 text-accent-900 leading-relaxed">
+                You are about to erase <strong>all {adminPledges.length} pledge{adminPledges.length === 1 ? '' : 's'}</strong> and
+                every notification record. Budget totals, the Roll of Honor and every contributor entry reset to zero.
+                <strong> There is no undo.</strong> Cancel now and export a CSV or PDF report first if you need one.
+              </div>
+
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Confirm Admin Passcode *</label>
+                <div className="relative">
+                  <FaLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 text-[11px]" aria-hidden="true" />
+                  <input
+                    type="password"
+                    required
+                    autoFocus
+                    placeholder="Re-enter the committee passcode"
+                    value={clearDbPassword}
+                    onChange={(e) => setClearDbPassword(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2.5 border border-neutral-300 rounded-xl focus:ring-2 focus:ring-accent-600 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => { setIsClearDbModalOpen(false); setClearDbPassword(''); }}
+                  className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-xl font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isClearingDb || !clearDbPassword}
+                  className="px-4 py-2 bg-accent-700 hover:bg-accent-800 disabled:opacity-60 text-white rounded-xl font-bold flex items-center gap-1.5"
+                >
+                  {isClearingDb ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaRegTrashCan aria-hidden="true" />}
+                  Permanently Clear Database
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* ================= MODAL: EMAIL HTML PREVIEW (ADMIN) ================= */}
       {previewEmailHtml && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in duration-200">
+          <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden animate-in zoom-in duration-200">
             <div className="p-4 bg-neutral-900 text-white flex justify-between items-center">
               <h4 className="font-bold text-sm flex items-center gap-2">
                 <FaRegEnvelopeOpen className="text-accent-400" aria-hidden="true" /> Formatted Notification Email Preview

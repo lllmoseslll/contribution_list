@@ -64,18 +64,6 @@
   --color-neutral-800: #1e293b;
   --color-neutral-900: #0f172a;
   --color-neutral-950: #020617;
-
-  --color-orange-50: #fff7ed;
-  --color-orange-100: #ffedd5;
-  --color-orange-200: #fed7aa;
-  --color-orange-300: #fdba74;
-  --color-orange-400: #fb923c;
-  --color-orange-500: #f97316;
-  --color-orange-600: #ea580c;
-  --color-orange-700: #c2410c;
-  --color-orange-800: #9a3412;
-  --color-orange-900: #7c2d12;
-  --color-orange-950: #431407;
 }
 
 @layer base {
@@ -155,28 +143,33 @@
   100% { transform: scale(0.9); box-shadow: 0 0 0 0 transparent; }
 }
 
-.pulse-dot-orange {
-  animation: pulseOrange 1.8s infinite;
+.pulse-dot-accent {
+  animation: pulseAccent 1.8s infinite;
 }
 
-@keyframes pulseOrange {
-  0%   { transform: scale(0.9); box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-orange-500) 70%, transparent); }
+@keyframes pulseAccent {
+  0%   { transform: scale(0.9); box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-500) 70%, transparent); }
   70%  { transform: scale(1.15); box-shadow: 0 0 0 7px transparent; }
   100% { transform: scale(0.9); box-shadow: 0 0 0 0 transparent; }
 }
 
-.shimmer-bar {
-  background-size: 200% 100%;
-  animation: shimmerMove 2.5s infinite linear;
+/*
+ * A scrolling wave-crest tile (WATER_WAVE_SVG, app/page.js) layered twice inside the
+ * budget progress bar's fill, at different opacity/speed/direction, so the flat fill reads
+ * as a moving water surface instead of a static bar - a functional animation tied to the
+ * live funded percentage, not decorative page chrome.
+ */
+.water-wave {
+  animation: waterWaveScroll 2.2s linear infinite;
 }
 
-@keyframes shimmerMove {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+.water-wave-reverse {
+  animation: waterWaveScroll 3.6s linear infinite reverse;
 }
 
-.milestone-glow {
-  box-shadow: 0 0 15px color-mix(in srgb, var(--color-brand-500) 30%, transparent);
+@keyframes waterWaveScroll {
+  from { background-position-x: 0; }
+  to   { background-position-x: -100px; }
 }
 
 .modal-backdrop {
