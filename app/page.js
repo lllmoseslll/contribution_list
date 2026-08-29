@@ -687,7 +687,7 @@ export default function KwanjulaBudgetPage() {
       </header>
 
       {/* Main Budget Section */}
-      <main className="max-w-6xl mx-auto w-full px-5 mb-16" id="budgetSection">
+      <main className="max-w-6xl mx-auto w-full px-5 mt-10 sm:mt-12 mb-16" id="budgetSection">
         
         {/* Controls & Search */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-6">
