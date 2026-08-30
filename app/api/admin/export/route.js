@@ -29,10 +29,13 @@ export async function GET(req) {
   ]);
 
   const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const buffer = Buffer.from(csv, 'utf8');
 
-  return new Response(csv, {
+  return new Response(buffer, {
     headers: {
       'Content-Type': 'text/csv',
+      // See app/api/admin/pdf/route.js for why this is set explicitly.
+      'Content-Length': String(buffer.length),
       'Content-Disposition': `attachment; filename="kwanjula-pledges-${new Date().toISOString().slice(0, 10)}.csv"`
     }
   });

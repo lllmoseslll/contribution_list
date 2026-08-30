@@ -14,6 +14,8 @@ export async function GET() {
   return new Response(buffer, {
     headers: {
       'Content-Type': 'application/pdf',
+      // See app/api/admin/pdf/route.js for why this is set explicitly.
+      'Content-Length': String(buffer.length),
       'Content-Disposition': `inline; filename="kwanjula-pledge-report-${new Date().toISOString().slice(0, 10)}.pdf"`,
       'Cache-Control': 'no-store'
     }
