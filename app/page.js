@@ -92,6 +92,76 @@ const FILTER_CHIPS = [
   { id: 'fully-covered', label: 'Fully Covered' }
 ];
 
+const GALLERY_PHOTOS = [
+  { src: '/gallery-couple-mall.jpg', alt: 'Edwin and Jamirah together', focus: 'object-[50%_25%]' },
+  { src: '/gallery-couple-event.jpg', alt: 'Edwin and Jamirah at a family event', focus: 'object-top' },
+  { src: '/gallery-edwin-formal.jpg', alt: 'Edwin in formal wear', focus: 'object-top' }
+];
+
+function HeroPhotoBackground({ children }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % GALLERY_PHOTOS.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative overflow-hidden min-h-[520px] sm:min-h-[600px] flex items-center px-5 py-14 sm:py-20">
+      {GALLERY_PHOTOS.map((photo, i) => (
+        <Image
+          key={photo.src}
+          src={photo.src}
+          alt=""
+          fill
+          sizes="100vw"
+          className={`object-cover ${photo.focus} transition-opacity duration-1000 ease-in-out ${i === index ? 'opacity-100' : 'opacity-0'}`}
+          priority
+        />
+      ))}
+
+      {/* Scrim: keeps hero text legible over busy candid photos and fades to the
+          solid brand-950 the stats card section below sits on, so the seam is invisible. */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-brand-950" aria-hidden="true" />
+
+      <div className="relative z-10 max-w-4xl mx-auto w-full text-center">
+        {children}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => setIndex((i) => (i - 1 + GALLERY_PHOTOS.length) % GALLERY_PHOTOS.length)}
+        aria-label="Previous photo"
+        className="hidden sm:flex absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white items-center justify-center transition"
+      >
+        <FaChevronDown className="rotate-90 text-xs" aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        onClick={() => setIndex((i) => (i + 1) % GALLERY_PHOTOS.length)}
+        aria-label="Next photo"
+        className="hidden sm:flex absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-black/40 hover:bg-black/60 text-white items-center justify-center transition"
+      >
+        <FaChevronDown className="-rotate-90 text-xs" aria-hidden="true" />
+      </button>
+
+      <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+        {GALLERY_PHOTOS.map((photo, i) => (
+          <button
+            key={photo.src}
+            type="button"
+            onClick={() => setIndex(i)}
+            aria-label={`Show photo ${i + 1}`}
+            className={`h-1.5 rounded-full transition-all ${i === index ? 'w-6 bg-accent-400' : 'w-1.5 bg-white/50'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function KwanjulaBudgetPage() {
   const [budget, setBudget] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -102,6 +172,7 @@ export default function KwanjulaBudgetPage() {
   const [copiedText, setCopiedText] = useState(null);
   const [toast, setToast] = useState(null);
   const [showAllHonorPledges, setShowAllHonorPledges] = useState(false);
+  const [committeeMembers, setCommitteeMembers] = useState([]);
 
   // Modals state
   const [isPledgeModalOpen, setIsPledgeModalOpen] = useState(false);
@@ -133,6 +204,17 @@ export default function KwanjulaBudgetPage() {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 5000);
   };
+
+  // Committee members change rarely, unlike pledges — one fetch on mount
+  // rather than joining the poll loop below.
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/committee')
+      .then(res => res.json())
+      .then(data => { if (!cancelled) setCommitteeMembers(Array.isArray(data) ? data : []); })
+      .catch(err => console.error('Failed to load committee members:', err));
+    return () => { cancelled = true; };
+  }, []);
 
   // Polling instead of a push connection. Vercel's serverless functions don't
   // share memory across invocations/instances and enforce execution-time
@@ -453,6 +535,12 @@ export default function KwanjulaBudgetPage() {
               <FaFilePdf className="text-accent-400" aria-hidden="true" /> Pledge Report
             </a>
             <Link
+              href="/guests"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-brand-200 bg-brand-900/60 hover:bg-brand-800 border border-brand-700/60 transition"
+            >
+              <FaUsers className="text-accent-400" aria-hidden="true" /> Guest List
+            </Link>
+            <Link
               href="/admin"
               className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold text-accent-300 bg-accent-500/10 hover:bg-accent-500/20 border border-accent-500/30 transition"
             >
@@ -463,12 +551,21 @@ export default function KwanjulaBudgetPage() {
       </div>
 
       {/* Hero Banner */}
-      <header className="relative bg-brand-950 text-white py-12 sm:py-16 px-5 text-center border-b border-brand-800">
-        <div className="relative max-w-4xl mx-auto">
-          <div className="flex justify-center mb-5">
+      <header className="relative text-white border-b border-brand-800">
+        <HeroPhotoBackground>
+          <div className="flex justify-center items-center gap-3 sm:gap-4 mb-5">
             <Image
               src="/edwin-laston-hero.jpg"
               alt="Edwin Laston"
+              width={112}
+              height={149}
+              priority
+              className="w-28 h-36 sm:w-32 sm:h-40 rounded-lg object-cover border-4 border-brand-700 shadow-lg"
+            />
+            <span className="text-accent-400 text-xl sm:text-2xl font-bold" aria-hidden="true">&amp;</span>
+            <Image
+              src="/jamirah-nakayemba-hero.jpg"
+              alt="Jamirah Nakayemba"
               width={112}
               height={149}
               priority
@@ -526,14 +623,15 @@ export default function KwanjulaBudgetPage() {
               <FaMobileScreenButton aria-hidden="true" /> Mobile Money
             </a>
           </div>
-        </div>
+        </HeroPhotoBackground>
 
         {/* Everything below is one combined card, kept inside the hero: budget progress,
             community backers, and the full milestone journey. Previously three separate
             surfaces (a stat-card grid in the hero, plus a whole milestone section on the
             white background below it) — now one dark card so it all reads as a single
             "ceremony status" unit at a glance. */}
-        <div className="max-w-5xl mx-auto mt-10 sm:mt-12 bg-brand-900 border border-brand-800 rounded-lg p-4 sm:p-6 text-left">
+        <div className="bg-brand-950 px-5 pb-12 sm:pb-16">
+        <div className="max-w-5xl mx-auto bg-brand-900 border border-brand-800 rounded-lg p-4 sm:p-6 text-left">
 
           {/* Budget Progress: Total Target + Raised & Pledged + Remaining, with a progress bar */}
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-3">
@@ -695,6 +793,7 @@ export default function KwanjulaBudgetPage() {
             </div>
           </div>
 
+        </div>
         </div>
       </header>
 
@@ -1133,59 +1232,40 @@ export default function KwanjulaBudgetPage() {
               </a>
             </div>
 
-            {/* KMP Emitu */}
-            <div className="bg-brand-900 rounded-lg p-6 border border-brand-800 flex flex-col justify-between">
-              <div>
-                <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">Committee Member</div>
-                <h3 className="text-xl font-bold text-white mb-4">Mr. KMP Emitu Ezielkel</h3>
+            {/* Committee members: added and removed from the admin portal's
+                Committee tab — nothing here is hardcoded, so a new member
+                shows up on the very next page load. */}
+            {committeeMembers.map((m) => (
+              <div key={m.id} className="bg-brand-900 rounded-lg p-6 border border-brand-800 flex flex-col justify-between">
+                <div>
+                  <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">{m.role || 'Committee Member'}</div>
+                  <h3 className="text-xl font-bold text-white mb-4">{m.name}</h3>
 
-                <div className="bg-brand-950 p-2.5 rounded-lg text-sm flex items-center justify-between mb-6">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-500 text-black">MTN Money</span>
-                  <span className="font-mono font-bold text-white tracking-wide">0783987907</span>
-                  <button
-                    onClick={() => handleCopy('0783987907')}
-                    className="p-1.5 text-neutral-300 hover:text-white"
-                    title="Copy number"
-                  >
-                    {copiedText === '0783987907' ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
-                  </button>
+                  <div className="bg-brand-950 p-2.5 rounded-lg text-sm flex items-center justify-between mb-6">
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${
+                      m.network === 'MTN Money' ? 'bg-accent-500 text-black' : m.network === 'Airtel Money' ? 'bg-accent-700 text-white' : 'bg-brand-700 text-white'
+                    }`}>
+                      {m.network || 'Mobile Money'}
+                    </span>
+                    <span className="font-mono font-bold text-white tracking-wide">{m.phone}</span>
+                    <button
+                      onClick={() => handleCopy(m.phone)}
+                      className="p-1.5 text-neutral-300 hover:text-white"
+                      title="Copy number"
+                    >
+                      {copiedText === m.phone ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
+                    </button>
+                  </div>
                 </div>
+
+                <a
+                  href={`tel:${m.phone}`}
+                  className="w-full py-2.5 px-4 rounded-lg text-sm font-bold bg-brand-800 hover:bg-brand-700 text-white flex items-center justify-center gap-2 transition"
+                >
+                  <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
+                </a>
               </div>
-
-              <a
-                href="tel:0783987907"
-                className="w-full py-2.5 px-4 rounded-lg text-sm font-bold bg-brand-800 hover:bg-brand-700 text-white flex items-center justify-center gap-2 transition"
-              >
-                <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
-              </a>
-            </div>
-
-            {/* Emmanuel Tinkasimire */}
-            <div className="bg-brand-900 rounded-lg p-6 border border-brand-800 flex flex-col justify-between">
-              <div>
-                <div className="text-[11px] font-extrabold text-brand-300 tracking-wider uppercase mb-1">Committee Member</div>
-                <h3 className="text-xl font-bold text-white mb-4">Mr. Tinkasimire Emmanuel</h3>
-
-                <div className="bg-brand-950 p-2.5 rounded-lg text-sm flex items-center justify-between mb-6">
-                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-accent-700 text-white">Airtel Money</span>
-                  <span className="font-mono font-bold text-white tracking-wide">0706171109</span>
-                  <button
-                    onClick={() => handleCopy('0706171109')}
-                    className="p-1.5 text-neutral-300 hover:text-white"
-                    title="Copy number"
-                  >
-                    {copiedText === '0706171109' ? <FaCheck className="text-brand-400" aria-hidden="true" /> : <FaRegCopy aria-hidden="true" />}
-                  </button>
-                </div>
-              </div>
-
-              <a
-                href="tel:0706171109"
-                className="w-full py-2.5 px-4 rounded-lg text-sm font-bold bg-brand-800 hover:bg-brand-700 text-white flex items-center justify-center gap-2 transition"
-              >
-                <FaPhone className="text-xs" aria-hidden="true" /> Call Contact
-              </a>
-            </div>
+            ))}
 
           </div>
 

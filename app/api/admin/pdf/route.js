@@ -20,6 +20,12 @@ export async function GET(req) {
   return new Response(buffer, {
     headers: {
       'Content-Type': 'application/pdf',
+      // The full PDF is already built in memory, so declaring its exact size
+      // is both correct and avoids falling back to chunked transfer-encoding
+      // — which this dev server intermittently mishandles for larger bodies,
+      // occasionally closing the connection before the body is sent and
+      // leaving the browser with a 0-byte file that won't open.
+      'Content-Length': String(buffer.length),
       'Content-Disposition': `attachment; filename="kwanjula-committee-pledge-report-${new Date().toISOString().slice(0, 10)}.pdf"`,
       'Cache-Control': 'no-store'
     }

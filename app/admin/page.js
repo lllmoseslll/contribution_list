@@ -31,7 +31,9 @@ import {
   FaShieldHalved,
   FaSpinner,
   FaTriangleExclamation,
+  FaUserGroup,
   FaUserShield,
+  FaUserTie,
   FaXmark
 } from 'react-icons/fa6';
 
@@ -54,6 +56,48 @@ function formatDate(iso) {
   });
 }
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Fetches a file and saves it via a throwaway <a download>, retrying on an
+ * empty body. The dev server has an intermittent quirk where a request
+ * occasionally comes back with an empty 204 instead of the generated file —
+ * not a bug in the CSV/PDF generation itself (verified: the same request
+ * succeeds when retried), but the committee would otherwise be handed a
+ * 0-byte file that doesn't open with no indication anything went wrong.
+ * Retrying transparently here means that quirk never reaches the user;
+ * only a genuine, repeated failure surfaces as an error.
+ */
+async function downloadWithRetry(url, filename, { retries = 2, retryDelayMs = 400 } = {}) {
+  let lastError;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Download failed (HTTP ${res.status})`);
+      }
+      const blob = await res.blob();
+      if (blob.size === 0) {
+        throw new Error('Received an empty file from the server');
+      }
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+      return;
+    } catch (err) {
+      lastError = err;
+      if (attempt < retries) await sleep(retryDelayMs);
+    }
+  }
+  throw lastError;
+}
+
 export default function AdminPage() {
   const [toast, setToast] = useState(null);
 
@@ -68,6 +112,10 @@ export default function AdminPage() {
   const [adminFilter, setAdminFilter] = useState('all');
   const [adminSearch, setAdminSearch] = useState('');
   const [adminNotifs, setAdminNotifs] = useState([]);
+  const [adminGuests, setAdminGuests] = useState([]);
+  const [adminGuestSearch, setAdminGuestSearch] = useState('');
+  const [adminCommittee, setAdminCommittee] = useState([]);
+  const [adminCommitteeSearch, setAdminCommitteeSearch] = useState('');
   const [previewEmailHtml, setPreviewEmailHtml] = useState(null);
   const [showPin, setShowPin] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
@@ -89,6 +137,16 @@ export default function AdminPage() {
   });
   const [isSubmittingOffline, setIsSubmittingOffline] = useState(false);
 
+  // Admin Add Guest Modal
+  const [isGuestModalOpen, setIsGuestModalOpen] = useState(false);
+  const [guestForm, setGuestForm] = useState({ name: '', phone: '' });
+  const [isSubmittingGuest, setIsSubmittingGuest] = useState(false);
+
+  // Admin Add Committee Member Modal
+  const [isCommitteeModalOpen, setIsCommitteeModalOpen] = useState(false);
+  const [committeeForm, setCommitteeForm] = useState({ name: '', phone: '', role: '' });
+  const [isSubmittingCommittee, setIsSubmittingCommittee] = useState(false);
+
   // Admin Clear Database Modal
   const [isClearDbModalOpen, setIsClearDbModalOpen] = useState(false);
   const [clearDbPassword, setClearDbPassword] = useState('');
@@ -98,7 +156,7 @@ export default function AdminPage() {
     ownerName: 'Mr. Edwin Laston',
     ownerEmail: '',
     notifyEmail: '',
-    notifyEmails: ['edwinlaston@gmail.com'],
+    notifyEmails: [],
     ownerPhone: '',
     emailNotificationsEnabled: true,
     smtp: {
@@ -184,6 +242,38 @@ export default function AdminPage() {
     }
   };
 
+  // Load Admin Guest List
+  const loadAdminGuests = async () => {
+    try {
+      const res = await fetch(`/api/admin/guests?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAdminGuests(data);
+      }
+    } catch (err) {
+      console.error('Failed to load admin guests:', err);
+    }
+  };
+
+  // Load Admin Committee Members
+  const loadAdminCommittee = async () => {
+    try {
+      const res = await fetch(`/api/admin/committee?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAdminCommittee(data);
+      }
+    } catch (err) {
+      console.error('Failed to load admin committee members:', err);
+    }
+  };
+
   // Load Admin Settings
   const loadAdminSettings = async () => {
     try {
@@ -193,15 +283,17 @@ export default function AdminPage() {
       });
       if (res.ok) {
         const data = await res.json();
+        // Only ever reflects emails the committee explicitly added via "Add
+        // Recipient" and saved — never a guessed default. notifyEmail (a
+        // comma-joined string) is read as a fallback purely for backward
+        // compatibility with rows saved before the notifyEmails array existed;
+        // the public "Contact Email" field is a separate, display-only setting
+        // and is deliberately never auto-promoted into this list.
         let emails = [];
         if (Array.isArray(data.notifyEmails) && data.notifyEmails.length > 0) {
           emails = data.notifyEmails;
         } else if (data.notifyEmail) {
           emails = data.notifyEmail.split(',').map(s => s.trim()).filter(Boolean);
-        } else if (data.ownerEmail) {
-          emails = [data.ownerEmail.trim()];
-        } else {
-          emails = ['edwinlaston@gmail.com'];
         }
         setAdminSettings({
           ...data,
@@ -255,6 +347,8 @@ export default function AdminPage() {
     loadAdminPledges();
     loadAdminNotifications();
     loadAdminSettings();
+    loadAdminGuests();
+    loadAdminCommittee();
   };
 
   const handleAdminLogout = async () => {
@@ -266,6 +360,8 @@ export default function AdminPage() {
     setAdminAuthenticated(false);
     setAdminPledges([]);
     setAdminNotifs([]);
+    setAdminGuests([]);
+    setAdminCommittee([]);
     showToast('Signed out of the Committee Portal', 'success');
   };
 
@@ -371,6 +467,102 @@ export default function AdminPage() {
     }
   };
 
+  // Submit Add Guest
+  const handleGuestSubmit = async (e) => {
+    e.preventDefault();
+    if (!guestForm.name.trim()) {
+      showToast('Guest name is required.', 'error');
+      return;
+    }
+
+    setIsSubmittingGuest(true);
+    try {
+      const res = await fetch('/api/admin/guests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(guestForm)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to add guest');
+
+      showToast(`"${guestForm.name}" added to the guest list.`, 'success');
+      setIsGuestModalOpen(false);
+      setGuestForm({ name: '', phone: '' });
+      loadAdminGuests();
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setIsSubmittingGuest(false);
+    }
+  };
+
+  // Remove Guest
+  const handleDeleteGuest = async (guestId, guestName) => {
+    const confirmDelete = window.confirm(`Remove "${guestName}" from the guest list?`);
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/admin/guests/${guestId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to remove guest');
+
+      showToast(`"${guestName}" removed from the guest list.`, 'info');
+      loadAdminGuests();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
+  // Submit Add Committee Member
+  const handleCommitteeSubmit = async (e) => {
+    e.preventDefault();
+    if (!committeeForm.name.trim()) {
+      showToast('Committee member name is required.', 'error');
+      return;
+    }
+    if (!committeeForm.phone.trim()) {
+      showToast('A phone number is required to receive Mobile Money pledges.', 'error');
+      return;
+    }
+
+    setIsSubmittingCommittee(true);
+    try {
+      const res = await fetch('/api/admin/committee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(committeeForm)
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to add committee member');
+
+      showToast(`"${committeeForm.name}" added to the committee.`, 'success');
+      setIsCommitteeModalOpen(false);
+      setCommitteeForm({ name: '', phone: '', role: '' });
+      loadAdminCommittee();
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      setIsSubmittingCommittee(false);
+    }
+  };
+
+  // Remove Committee Member
+  const handleDeleteCommitteeMember = async (memberId, memberName) => {
+    const confirmDelete = window.confirm(`Remove "${memberName}" from the committee? Their payment card will disappear from the public page.`);
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/admin/committee/${memberId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to remove committee member');
+
+      showToast(`"${memberName}" removed from the committee.`, 'info');
+      loadAdminCommittee();
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  };
+
   // Clear Database — wipes every pledge and notification. Re-checks the
   // admin passcode server-side even though the session is already valid.
   const handleClearDatabase = async (e) => {
@@ -432,20 +624,12 @@ export default function AdminPage() {
   // Save Admin Settings
   const handleExportCsv = async () => {
     try {
-      const res = await fetch('/api/admin/export');
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Export failed');
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `kwanjula-pledges-${new Date().toISOString().slice(0, 10)}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      await downloadWithRetry('/api/admin/export', `kwanjula-pledges-${new Date().toISOString().slice(0, 10)}.csv`);
+      // The export route always reads straight from the database, so the file
+      // itself is never stale — this just brings the on-screen table back in
+      // sync in case a pledge changed elsewhere since the last poll, so what
+      // the committee sees matches what they just exported.
+      loadAdminPledges();
     } catch (err) {
       showToast(err.message, 'error');
     }
@@ -453,25 +637,16 @@ export default function AdminPage() {
 
   // Unlike the public Pledge Report link, this reads the committee's own PDF
   // route — same report, but its contributor page carries every pledge's
-  // real name, phone and amount with no anonymisation applied.
+  // real name, phone and amount with no anonymisation applied. Like the CSV
+  // export above, the PDF is always built from a fresh database read at the
+  // moment of download, never from a cached snapshot — refreshing the table
+  // here only keeps the on-screen view in step with what was just downloaded.
   const handleExportPdf = async () => {
     try {
-      const res = await fetch('/api/admin/pdf');
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'PDF generation failed');
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `kwanjula-committee-pledge-report-${new Date().toISOString().slice(0, 10)}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+      await downloadWithRetry('/api/admin/pdf', `kwanjula-committee-pledge-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+      loadAdminPledges();
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast('Could not generate the PDF after retrying — please try again in a moment.', 'error');
     }
   };
 
@@ -510,6 +685,22 @@ export default function AdminPage() {
       return true;
     });
   }, [adminPledges, adminFilter, adminSearch]);
+
+  const filteredAdminGuests = useMemo(() => {
+    if (!adminGuestSearch.trim()) return adminGuests;
+    const q = adminGuestSearch.toLowerCase();
+    return adminGuests.filter(g =>
+      (g.name || '').toLowerCase().includes(q) || (g.phone || '').toLowerCase().includes(q)
+    );
+  }, [adminGuests, adminGuestSearch]);
+
+  const filteredAdminCommittee = useMemo(() => {
+    if (!adminCommitteeSearch.trim()) return adminCommittee;
+    const q = adminCommitteeSearch.toLowerCase();
+    return adminCommittee.filter(m =>
+      (m.name || '').toLowerCase().includes(q) || (m.phone || '').toLowerCase().includes(q)
+    );
+  }, [adminCommittee, adminCommitteeSearch]);
 
   return (
     <div className="min-h-screen bg-neutral-50 py-6 px-5 sm:px-6">
@@ -595,6 +786,8 @@ export default function AdminPage() {
               <div className="flex border-b border-neutral-200 mb-6 gap-2">
                 {[
                   { id: 'pledges', label: `Pledges (${adminPledges.length})`, icon: 'fa-list-check' },
+                  { id: 'guests', label: `Guests (${adminGuests.length})`, icon: 'fa-user-group' },
+                  { id: 'committee', label: `Committee (${adminCommittee.length})`, icon: 'fa-user-tie' },
                   { id: 'notifications', label: `Email Outbox (${adminNotifs.length})`, icon: 'fa-envelope-open-text' },
                   { id: 'settings', label: 'Settings & SMTP', icon: 'fa-gear' }
                 ].map(t => (
@@ -605,6 +798,8 @@ export default function AdminPage() {
                       if (t.id === 'notifications') loadAdminNotifications();
                       if (t.id === 'pledges') loadAdminPledges();
                       if (t.id === 'settings') loadAdminSettings();
+                      if (t.id === 'guests') loadAdminGuests();
+                      if (t.id === 'committee') loadAdminCommittee();
                     }}
                     className={`pb-3 px-4 text-xs font-bold border-b-2 flex items-center gap-2 transition ${
                       adminTab === t.id
@@ -614,6 +809,8 @@ export default function AdminPage() {
                   >
                     {{
                     'fa-list-check': <FaListCheck aria-hidden="true" />,
+                    'fa-user-group': <FaUserGroup aria-hidden="true" />,
+                    'fa-user-tie': <FaUserTie aria-hidden="true" />,
                     'fa-envelope-open-text': <FaEnvelopeOpenText aria-hidden="true" />,
                     'fa-gear': <FaGear aria-hidden="true" />,
                   }[t.icon]} {t.label}
@@ -624,6 +821,13 @@ export default function AdminPage() {
               {/* TAB 1: PLEDGES */}
               {adminTab === 'pledges' && (
                 <div>
+                  <p className="text-xs text-neutral-500 mb-4 leading-relaxed">
+                    Every pledge submitted on the public page lands here automatically, in real time.
+                    Use this tab to confirm Mobile Money payments as they arrive (<strong>Mark Paid</strong>),
+                    record pledges made by phone or in cash (<strong>Add Offline Pledge</strong>), void a
+                    pledge that was cancelled or entered in error, and export the full record as CSV or PDF
+                    for the committee's own books.
+                  </p>
                   {/* Sub-bar with metrics, search, and action buttons */}
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -792,13 +996,181 @@ export default function AdminPage() {
                 </div>
               )}
 
+              {/* TAB: GUEST LIST */}
+              {adminTab === 'guests' && (
+                <div>
+                  <p className="text-xs text-neutral-500 mb-4 leading-relaxed">
+                    A simple name-and-phone list of everyone confirmed to attend, shown publicly and
+                    read-only at <strong>/guests</strong> so family and contributors can check who's
+                    coming. Only the committee can add or remove a guest — from here.
+                  </p>
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+                    <input
+                      type="text"
+                      placeholder="Search guests by name / phone..."
+                      value={adminGuestSearch}
+                      onChange={(e) => setAdminGuestSearch(e.target.value)}
+                      className="text-xs p-2 border border-neutral-300 rounded-lg w-full md:w-64 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                    />
+                    <button
+                      onClick={() => setIsGuestModalOpen(true)}
+                      className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-800 text-white flex items-center gap-1.5 hover:bg-brand-900 shrink-0"
+                    >
+                      <FaPlus aria-hidden="true" /> Add Guest
+                    </button>
+                  </div>
+
+                  <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-3 mb-4 text-xs flex justify-between items-center">
+                    <span>Total Guests: <strong>{adminGuests.length}</strong></span>
+                  </div>
+
+                  <div className="overflow-x-auto border border-neutral-200 rounded-xl">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-neutral-50 text-neutral-500 font-bold uppercase text-[10px] border-b">
+                        <tr>
+                          <th className="p-3">Name</th>
+                          <th className="p-3">Phone</th>
+                          <th className="p-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {filteredAdminGuests.length === 0 ? (
+                          <tr>
+                            <td colSpan="3" className="p-6 text-center text-neutral-500">
+                              No guests found. Add the first guest to the list.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredAdminGuests.map((g) => (
+                            <tr key={g.id} className="hover:bg-neutral-50">
+                              <td className="p-3 font-bold text-neutral-900">{g.name}</td>
+                              <td className="p-3 text-neutral-600">
+                                {g.phone ? (
+                                  <a href={`tel:${g.phone}`} className="hover:underline flex items-center gap-1.5">
+                                    <FaPhone className="text-[9px] text-neutral-500" aria-hidden="true" /> {g.phone}
+                                  </a>
+                                ) : (
+                                  <span className="text-neutral-400">—</span>
+                                )}
+                              </td>
+                              <td className="p-3 text-right">
+                                <button
+                                  onClick={() => handleDeleteGuest(g.id, g.name)}
+                                  className="p-1 text-neutral-500 hover:text-accent-800 rounded hover:bg-accent-50 transition"
+                                  title="Remove guest"
+                                  aria-label={`Remove ${g.name} from the guest list`}
+                                >
+                                  <FaRegTrashCan aria-hidden="true" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB: COMMITTEE MEMBERS */}
+              {adminTab === 'committee' && (
+                <div>
+                  <p className="text-xs text-neutral-500 mb-4 leading-relaxed">
+                    Everyone here appears as a Mobile Money payment card in the "How to Fulfill Your
+                    Pledge" section on the public page — with a Call button contributors can use to
+                    reach them directly. The MTN / Airtel badge is detected automatically from the
+                    phone number's prefix, so there's nothing else to configure.
+                  </p>
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+                    <input
+                      type="text"
+                      placeholder="Search committee by name / phone..."
+                      value={adminCommitteeSearch}
+                      onChange={(e) => setAdminCommitteeSearch(e.target.value)}
+                      className="text-xs p-2 border border-neutral-300 rounded-lg w-full md:w-64 focus:outline-none focus:ring-1 focus:ring-brand-700"
+                    />
+                    <button
+                      onClick={() => setIsCommitteeModalOpen(true)}
+                      className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-800 text-white flex items-center gap-1.5 hover:bg-brand-900 shrink-0"
+                    >
+                      <FaPlus aria-hidden="true" /> Add Committee Member
+                    </button>
+                  </div>
+
+                  <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-3 mb-4 text-xs flex justify-between items-center">
+                    <span>Total Committee Members: <strong>{adminCommittee.length}</strong></span>
+                  </div>
+
+                  <div className="overflow-x-auto border border-neutral-200 rounded-xl">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-neutral-50 text-neutral-500 font-bold uppercase text-[10px] border-b">
+                        <tr>
+                          <th className="p-3">Name</th>
+                          <th className="p-3">Role</th>
+                          <th className="p-3">Phone</th>
+                          <th className="p-3">Network</th>
+                          <th className="p-3 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-neutral-100">
+                        {filteredAdminCommittee.length === 0 ? (
+                          <tr>
+                            <td colSpan="5" className="p-6 text-center text-neutral-500">
+                              No committee members found. Add the first one.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredAdminCommittee.map((m) => (
+                            <tr key={m.id} className="hover:bg-neutral-50">
+                              <td className="p-3 font-bold text-neutral-900">{m.name}</td>
+                              <td className="p-3 text-neutral-600">{m.role || <span className="text-neutral-400">—</span>}</td>
+                              <td className="p-3 text-neutral-600">
+                                <a href={`tel:${m.phone}`} className="hover:underline flex items-center gap-1.5">
+                                  <FaPhone className="text-[9px] text-neutral-500" aria-hidden="true" /> {m.phone}
+                                </a>
+                              </td>
+                              <td className="p-3">
+                                {m.network ? (
+                                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                                    m.network === 'MTN Money' ? 'bg-accent-500 text-black' : 'bg-accent-700 text-white'
+                                  }`}>
+                                    {m.network}
+                                  </span>
+                                ) : (
+                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-brand-700 text-white">
+                                    Mobile Money
+                                  </span>
+                                )}
+                              </td>
+                              <td className="p-3 text-right">
+                                <button
+                                  onClick={() => handleDeleteCommitteeMember(m.id, m.name)}
+                                  className="p-1 text-neutral-500 hover:text-accent-800 rounded hover:bg-accent-50 transition"
+                                  title="Remove committee member"
+                                  aria-label={`Remove ${m.name} from the committee`}
+                                >
+                                  <FaRegTrashCan aria-hidden="true" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {/* TAB 2: NOTIFICATIONS OUTBOX */}
               {adminTab === 'notifications' && (
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs text-neutral-500">
-                      Automated email alerts generated for Edwin Laston on new contributions:
-                    </p>
+                  <p className="text-xs text-neutral-500 mb-1 leading-relaxed">
+                    A log of every automated pledge-alert email the system has generated for the
+                    addresses configured under <strong>Settings & SMTP → Pledge Alert Notification
+                    Inboxes</strong>. Use it to confirm alerts are actually going out, and to preview
+                    exactly what each recipient received.
+                  </p>
+                  <div className="flex justify-end mb-2">
                     <button
                       onClick={() => loadAdminNotifications()}
                       className="text-xs text-brand-800 font-bold hover:underline flex items-center gap-1"
@@ -822,6 +1194,11 @@ export default function AdminPage() {
                         <div className="font-bold text-neutral-800">
                           New Pledge: {n.pledgerName} ({formatUGX(n.amount)}) for {n.item}
                         </div>
+                        {n.generalFundAmount > 0 && (
+                          <div className="text-brand-800 font-semibold">
+                            + {formatUGX(n.generalFundAmount)} spilled over to the General Ceremony Fund
+                          </div>
+                        )}
                         <div className="flex justify-between items-center pt-1">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                             n.status === 'sent_smtp' ? 'bg-brand-100 text-brand-800' : 'bg-neutral-200 text-neutral-700'
@@ -844,6 +1221,11 @@ export default function AdminPage() {
               {/* TAB 3: SETTINGS - NOTIFICATION RECIPIENT EMAILS */}
               {adminTab === 'settings' && (
                 <>
+                <p className="text-xs text-neutral-500 mb-1 leading-relaxed">
+                  Who gets notified, what contributors see about the committee, and the one
+                  irreversible action (wiping all pledge data). Each card below saves independently
+                  of the Danger Zone at the bottom.
+                </p>
                 <form onSubmit={handleSaveSettings} className="space-y-5 text-xs">
 
                   {/* Pledge Alert Notification Emails */}
@@ -854,7 +1236,11 @@ export default function AdminPage() {
                           <FaBell className="text-brand-700" aria-hidden="true" /> Pledge Alert Notification Inboxes
                         </h5>
                         <p className="text-neutral-500 text-xs mt-0.5">
-                          Every time a contributor submits a pledge, an instant email alert will be delivered to all addresses listed below.
+                          Every time a contributor submits a pledge, an instant email alert is delivered to
+                          every address listed below — and only those addresses; an inbox is never
+                          notified unless it was explicitly added here. This list starts empty. Add an
+                          address, then click <strong>Save Notification Inboxes</strong> below to make it
+                          permanent — nothing is added or removed until you save.
                         </p>
                       </div>
                       <label className="flex items-center gap-2 cursor-pointer bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-xl border border-brand-200 transition">
@@ -1032,7 +1418,11 @@ export default function AdminPage() {
                     <h5 className="font-bold text-neutral-900 mb-1 text-sm flex items-center gap-2">
                       <FaUserShield className="text-brand-700" aria-hidden="true" /> Public Committee Contact Details
                     </h5>
-                    <p className="text-neutral-500 mb-3 text-xs">Shown to contributors on the public page for reference & phone inquiries.</p>
+                    <p className="text-neutral-500 mb-3 text-xs">
+                      Display-only — shown to contributors on the public page for reference & phone
+                      inquiries. Separate from the alert inboxes above: setting an email here does not
+                      add it to the pledge-alert recipient list.
+                    </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-neutral-500 text-[10px] uppercase font-bold mb-1">Primary Organizer Name</label>
@@ -1217,6 +1607,154 @@ export default function AdminPage() {
                 >
                   {isSubmittingOffline ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaCheck aria-hidden="true" />}
                   Save Offline Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: ADD GUEST (ADMIN) ================= */}
+      {isGuestModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+          <div className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
+            <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold">Add Guest</h3>
+                <p className="text-xs text-brand-200">Appears immediately on the public guest list</p>
+              </div>
+              <button
+                onClick={() => setIsGuestModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
+                aria-label="Close"
+              >
+                <FaXmark aria-hidden="true" />
+              </button>
+            </div>
+
+            <form onSubmit={handleGuestSubmit} className="p-5 space-y-3.5 text-xs">
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Guest Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Mrs. Grace Namono"
+                  value={guestForm.name}
+                  onChange={(e) => setGuestForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  placeholder="0772 000000"
+                  value={guestForm.phone}
+                  onChange={(e) => setGuestForm(prev => ({ ...prev, phone: e.target.value }))}
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsGuestModalOpen(false)}
+                  className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-xl font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingGuest}
+                  className="px-4 py-2 bg-brand-800 hover:bg-brand-900 text-white rounded-xl font-bold flex items-center gap-1.5"
+                >
+                  {isSubmittingGuest ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaCheck aria-hidden="true" />}
+                  Add Guest
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: ADD COMMITTEE MEMBER (ADMIN) ================= */}
+      {isCommitteeModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+          <div className="bg-white rounded-xl shadow-lg max-w-sm w-full overflow-hidden flex flex-col animate-in zoom-in duration-200">
+            <div className="bg-brand-900 text-white p-5 flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-bold">Add Committee Member</h3>
+                <p className="text-xs text-brand-200">Appears immediately as a payment card on the public page</p>
+              </div>
+              <button
+                onClick={() => setIsCommitteeModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-sm"
+                aria-label="Close"
+              >
+                <FaXmark aria-hidden="true" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCommitteeSubmit} className="p-5 space-y-3.5 text-xs">
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  autoFocus
+                  placeholder="e.g. Mr Tumwesigye"
+                  value={committeeForm.name}
+                  onChange={(e) => setCommitteeForm(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Phone Number *</label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="0772 000000"
+                  value={committeeForm.phone}
+                  onChange={(e) => setCommitteeForm(prev => ({ ...prev, phone: e.target.value }))}
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
+                />
+                <p className="text-[10px] text-neutral-500 mt-1">
+                  MTN or Airtel Money is detected automatically from the number.
+                </p>
+              </div>
+
+              <div>
+                <label className="block font-bold text-neutral-700 uppercase mb-1">Role / Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Chairman (optional)"
+                  value={committeeForm.role}
+                  onChange={(e) => setCommitteeForm(prev => ({ ...prev, role: e.target.value }))}
+                  className="w-full p-2.5 border border-neutral-300 rounded-xl"
+                />
+                <p className="text-[10px] text-neutral-500 mt-1">
+                  Shown on their public card instead of "Committee Member" — leave blank to use the default.
+                </p>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCommitteeModalOpen(false)}
+                  className="px-4 py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-700 rounded-xl font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingCommittee}
+                  className="px-4 py-2 bg-brand-800 hover:bg-brand-900 text-white rounded-xl font-bold flex items-center gap-1.5"
+                >
+                  {isSubmittingCommittee ? <FaSpinner className="animate-spin" aria-hidden="true" /> : <FaCheck aria-hidden="true" />}
+                  Add Committee Member
                 </button>
               </div>
             </form>
