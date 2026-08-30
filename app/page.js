@@ -124,7 +124,7 @@ function HeroPhotoBackground({ children }) {
 
       {/* Scrim: keeps hero text legible over busy candid photos and fades to the
           solid brand-950 the stats card section below sits on, so the seam is invisible. */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 to-brand-950" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/60 via-80% to-brand-950" aria-hidden="true" />
 
       <div className="relative z-10 max-w-4xl mx-auto w-full text-center">
         {children}
@@ -623,82 +623,77 @@ export default function KwanjulaBudgetPage() {
               <FaMobileScreenButton aria-hidden="true" /> Mobile Money
             </a>
           </div>
-        </HeroPhotoBackground>
 
-        {/* Everything below is one combined card, kept inside the hero: budget progress,
-            community backers, and the full milestone journey. Previously three separate
-            surfaces (a stat-card grid in the hero, plus a whole milestone section on the
-            white background below it) — now one dark card so it all reads as a single
-            "ceremony status" unit at a glance. */}
-        <div className="bg-brand-950 px-5 pb-12 sm:pb-16">
-        <div className="max-w-5xl mx-auto bg-brand-900 border border-brand-800 rounded-lg p-4 sm:p-6 text-left">
-
-          {/* Budget Progress: Total Target + Raised & Pledged + Remaining, with a progress bar */}
-          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-3">
-            <div>
-              <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Ceremony Budget Progress</div>
-              <div className="text-lg sm:text-2xl font-black text-white tracking-tight">
-                {formatUGX(stats.totalBudget)} <span className="text-brand-300 text-xs sm:text-sm font-bold">Total Target</span>
+          {/* Everything below is one combined card, kept inside the photo hero itself:
+              budget progress, community backers, and the full milestone journey — so
+              ceremony status is the first thing a visitor sees, not a separate section
+              below the fold. */}
+          <div className="mt-8 bg-brand-900/40 backdrop-blur-sm border border-brand-700/50 rounded-lg p-4 sm:p-6 text-left shadow-xl">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-3">
+              <div>
+                <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Ceremony Budget Progress</div>
+                <div className="text-lg sm:text-2xl font-black text-white tracking-tight">
+                  {formatUGX(stats.totalBudget)} <span className="text-brand-300 text-xs sm:text-sm font-bold">Total Target</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs font-bold text-brand-300">
+                <span className="w-2 h-2 rounded-full bg-brand-400 pulse-dot inline-block"></span>
+                <span>Live</span>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-bold text-brand-300">
-              <span className="w-2 h-2 rounded-full bg-brand-400 pulse-dot inline-block"></span>
-              <span>Live</span>
-            </div>
-          </div>
 
-          {/* The bar itself, plus the Raised/Remaining figures docked onto its two ends as
-              solid-background badges — legible over either the fill or the track behind
-              them, wherever the fill percentage happens to put that edge. Remaining stays
-              accent-coloured so it's still the figure that draws the eye. */}
-          <div className="relative mb-3">
-            <div
-              className="relative h-9 sm:h-10 rounded-full bg-brand-950 overflow-hidden"
-              role="progressbar"
-              aria-valuenow={stats.totalPercentage}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label="Ceremony budget funded percentage"
-            >
+            {/* The bar itself, plus the Raised/Remaining figures docked onto its two ends as
+                solid-background badges — legible over either the fill or the track behind
+                them, wherever the fill percentage happens to put that edge. Remaining stays
+                accent-coloured so it's still the figure that draws the eye. */}
+            <div className="relative mb-3">
               <div
-                className="h-full bg-brand-700 relative overflow-hidden transition-[width] duration-500"
-                style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}
+                className="relative h-9 sm:h-10 rounded-full bg-brand-950 overflow-hidden"
+                role="progressbar"
+                aria-valuenow={stats.totalPercentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label="Ceremony budget funded percentage"
               >
                 <div
-                  className="absolute inset-0 opacity-40 water-wave"
-                  style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
-                  aria-hidden="true"
-                ></div>
-                <div
-                  className="absolute inset-0 opacity-25 water-wave-reverse"
-                  style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
-                  aria-hidden="true"
-                ></div>
+                  className="h-full bg-brand-700 relative overflow-hidden transition-[width] duration-500"
+                  style={{ width: `${Math.min(stats.totalPercentage, 100)}%` }}
+                >
+                  <div
+                    className="absolute inset-0 opacity-40 water-wave"
+                    style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
+                    aria-hidden="true"
+                  ></div>
+                  <div
+                    className="absolute inset-0 opacity-25 water-wave-reverse"
+                    style={{ backgroundImage: WATER_WAVE_SVG, backgroundRepeat: 'repeat-x', backgroundSize: '100px 100%' }}
+                    aria-hidden="true"
+                  ></div>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-white tracking-wide">
+                  {stats.totalPercentage}% Funded
+                </div>
               </div>
-              <div className="absolute inset-0 flex items-center justify-center text-xs sm:text-sm font-black text-white tracking-wide">
-                {stats.totalPercentage}% Funded
+
+              <div className="absolute left-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 bg-brand-800 border border-brand-600 rounded-full pl-1.5 pr-2.5 py-1 shadow-sm">
+                <FaCircleCheck className="text-brand-300 text-[9px] shrink-0" aria-hidden="true" />
+                <span className="text-[10px] sm:text-[11px] font-bold text-white whitespace-nowrap">{formatUGX(stats.totalCoveredAndPledged)}</span>
+              </div>
+
+              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 bg-accent-700 border border-accent-500 rounded-full pl-1.5 pr-2.5 py-1 shadow-sm">
+                <FaScaleBalanced className="text-white text-[9px] shrink-0" aria-hidden="true" />
+                <span className="text-[10px] sm:text-[11px] font-black text-white whitespace-nowrap">{formatUGX(stats.totalRemaining)}</span>
               </div>
             </div>
 
-            <div className="absolute left-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 bg-brand-800 border border-brand-600 rounded-full pl-1.5 pr-2.5 py-1 shadow-sm">
-              <FaCircleCheck className="text-brand-300 text-[9px] shrink-0" aria-hidden="true" />
-              <span className="text-[10px] sm:text-[11px] font-bold text-white whitespace-nowrap">{formatUGX(stats.totalCoveredAndPledged)}</span>
+            <div className="flex items-center justify-between gap-2 text-[11px] font-medium text-brand-300">
+              <span>Raised &amp; Pledged</span>
+              <span className="text-accent-200 font-bold">Remaining</span>
             </div>
 
-            <div className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center gap-1 bg-accent-700 border border-accent-500 rounded-full pl-1.5 pr-2.5 py-1 shadow-sm">
-              <FaScaleBalanced className="text-white text-[9px] shrink-0" aria-hidden="true" />
-              <span className="text-[10px] sm:text-[11px] font-black text-white whitespace-nowrap">{formatUGX(stats.totalRemaining)}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between gap-2 text-[11px] font-medium text-brand-300">
-            <span>Raised &amp; Pledged</span>
-            <span className="text-accent-200 font-bold">Remaining</span>
-          </div>
-
-          {/* Community Backers */}
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-brand-800">
-            <FaUsers className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
+            {/* Community Backers */}
+            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-brand-800">
+              <FaUsers className="text-brand-400 text-lg shrink-0" aria-hidden="true" />
             <div>
               <div className="text-[11px] font-bold text-brand-300 uppercase tracking-wider">Community Backers</div>
               <div className="text-sm sm:text-base font-black text-white tracking-tight">
@@ -708,8 +703,8 @@ export default function KwanjulaBudgetPage() {
           </div>
 
           {/* Ceremony Funding Milestone Journey — no repeat of the "Live" badge or the
-              couple's name/date, both already shown above (the top announcement bar and
-              the hero H1) and at the top of this same card. */}
+              couple's name/date, both already shown above (the top announcement bar, the
+              hero H1, and the budget progress card higher up in the hero). */}
           <div className="mt-5 pt-5 border-t border-brand-800">
             <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2 mb-4">
               <FaTrophy className="text-accent-400" aria-hidden="true" /> Ceremony Funding Milestone Journey
@@ -794,7 +789,7 @@ export default function KwanjulaBudgetPage() {
           </div>
 
         </div>
-        </div>
+        </HeroPhotoBackground>
       </header>
 
       {/* Main Budget Section */}
